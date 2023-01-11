@@ -2,12 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'app.dart';
-import 'signin.dart';
-
-// void main() {
-//   runApp(LoginPage());
-// }
+import 'package:vegan_app/pages/app.dart';
+import 'package:vegan_app/signin.dart';
 
 class LoginPage extends StatelessWidget {
   final email = TextEditingController();

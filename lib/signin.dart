@@ -2,10 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-// void main() {
-//   runApp(SignInPage());
-// }
-
 class SignInPage extends StatelessWidget {
   final email = TextEditingController();
   final password = TextEditingController();

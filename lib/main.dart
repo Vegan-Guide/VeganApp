@@ -4,8 +4,8 @@ import 'firebase_options.dart';
 
 import 'package:flutter/material.dart';
 
-import 'login.dart';
-import 'app.dart';
+import 'package:vegan_app/login.dart';
+import 'package:vegan_app/pages/app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

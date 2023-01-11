@@ -1,10 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
+import '../firebase_options.dart';
 
 import 'package:flutter/material.dart';
 
-import 'home.dart';
-import 'configuration.dart';
+import 'package:vegan_app/pages/configuration.dart';
+import 'package:vegan_app/pages/home.dart';
+import 'package:vegan_app/pages/restaurantes/restaurants.dart';
 
 class App extends StatefulWidget {
   const App({super.key, loggedin: false});
@@ -42,7 +43,7 @@ class _LoginState extends State<App> {
                   ])),
               body: TabBarView(children: [
                 Center(child: HomePage()),
-                Center(child: Text("Restaurantes")),
+                Center(child: Restaurants()),
                 Center(child: Text("Receitas")),
                 Center(child: ConfigPage())
               ]),
