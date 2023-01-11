@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -8,32 +10,20 @@ class ConfigPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return MaterialApp(
-      routes: {
-        '/': (context) => Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text("Perfil"),
-                Text("Localização"),
-                Text("Meus Pratos"),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: ((context) => LoginPage())));
-                  },
-                  child: Text("Login"),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: ((context) => SignInPage())));
-                  },
-                  child: Text("Registrar"),
-                )
-              ],
-            ),
-        '/login': (context) => LoginPage()
-      },
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        // Center(child: Text(FirebaseAuth.instance.currentUser.email ?? "")),
+        Center(child: Text("Perfil")),
+        Center(child: Text("Localização")),
+        Center(child: Text("Meus Pratos")),
+        ElevatedButton(
+          onPressed: () {
+            FirebaseAuth.instance.signOut();
+          },
+          child: Text("Logout"),
+        )
+      ],
     );
   }
 }

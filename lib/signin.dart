@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -6,6 +7,9 @@ void main() {
 }
 
 class SignInPage extends StatelessWidget {
+  final email = TextEditingController();
+  final password = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -17,15 +21,9 @@ class SignInPage extends StatelessWidget {
           Center(
               child: Column(
             children: [
-              Text("Nome"),
-              TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Seu Nome',
-                ),
-              ),
               Text("Email"),
               TextField(
+                controller: email,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: 'example@example.com',
@@ -33,16 +31,23 @@ class SignInPage extends StatelessWidget {
               ),
               Text("Password"),
               TextField(
+                controller: password,
+                obscureText: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: '********',
                 ),
               ),
               ElevatedButton(
                   onPressed: () {
-                    //fazer login
+                    //fazer registro
+                    FirebaseAuth.instance
+                        .createUserWithEmailAndPassword(
+                            email: email.text, password: password.text)
+                        .then((value) => Navigator.pop(context))
+                        .onError(
+                            (error, stackTrace) => {print("Error ${error}")});
                   },
-                  child: Text("Login"))
+                  child: Text("Registrar"))
             ],
           ))
         ],
