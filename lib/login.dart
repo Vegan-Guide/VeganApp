@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'app.dart';
 import 'signin.dart';
 
-void main() {
-  runApp(LoginPage());
-}
+// void main() {
+//   runApp(LoginPage());
+// }
 
 class LoginPage extends StatelessWidget {
   final email = TextEditingController();
@@ -44,8 +44,15 @@ class LoginPage extends StatelessWidget {
               ElevatedButton(
                   onPressed: () {
                     //fazer login
-                    FirebaseAuth.instance.signInWithEmailAndPassword(
-                        email: email.text, password: password.text);
+                    FirebaseAuth.instance
+                        .signInWithEmailAndPassword(
+                            email: email.text, password: password.text)
+                        .then((value) => {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => App()))
+                            });
                   },
                   child: Text("Login")),
               Padding(

@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(SignInPage());
-}
+// void main() {
+//   runApp(SignInPage());
+// }
 
 class SignInPage extends StatelessWidget {
   final email = TextEditingController();
@@ -44,8 +44,8 @@ class SignInPage extends StatelessWidget {
                         .createUserWithEmailAndPassword(
                             email: email.text, password: password.text)
                         .then((value) => Navigator.pop(context))
-                        .onError(
-                            (error, stackTrace) => {print("Error ${error}")});
+                        .onError((error, stackTrace) =>
+                            {print("Error ${error.toString()}")});
                   },
                   child: Text("Registrar"))
             ],
