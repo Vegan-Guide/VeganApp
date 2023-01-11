@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SignInPage extends StatelessWidget {
+  final name = TextEditingController();
   final email = TextEditingController();
   final password = TextEditingController();
 
@@ -17,6 +18,14 @@ class SignInPage extends StatelessWidget {
           Center(
               child: Column(
             children: [
+              Text("Nome"),
+              TextField(
+                controller: name,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Seu nome',
+                ),
+              ),
               Text("Email"),
               TextField(
                 controller: email,
@@ -39,9 +48,11 @@ class SignInPage extends StatelessWidget {
                     FirebaseAuth.instance
                         .createUserWithEmailAndPassword(
                             email: email.text, password: password.text)
-                        .then((value) => Navigator.pop(context))
-                        .onError((error, stackTrace) =>
-                            {print("Error ${error.toString()}")});
+                        .then((value) => {
+                              value.user
+                                  ?.updateDisplayName(name.text)
+                                  .then((value) => Navigator.pop(context))
+                            });
                   },
                   child: Text("Registrar"))
             ],
