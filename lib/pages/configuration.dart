@@ -11,6 +11,7 @@ class ConfigPage extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Center(
             child: Text(FirebaseAuth.instance.currentUser?.displayName ?? "")),
