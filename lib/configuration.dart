@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'login.dart';
+import 'signin.dart';
 
 class ConfigPage extends StatelessWidget {
   @override
@@ -21,6 +22,13 @@ class ConfigPage extends StatelessWidget {
                         MaterialPageRoute(builder: ((context) => LoginPage())));
                   },
                   child: Text("Login"),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: ((context) => SignInPage())));
+                  },
+                  child: Text("Registrar"),
                 )
               ],
             ),
