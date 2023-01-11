@@ -8,7 +8,18 @@ class addRestaurant extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          //
+          Center(
+              child: Text(
+            "Adicionar Restaurante",
+            style: TextStyle(fontSize: 20),
+          )),
+          Center(child: Text("Adicionar Restaurante")),
+          TextField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: 'Nome do Restaurante',
+            ),
+          )
         ],
       ),
     );

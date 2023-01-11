@@ -14,7 +14,8 @@ class ConfigPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Center(
-            child: Text(FirebaseAuth.instance.currentUser?.displayName ?? "")),
+            child: Text(FirebaseAuth.instance.currentUser?.displayName ?? "",
+                style: TextStyle(fontSize: 20))),
         Center(
             child: GestureDetector(
                 onTap: (() {
