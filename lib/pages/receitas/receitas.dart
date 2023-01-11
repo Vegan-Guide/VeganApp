@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:vegan_app/pages/restaurantes/add.dart';
+import 'package:vegan_app/pages/receitas/add.dart';
 
-class Restaurants extends StatelessWidget {
+class Receitas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -11,7 +11,7 @@ class Restaurants extends StatelessWidget {
         body: Column(children: [
           Center(
             child: Text(
-              "Restaurantes",
+              "Receitas",
               style: TextStyle(fontSize: 25),
             ),
           )
@@ -20,7 +20,7 @@ class Restaurants extends StatelessWidget {
             onPressed: () {
               //algo aqui
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => addRestaurant()));
+                  MaterialPageRoute(builder: (context) => addReceita()));
             },
             child: Icon(Icons.add)));
   }

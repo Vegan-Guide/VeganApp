@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:vegan_app/pages/configuration.dart';
 import 'package:vegan_app/pages/home.dart';
 import 'package:vegan_app/pages/restaurantes/restaurants.dart';
+import 'package:vegan_app/pages/receitas/receitas.dart';
 
 class App extends StatefulWidget {
   const App({super.key, loggedin: false});
@@ -44,7 +45,7 @@ class _LoginState extends State<App> {
               body: TabBarView(children: [
                 Center(child: HomePage()),
                 Center(child: Restaurants()),
-                Center(child: Text("Receitas")),
+                Center(child: Receitas()),
                 Center(child: ConfigPage())
               ]),
             )));
