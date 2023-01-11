@@ -30,6 +30,13 @@
             {
               "client_id": "783934236738-06jc5resapf7qig51sqh8p4tvdlrs1m6.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "783934236738-8rj0nnp4mbmripo155jaiq95agrt13c1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.veganApp"
+              }
             }
           ]
         }
