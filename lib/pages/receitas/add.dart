@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 
+import 'package:material_tag_editor/tag_editor.dart';
+
 List<String> list = <String>[
   "Massa",
   "Pratos quentes",
@@ -12,15 +14,27 @@ List<String> list = <String>[
   "Doces"
 ];
 
-class addReceita extends StatelessWidget {
+class addReceita extends StatefulWidget {
+  const addReceita({super.key});
+
+  @override
+  _Receita createState() => _Receita();
+}
+
+class _Receita extends State<addReceita> {
+  List<String> ingredients = [];
+  _onDelete(index) {
+    setState(() {
+      ingredients.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     DatabaseReference ref = FirebaseDatabase.instance.ref("recipes");
 
     final name = TextEditingController();
-    final ingredient = TextEditingController();
     var tipo = list.first;
-    var ingredients = [];
 
     // TODO: implement build
     return Scaffold(
@@ -53,24 +67,25 @@ class addReceita extends StatelessWidget {
             },
           ),
           Center(child: Text("Ingrediente")),
-          Row(children: [
-            Expanded(
-              child: TextField(
-                controller: ingredient,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'nome do Ingrediente',
-                ),
-              ),
+          TagEditor(
+            length: ingredients.length,
+            delimiters: [',', ' '],
+            hasAddButton: true,
+            inputDecoration: const InputDecoration(
+              border: InputBorder.none,
+              hintText: 'Hint Text...',
             ),
-            ElevatedButton(
-                onPressed: () {
-                  ingredients.add(ingredient.text);
-                  ingredient.clear();
-                },
-                child: Icon(Icons.add))
-          ]),
-          Center(child: Text(ingredients.join(", "))),
+            onTagChanged: (newValue) {
+              setState(() {
+                ingredients.add(newValue);
+              });
+            },
+            tagBuilder: (context, index) => _Chip(
+              index: index,
+              label: ingredients[index],
+              onDeleted: _onDelete,
+            ),
+          ),
           ElevatedButton(
               onPressed: () {
                 //algo
@@ -85,6 +100,33 @@ class addReceita extends StatelessWidget {
               child: Text("Adicionar"))
         ],
       ),
+    );
+  }
+}
+
+class _Chip extends StatelessWidget {
+  const _Chip({
+    required this.label,
+    required this.onDeleted,
+    required this.index,
+  });
+
+  final String label;
+  final ValueChanged<int> onDeleted;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return Chip(
+      labelPadding: const EdgeInsets.only(left: 8.0),
+      label: Text(label),
+      deleteIcon: Icon(
+        Icons.close,
+        size: 18,
+      ),
+      onDeleted: () {
+        onDeleted(index);
+      },
     );
   }
 }
