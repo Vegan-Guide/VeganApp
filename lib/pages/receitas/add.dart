@@ -22,6 +22,7 @@ class addReceita extends StatefulWidget {
 }
 
 class _Receita extends State<addReceita> {
+  final name = TextEditingController();
   List<String> ingredients = [];
   bool veggie = false;
   String tipo = list.first;
@@ -32,13 +33,9 @@ class _Receita extends State<addReceita> {
     });
   }
 
-  final _formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     DatabaseReference ref = FirebaseDatabase.instance.ref("recipes");
-
-    final name = TextEditingController();
 
     // TODO: implement build
     return Scaffold(
@@ -53,69 +50,66 @@ class _Receita extends State<addReceita> {
                     "Adicionar Receita",
                     style: TextStyle(fontSize: 20),
                   )),
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextField(
-                          controller: name,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: 'Nome',
-                          ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextField(
+                        controller: name,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: 'Nome',
                         ),
-                        Center(
-                          child: Text("Tipo da receita"),
+                      ),
+                      Center(
+                        child: Text("Tipo da receita"),
+                      ),
+                      DropdownButton(
+                        items:
+                            list.map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                              value: value, child: Text(value));
+                        }).toList(),
+                        value: tipo,
+                        onChanged: (value) {
+                          setState(() {
+                            tipo = value!;
+                          });
+                        },
+                      ),
+                      Center(child: Text("Ingrediente")),
+                      TagEditor(
+                        length: ingredients.length,
+                        delimiters: [',', ' '],
+                        hasAddButton: true,
+                        inputDecoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Hint Text...',
                         ),
-                        DropdownButton(
-                          items: list
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                                value: value, child: Text(value));
-                          }).toList(),
-                          value: tipo,
-                          onChanged: (value) {
-                            setState(() {
-                              tipo = value!;
+                        onTagChanged: (newValue) {
+                          setState(() {
+                            ingredients.add(newValue);
+                          });
+                        },
+                        tagBuilder: (context, index) => _Chip(
+                          index: index,
+                          label: ingredients[index],
+                          onDeleted: _onDelete,
+                        ),
+                      ),
+                      ElevatedButton(
+                          onPressed: () {
+                            //algo
+                            ref.set({
+                              "name": name,
+                              "type": tipo,
+                              "ingredients": ingredients.toString()
+                            }).then((value) {
+                              Navigator.pop(context);
                             });
                           },
-                        ),
-                        Center(child: Text("Ingrediente")),
-                        TagEditor(
-                          length: ingredients.length,
-                          delimiters: [',', ' '],
-                          hasAddButton: true,
-                          inputDecoration: const InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Hint Text...',
-                          ),
-                          onTagChanged: (newValue) {
-                            setState(() {
-                              ingredients.add(newValue);
-                            });
-                          },
-                          tagBuilder: (context, index) => _Chip(
-                            index: index,
-                            label: ingredients[index],
-                            onDeleted: _onDelete,
-                          ),
-                        ),
-                        ElevatedButton(
-                            onPressed: () {
-                              //algo
-                              ref.set({
-                                "name": name,
-                                "type": tipo,
-                                "ingredients": ingredients.toString()
-                              }).then((value) {
-                                Navigator.pop(context);
-                              });
-                            },
-                            child: Text("Adicionar"))
-                      ],
-                    ),
-                  )
+                          child: Text("Adicionar"))
+                    ],
+                  ),
                 ])));
   }
 }

@@ -18,7 +18,7 @@ class addRestaurant extends StatefulWidget {
 
 class _Restaurante extends State<addRestaurant> {
   final controller = TextEditingController();
-  final name = TextEditingController();
+  final nameController = TextEditingController();
   String tipo = list.first;
   bool veggie = false;
 
@@ -48,8 +48,6 @@ class _Restaurante extends State<addRestaurant> {
 
     var initialAddress = Address.fromCoords(coords: coords);
 
-    final _formKey = GlobalKey<FormState>();
-
     // TODO: implement build
     return Scaffold(
         appBar: AppBar(title: Text("Adicionar Restaurante")),
@@ -63,87 +61,85 @@ class _Restaurante extends State<addRestaurant> {
                     "Adicionar Restaurante",
                     style: TextStyle(fontSize: 20),
                   )),
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextField(
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextField(
+                        controller: nameController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: 'Nome',
+                        ),
+                      ),
+                      Center(
+                        child: Text("Tipo do Restaurante"),
+                      ),
+                      DropdownButton(
+                        items:
+                            list.map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                              value: value, child: Text(value));
+                        }).toList(),
+                        value: tipo,
+                        onChanged: (value) {
+                          setState(() {
+                            tipo = value!;
+                          });
+                        },
+                      ),
+                      Row(
+                        children: [
+                          Center(
+                            child: Text("Totalmente Vegano"),
+                          ),
+                          Checkbox(
+                              value: veggie,
+                              onChanged: (value) {
+                                setState(() {
+                                  veggie = value!;
+                                });
+                              }),
+                        ],
+                      ),
+                      Center(
+                        child: Text("Endereço"),
+                      ),
+                      AddressLocator(
+                        coords: coords,
+                        geoMethods: geoMethods,
+                        controller: controller,
+                        child: TextField(
+                          controller: controller,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
-                            hintText: 'Nome',
+                            hintText: 'Endereco',
+                          ),
+                          onTap: () => showDialog(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                AddressSearchDialog(
+                                    controller: controller,
+                                    geoMethods: geoMethods,
+                                    onDone: (Address address) =>
+                                        initialAddress = address),
                           ),
                         ),
-                        Center(
-                          child: Text("Tipo do Restaurante"),
-                        ),
-                        DropdownButton(
-                          items: list
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                                value: value, child: Text(value));
-                          }).toList(),
-                          value: tipo,
-                          onChanged: (value) {
-                            setState(() {
-                              tipo = value!;
+                      ),
+                      ElevatedButton(
+                          onPressed: () {
+                            //algo
+                            ref.set({
+                              "name": nameController,
+                              "type": tipo,
+                              "isVegan": veggie,
+                              "address": initialAddress
+                            }).then((value) {
+                              Navigator.pop(context);
                             });
                           },
-                        ),
-                        Row(
-                          children: [
-                            Center(
-                              child: Text("Totalmente Vegano"),
-                            ),
-                            Checkbox(
-                                value: veggie,
-                                onChanged: (value) {
-                                  setState(() {
-                                    veggie = value!;
-                                  });
-                                }),
-                          ],
-                        ),
-                        Center(
-                          child: Text("Endereço"),
-                        ),
-                        AddressLocator(
-                          coords: coords,
-                          geoMethods: geoMethods,
-                          controller: controller,
-                          child: TextField(
-                            controller: controller,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Endereco',
-                            ),
-                            onTap: () => showDialog(
-                              context: context,
-                              builder: (BuildContext context) =>
-                                  AddressSearchDialog(
-                                      controller: controller,
-                                      geoMethods: geoMethods,
-                                      onDone: (Address address) =>
-                                          initialAddress = address),
-                            ),
-                          ),
-                        ),
-                        ElevatedButton(
-                            onPressed: () {
-                              //algo
-                              ref.set({
-                                "name": name,
-                                "type": tipo,
-                                "isVegan": veggie,
-                                "address": initialAddress
-                              }).then((value) {
-                                Navigator.pop(context);
-                              });
-                            },
-                            child: Text("Adicionar"))
-                      ],
-                    ),
-                  )
+                          child: Text("Adicionar"))
+                    ],
+                  ),
                 ])));
   }
 }

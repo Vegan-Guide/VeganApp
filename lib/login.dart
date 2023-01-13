@@ -1,32 +1,41 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:vegan_app/pages/app.dart';
 import 'package:vegan_app/signin.dart';
 
-class LoginPage extends StatelessWidget {
-  final email = TextEditingController();
-  final password = TextEditingController();
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
+  @override
+  _Login createState() => _Login();
+}
+
+class _Login extends State<LoginPage> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(title: Text("Login")),
+        // resizeToAvoidBottomInset: false,
+        // appBar: AppBar(title: Text("Login")),
         body: Padding(
             padding: EdgeInsets.all(10),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text("Login", style: TextStyle(fontSize: 25)),
+                Image.asset('assets/images/logo.png', width: 200),
+                // Text("Login", style: TextStyle(fontSize: 25)),
                 Card(
                     child: Column(
                   children: [
                     Text("Email"),
                     TextField(
-                      controller: email,
+                      controller: emailController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'example@example.com',
@@ -34,7 +43,7 @@ class LoginPage extends StatelessWidget {
                     ),
                     Text("Password"),
                     TextField(
-                      controller: password,
+                      controller: passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
@@ -45,7 +54,8 @@ class LoginPage extends StatelessWidget {
                           //fazer login
                           FirebaseAuth.instance
                               .signInWithEmailAndPassword(
-                                  email: email.text, password: password.text)
+                                  email: emailController.text,
+                                  password: passwordController.text)
                               .then((value) => {
                                     Navigator.pushReplacement(
                                         context,
@@ -55,17 +65,31 @@ class LoginPage extends StatelessWidget {
                         },
                         child: Text("Login")),
                     Padding(
-                      padding: EdgeInsets.all(10),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: ((context) => SignInPage())));
-                        },
-                        child: Text("Registrar"),
-                      ),
-                    )
+                        padding: EdgeInsets.all(10),
+                        child: RichText(
+                            selectionColor: Color.fromARGB(174, 0, 0, 0),
+                            text: TextSpan(text: "Não tem login? ", children: [
+                              TextSpan(
+                                  text: "Registrar",
+                                  recognizer: new TapGestureRecognizer()
+                                    ..onTap = () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SignInPage()));
+                                    }),
+                              TextSpan(text: " Aqui")
+                            ])))
+                    // ElevatedButton(
+                    //   onPressed: () {
+                    //     Navigator.push(
+                    //         context,
+                    //         MaterialPageRoute(
+                    //             builder: ((context) => SignInPage())));
+                    //   },
+                    //   child: Text("Registrar"),
+                    // ),
                   ],
                 ))
               ],
