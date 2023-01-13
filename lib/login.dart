@@ -13,60 +13,62 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(title: Text("Login")),
-      body: Column(
-        children: [
-          Text("Login", style: TextStyle(fontSize: 25)),
-          Center(
-              child: Column(
-            children: [
-              Text("Email"),
-              TextField(
-                controller: email,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'example@example.com',
-                ),
-              ),
-              Text("Password"),
-              TextField(
-                controller: password,
-                obscureText: true,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    //fazer login
-                    FirebaseAuth.instance
-                        .signInWithEmailAndPassword(
-                            email: email.text, password: password.text)
-                        .then((value) => {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => App()))
-                            });
-                  },
-                  child: Text("Login")),
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: ((context) => SignInPage())));
-                  },
-                  child: Text("Registrar"),
-                ),
-              )
-            ],
-          ))
-        ],
-      ),
-    );
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(title: Text("Login")),
+        body: Padding(
+            padding: EdgeInsets.all(10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Login", style: TextStyle(fontSize: 25)),
+                Card(
+                    child: Column(
+                  children: [
+                    Text("Email"),
+                    TextField(
+                      controller: email,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'example@example.com',
+                      ),
+                    ),
+                    Text("Password"),
+                    TextField(
+                      controller: password,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    ElevatedButton(
+                        onPressed: () {
+                          //fazer login
+                          FirebaseAuth.instance
+                              .signInWithEmailAndPassword(
+                                  email: email.text, password: password.text)
+                              .then((value) => {
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => App()))
+                                  });
+                        },
+                        child: Text("Login")),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: ((context) => SignInPage())));
+                        },
+                        child: Text("Registrar"),
+                      ),
+                    )
+                  ],
+                ))
+              ],
+            )));
   }
 }

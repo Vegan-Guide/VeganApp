@@ -23,6 +23,7 @@ class ConfigPage extends StatelessWidget {
                       .push(MaterialPageRoute(builder: (context) => Profile()));
                 }),
                 child: Text("Perfil"))),
+        Center(child: Text("Amigos")),
         Center(child: Text("Localização")),
         Center(child: Text("Meus Pratos")),
         ElevatedButton(
