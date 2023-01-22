@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 
@@ -19,34 +20,36 @@ class addRestaurant extends StatefulWidget {
 class _Restaurante extends State<addRestaurant> {
   final controller = TextEditingController();
   final nameController = TextEditingController();
+  final initialAddress = TextEditingController();
   String tipo = list.first;
   bool veggie = false;
 
   @override
   Widget build(BuildContext context) {
-    DatabaseReference ref = FirebaseDatabase.instance.ref("restaurants");
+    CollectionReference ref =
+        FirebaseFirestore.instance.collection("restaurants");
 
-    final geoMethods = GeoMethods(
-      googleApiKey: 'GOOGLE_API_KEY',
-      language: 'pt-BR',
-      countryCode: 'br',
-      countryCodes: ['br'],
-      country: 'Brazil',
-      city: 'Sao Paulo',
-    );
-    final coords = Coords(-23.550087, -46.634066);
+    // final geoMethods = GeoMethods(
+    //   googleApiKey: 'GOOGLE_API_KEY',
+    //   language: 'pt-BR',
+    //   countryCode: 'br',
+    //   countryCodes: ['br'],
+    //   country: 'Brazil',
+    //   city: 'Sao Paulo',
+    // );
+    // final coords = Coords(-23.550087, -46.634066);
 
-    // It will search in unite states, espain and colombia. It just can filter up to 5 countries.
-    geoMethods.autocompletePlace(query: 'place streets or reference');
+    // // It will search in unite states, espain and colombia. It just can filter up to 5 countries.
+    // geoMethods.autocompletePlace(query: 'place streets or reference');
 
-    geoMethods.geoLocatePlace(coords: coords);
+    // geoMethods.geoLocatePlace(coords: coords);
 
-    geoMethods.getPlaceGeometry(
-      reference: 'place streets',
-      placeId: 'ajFDN3662fNsa4hhs42FAjeb5n',
-    );
+    // geoMethods.getPlaceGeometry(
+    //   reference: 'place streets',
+    //   placeId: 'ajFDN3662fNsa4hhs42FAjeb5n',
+    // );
 
-    var initialAddress = Address.fromCoords(coords: coords);
+    // var initialAddress = Address.fromCoords(coords: coords);
 
     // TODO: implement build
     return Scaffold(
@@ -104,35 +107,42 @@ class _Restaurante extends State<addRestaurant> {
                       Center(
                         child: Text("Endereço"),
                       ),
-                      AddressLocator(
-                        coords: coords,
-                        geoMethods: geoMethods,
-                        controller: controller,
-                        child: TextField(
-                          controller: controller,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: 'Endereco',
-                          ),
-                          onTap: () => showDialog(
-                            context: context,
-                            builder: (BuildContext context) =>
-                                AddressSearchDialog(
-                                    controller: controller,
-                                    geoMethods: geoMethods,
-                                    onDone: (Address address) =>
-                                        initialAddress = address),
-                          ),
+                      TextField(
+                        controller: initialAddress,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: 'Endereco',
                         ),
                       ),
+                      // AddressLocator(
+                      //   coords: coords,
+                      //   geoMethods: geoMethods,
+                      //   controller: controller,
+                      //   child: TextField(
+                      //     controller: controller,
+                      //     decoration: InputDecoration(
+                      //       border: OutlineInputBorder(),
+                      //       hintText: 'Endereco',
+                      //     ),
+                      //     onTap: () => showDialog(
+                      //       context: context,
+                      //       builder: (BuildContext context) =>
+                      //           AddressSearchDialog(
+                      //               controller: controller,
+                      //               geoMethods: geoMethods,
+                      //               onDone: (Address address) =>
+                      //                   initialAddress = address),
+                      //     ),
+                      //   ),
+                      // ),
                       ElevatedButton(
                           onPressed: () {
                             //algo
-                            ref.set({
-                              "name": nameController,
+                            ref.add({
+                              "name": nameController.text,
                               "type": tipo,
                               "isVegan": veggie,
-                              "address": initialAddress
+                              "address": initialAddress.text
                             }).then((value) {
                               Navigator.pop(context);
                             });

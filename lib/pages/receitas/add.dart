@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:material_tag_editor/tag_editor.dart';
 
@@ -35,7 +34,7 @@ class _Receita extends State<addReceita> {
 
   @override
   Widget build(BuildContext context) {
-    DatabaseReference ref = FirebaseDatabase.instance.ref("recipes");
+    CollectionReference ref = FirebaseFirestore.instance.collection("recipes");
 
     // TODO: implement build
     return Scaffold(
@@ -99,10 +98,10 @@ class _Receita extends State<addReceita> {
                       ElevatedButton(
                           onPressed: () {
                             //algo
-                            ref.set({
+                            ref.add({
                               "name": name,
                               "type": tipo,
-                              "ingredients": ingredients.toString()
+                              "ingredients": ingredients
                             }).then((value) {
                               Navigator.pop(context);
                             });

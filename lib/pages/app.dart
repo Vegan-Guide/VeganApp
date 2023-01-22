@@ -15,7 +15,9 @@ class App extends StatefulWidget {
   State<App> createState() => _LoginState();
 }
 
-class _LoginState extends State<App> {
+class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
