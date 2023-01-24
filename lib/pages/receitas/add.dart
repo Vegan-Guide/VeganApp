@@ -99,7 +99,7 @@ class _Receita extends State<addReceita> {
                           onPressed: () {
                             //algo
                             ref.add({
-                              "name": name,
+                              "name": name.text,
                               "type": tipo,
                               "ingredients": ingredients
                             }).then((value) {
