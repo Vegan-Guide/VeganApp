@@ -20,49 +20,36 @@ class RecipeDetail extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.done) {
               Map<String, dynamic> data =
                   snapshot.data!.data() as Map<String, dynamic>;
-              return Center(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 154, 179, 162),
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Text(
+                      "Nome: ${(data['name'] ?? "")}",
+                      style: TextStyle(fontSize: 25),
+                    ),
                   ),
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  height: 100,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Center(
-                          child: Column(
-                        children: [
-                          Center(
-                            child: Row(
-                              children: [
-                                Text("Nome: "),
-                                Text(data['name'] ?? "")
-                              ],
-                            ),
-                          ),
-                          Center(
-                            child: Row(
-                              children: [
-                                Text("Tipo: "),
-                                Text(data['type'] ?? "Não Informado")
-                              ],
-                            ),
-                          ),
-                          Center(
-                            child: Row(
-                              children: [
-                                Text("Ingredientes: "),
-                                Text(data['ingredients'].toString())
-                              ],
-                            ),
-                          ),
-                        ],
-                      ))
-                    ],
+                  Center(
+                    child: Text("Tipo: ${(data['type'] ?? "Não Informado")}"),
                   ),
-                ),
+                  Center(
+                    child: Text(
+                        "Ingredientes: ${(data['ingredients'].toString())}"),
+                    // child: Row(
+                    //   children: [
+                    //     Text("Ingredientes: "),
+                    //     ListView.builder(
+                    //         itemCount: (data['ingredients'] ?? []).length,
+                    //         itemBuilder: ((context, index) {
+                    //           return ListTile(
+                    //             title: Text(data['ingredients'][index] ?? ""),
+                    //           );
+                    //         }))
+                    //   ],
+                    // ),
+                  ),
+                ],
               );
             }
             return Text("Loading...");

@@ -20,56 +20,26 @@ class RestaurantDetail extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.done) {
               Map<String, dynamic> data =
                   snapshot.data!.data() as Map<String, dynamic>;
-              return Center(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 154, 179, 162),
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Text(
+                      "Nome: ${(data['name'] ?? "")}",
+                      style: TextStyle(fontSize: 25),
+                    ),
                   ),
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  height: 100,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Center(
-                          child: Column(
-                        children: [
-                          Center(
-                            child: Row(
-                              children: [
-                                Text("Nome: "),
-                                Text(data['name'] ?? "")
-                              ],
-                            ),
-                          ),
-                          Center(
-                            child: Row(
-                              children: [
-                                Text("Tipo: "),
-                                Text(data['type'] ?? "Não Cadastrado")
-                              ],
-                            ),
-                          ),
-                          Center(
-                            child: Row(
-                              children: [
-                                Text("Endereço:"),
-                                Text(data['address'] ?? "")
-                              ],
-                            ),
-                          ),
-                          Center(
-                              child: Row(
-                            children: [
-                              Text("Totalmente Vegano: "),
-                              Text(data['vegan'] ? "Sim" : "Não")
-                            ],
-                          )),
-                        ],
-                      ))
-                    ],
+                  Center(
+                    child: Text("Tipo: ${(data['type'] ?? "Não Informado")}"),
                   ),
-                ),
+                  Center(
+                    child: Text("Endereço: ${(data['address'] ?? "")}"),
+                  ),
+                  Center(
+                      child: Text(
+                          "Totalmente Vegano: ${((data['vegan'] ?? false) ? "Sim" : "Não")}")),
+                ],
               );
             }
             return Text("Loading...");
