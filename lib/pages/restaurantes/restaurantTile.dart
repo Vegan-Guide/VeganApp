@@ -3,7 +3,7 @@ import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import 'package:vegan_app/pages/receitas/recipe.dart';
+import 'package:vegan_app/pages/restaurantes/restaurant.dart';
 
 class getRestaurant extends StatelessWidget {
   final String documentId;
@@ -50,7 +50,7 @@ class getRestaurant extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              RecipeDetail(documentId: documentId)));
+                              RestaurantDetail(documentId: documentId)));
                 },
                 child: Tile(data['name']),
               ),
@@ -68,7 +68,7 @@ class getRestaurant extends StatelessWidget {
         children: [
           Container(
             padding: EdgeInsets.all(2),
-            margin: EdgeInsets.all(5),
+            margin: const EdgeInsets.only(left: 20.0, right: 20.0),
             color: Colors.white,
             width: 100,
             height: 100,

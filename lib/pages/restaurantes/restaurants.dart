@@ -32,7 +32,8 @@ class _Restaurants extends State<Restaurants>
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-        body: Column(children: [
+        body: SingleChildScrollView(
+            child: Column(children: [
           Center(child: Text("Restaurantes", style: TextStyle(fontSize: 25))),
           FutureBuilder(
             future: getRestaurants(),
@@ -52,7 +53,7 @@ class _Restaurants extends State<Restaurants>
               ));
             },
           ),
-        ]),
+        ])),
         floatingActionButton: FloatingActionButton(
             onPressed: () {
               //algo aqui

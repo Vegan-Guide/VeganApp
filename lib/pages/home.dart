@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vegan_app/pages/receitas/recipeTile.dart';
+import 'package:vegan_app/pages/restaurantes/restaurantTile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,6 +15,7 @@ class _Home extends State<HomePage> with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive => true;
 
   List<String> recipes = [];
+  List<String> restaurants = [];
 
   Future getRecipes() async {
     await FirebaseFirestore.instance
@@ -25,13 +27,26 @@ class _Home extends State<HomePage> with AutomaticKeepAliveClientMixin {
             })));
   }
 
+  Future getRestaurants() async {
+    await FirebaseFirestore.instance
+        .collection('restaurants')
+        .get()
+        .then(((values) => values.docs.forEach((value) {
+              print(value);
+              restaurants.add(value.reference.id);
+            })));
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-        body: Column(
+        body: SingleChildScrollView(
+            child: Column(
       children: [
+        Text("Novidades!", style: TextStyle(fontSize: 55)),
         Container(
+          margin: EdgeInsets.all(10),
           width: MediaQuery.of(context).size.width,
           height: 150,
           child: Center(
@@ -44,7 +59,9 @@ class _Home extends State<HomePage> with AutomaticKeepAliveClientMixin {
         Container(
           width: MediaQuery.of(context).size.width,
           child: Column(children: [
-            Center(child: Text("Top Receitas", style: TextStyle(fontSize: 25))),
+            Padding(
+                padding: EdgeInsets.all(5),
+                child: Text("Top Receitas", style: TextStyle(fontSize: 25))),
             FutureBuilder(
               future: getRecipes(),
               builder: (context, snapshot) {
@@ -65,8 +82,36 @@ class _Home extends State<HomePage> with AutomaticKeepAliveClientMixin {
               },
             ),
           ]),
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width,
+          child: Column(children: [
+            Padding(
+                padding: EdgeInsets.all(5),
+                child: Text("Restaurantes pra você conhecer!",
+                    style: TextStyle(fontSize: 25))),
+            FutureBuilder(
+              future: getRestaurants(),
+              builder: (context, snapshot) {
+                return Container(
+                  height: 150,
+                  width: MediaQuery.of(context).size.width,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: restaurants.length,
+                    itemBuilder: (context, index) {
+                      return getRestaurant(
+                          documentId: restaurants[index],
+                          tileWidth: 180,
+                          flexDirection: "vertical");
+                    },
+                  ),
+                );
+              },
+            ),
+          ]),
         )
       ],
-    ));
+    )));
   }
 }

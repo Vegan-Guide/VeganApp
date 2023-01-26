@@ -27,7 +27,9 @@ class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
   ];
 
   void _onItemTapped(int index) {
-    _selectedIndex = index;
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
   Widget build(BuildContext context) {
@@ -43,7 +45,7 @@ class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
         ),
         drawer: Drawer(
             backgroundColor: Color.fromARGB(255, 94, 177, 112),
-            width: MediaQuery.of(context).size.width * 0.7,
+            width: MediaQuery.of(context).size.width * 0.75,
             child: ConfigPage()),
         bottomNavigationBar: BottomNavigationBar(
           items: [
