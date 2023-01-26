@@ -27,9 +27,7 @@ class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
   ];
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    _selectedIndex = index;
   }
 
   Widget build(BuildContext context) {

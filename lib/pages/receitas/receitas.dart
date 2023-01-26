@@ -32,21 +32,24 @@ class _Receitas extends State<Receitas> with AutomaticKeepAliveClientMixin {
     return Scaffold(
         body: Column(children: [
           Center(child: Text("Receitas", style: TextStyle(fontSize: 25))),
-          Expanded(
-            child: FutureBuilder(
-              future: getRecipes(),
-              builder: (context, snapshot) {
-                return ListView.builder(
-                  itemCount: recipes.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: getRecipe(documentId: recipes[index]),
-                    );
-                  },
-                );
-              },
-            ),
-          )
+          FutureBuilder(
+            future: getRecipes(),
+            builder: (context, snapshot) {
+              return Expanded(
+                  child: ListView.builder(
+                itemCount: recipes.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: getRecipe(
+                      documentId: recipes[index],
+                      tileWidth: 0.9,
+                      flexDirection: "horizontal",
+                    ),
+                  );
+                },
+              ));
+            },
+          ),
         ]),
         floatingActionButton: FloatingActionButton(
             onPressed: () {

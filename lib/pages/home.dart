@@ -1,7 +1,30 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:vegan_app/pages/receitas/recipeTile.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  _Home createState() => _Home();
+}
+
+class _Home extends State<HomePage> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  List<String> recipes = [];
+
+  Future getRecipes() async {
+    await FirebaseFirestore.instance
+        .collection('recipes')
+        .get()
+        .then(((values) => values.docs.forEach((value) {
+              print(value);
+              recipes.add(value.reference.id);
+            })));
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -18,43 +41,29 @@ class HomePage extends StatelessWidget {
           )),
           decoration: new BoxDecoration(color: Colors.greenAccent),
         ),
-        TextField(
-          decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            hintText: 'Buscar',
-          ),
-        ),
         Container(
           width: MediaQuery.of(context).size.width,
-          height: 150,
           child: Column(children: [
-            Align(
-              alignment: Alignment.center,
-              child: Text("Top Receitas", style: TextStyle(fontSize: 25)),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: 100,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  Container(
-                      width: 200,
-                      height: 100,
-                      child: Center(child: Text("Receita 1"))),
-                  Container(
-                    width: 200,
-                    height: 100,
-                    child: Center(child: Text("Receita 2")),
+            Center(child: Text("Top Receitas", style: TextStyle(fontSize: 25))),
+            FutureBuilder(
+              future: getRecipes(),
+              builder: (context, snapshot) {
+                return Container(
+                  height: 150,
+                  width: MediaQuery.of(context).size.width,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: recipes.length,
+                    itemBuilder: (context, index) {
+                      return getRecipe(
+                          documentId: recipes[index],
+                          tileWidth: 180,
+                          flexDirection: "vertical");
+                    },
                   ),
-                  Container(
-                    width: 200,
-                    height: 100,
-                    child: Center(child: Text("Receita 3")),
-                  )
-                ],
-              ),
-            )
+                );
+              },
+            ),
           ]),
         )
       ],
