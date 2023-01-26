@@ -18,38 +18,57 @@ class App extends StatefulWidget {
 class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
+  int _selectedIndex = 0;
   @override
+  static List<Widget> _widgetOptions = <Widget>[
+    HomePage(),
+    Restaurants(),
+    Receitas()
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   Widget build(BuildContext context) {
     // TODO: implement build
-    return MaterialApp(
-        theme: ThemeData(
-          appBarTheme: AppBarTheme(
-            color: Color.fromARGB(255, 94, 177, 112),
-          ),
+    return Scaffold(
+        body: Center(
+          child: _widgetOptions.elementAt(_selectedIndex),
         ),
-        home: DefaultTabController(
-            length: 4,
-            child: Scaffold(
-              appBar: AppBar(
-                  title: Text("VeganApp"),
-                  bottom: TabBar(tabs: [
-                    Tab(
-                      text: "Home",
-                      icon: Icon(Icons.home),
-                    ),
-                    Tab(text: "Restaurantes", icon: Icon(Icons.restaurant)),
-                    Tab(text: "Receitas", icon: Icon(Icons.restaurant_menu)),
-                    Tab(
-                      text: "Configurações",
-                      icon: Icon(Icons.build),
-                    )
-                  ])),
-              body: TabBarView(children: [
-                Center(child: HomePage()),
-                Center(child: Restaurants()),
-                Center(child: Receitas()),
-                Center(child: ConfigPage())
-              ]),
-            )));
+        appBar: AppBar(
+          title: Text("Vegan Guide"),
+          actions: [Center(child: Text("PESQUISA"))],
+          backgroundColor: Color.fromARGB(255, 94, 177, 112),
+        ),
+        drawer: Drawer(
+            backgroundColor: Color.fromARGB(255, 94, 177, 112),
+            width: MediaQuery.of(context).size.width * 0.7,
+            child: ConfigPage()),
+        bottomNavigationBar: BottomNavigationBar(
+          items: [
+            BottomNavigationBarItem(
+              backgroundColor: Color.fromARGB(255, 82, 153, 97),
+              label: "Home",
+              icon: Icon(Icons.home),
+            ),
+            BottomNavigationBarItem(
+              backgroundColor: Color.fromARGB(255, 82, 153, 97),
+              label: "Restaurantes",
+              icon: Icon(Icons.restaurant),
+            ),
+            BottomNavigationBarItem(
+              backgroundColor: Color.fromARGB(255, 82, 153, 97),
+              label: "Receitas",
+              icon: Icon(Icons.restaurant_menu),
+            )
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Color.fromARGB(255, 198, 223, 209),
+          backgroundColor: Color.fromARGB(255, 94, 177, 112),
+          onTap: _onItemTapped,
+        ));
   }
 }

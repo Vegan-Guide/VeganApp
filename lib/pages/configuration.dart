@@ -13,19 +13,30 @@ class ConfigPage extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
+        Container(
+          width: 100,
+          height: 100,
+          color: Colors.white,
+          child: Center(child: Text("FOTO")),
+        ),
         Center(
             child: Text(FirebaseAuth.instance.currentUser?.displayName ?? "",
-                style: TextStyle(fontSize: 20))),
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white))),
         Center(
             child: GestureDetector(
                 onTap: (() {
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (context) => Profile()));
                 }),
-                child: Text("Perfil"))),
-        Center(child: Text("Amigos")),
-        Center(child: Text("Localização")),
-        Center(child: Text("Meus Pratos")),
+                child: Text("Perfil", style: TextStyle(color: Colors.white)))),
+        Center(child: Text("Amigos", style: TextStyle(color: Colors.white))),
+        Center(
+            child: Text("Localização", style: TextStyle(color: Colors.white))),
+        Center(
+            child: Text("Meus Pratos", style: TextStyle(color: Colors.white))),
         ElevatedButton(
           onPressed: () {
             FirebaseAuth.instance.signOut().then((value) => {
