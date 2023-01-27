@@ -26,7 +26,9 @@ class _Home extends State<HomePage> with AutomaticKeepAliveClientMixin {
         .get()
         .then(((values) => values.docs.forEach((value) {
               print(value);
-              recipes.add(value.reference.id);
+              if (!recipes.contains(value.reference.id)) {
+                recipes.add(value.reference.id);
+              }
             })));
   }
 
@@ -37,7 +39,9 @@ class _Home extends State<HomePage> with AutomaticKeepAliveClientMixin {
         .get()
         .then(((values) => values.docs.forEach((value) {
               print(value);
-              restaurants.add(value.reference.id);
+              if (!restaurants.contains(value.reference.id)) {
+                restaurants.add(value.reference.id);
+              }
             })));
   }
 

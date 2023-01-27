@@ -5,14 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:material_tag_editor/tag_editor.dart';
 
-List<String> list = <String>[
-  "Massa",
-  "Pratos quentes",
-  "Leite",
-  "Pães",
-  "Doces"
-];
-
 class addReceita extends StatefulWidget {
   const addReceita({super.key});
 
@@ -21,10 +13,45 @@ class addReceita extends StatefulWidget {
 }
 
 class _Receita extends State<addReceita> {
+  @override
   final name = TextEditingController();
   List<String> ingredients = [];
   bool veggie = false;
-  String tipo = list.first;
+  String tipo = "";
+
+  List<String> categories = <String>[];
+
+  Future getCategories() async {
+    print("getting categories");
+    await FirebaseFirestore.instance
+        .collection('categories')
+        .get()
+        .then((value) => value.docs.forEach((element) async {
+              await getCategorieName(element.reference.id);
+              tipo = categories.first;
+            }));
+    print("categories list");
+    print(categories);
+  }
+
+  Future getCategorieName(id) async {
+    CollectionReference ref =
+        FirebaseFirestore.instance.collection('categories');
+    final doc = ref.doc(id).get();
+    return await doc.then((value) => {
+          value.reference.snapshots().forEach((element) {
+            Map<String, dynamic> data = element.data() as Map<String, dynamic>;
+            String name = data["name"];
+            if (categories.contains(name) == false) {
+              setState(() {
+                categories.add(name);
+              });
+            }
+            print(categories);
+            return data["name"];
+          })
+        });
+  }
 
   _onDelete(index) {
     setState(() {
@@ -62,19 +89,22 @@ class _Receita extends State<addReceita> {
                       Center(
                         child: Text("Tipo da receita"),
                       ),
-                      DropdownButton(
-                        items:
-                            list.map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                              value: value, child: Text(value));
-                        }).toList(),
-                        value: tipo,
-                        onChanged: (value) {
-                          setState(() {
-                            tipo = value!;
-                          });
-                        },
-                      ),
+                      FutureBuilder(
+                          future: getCategories(),
+                          builder: ((context, snapshot) {
+                            return DropdownButton(
+                                items: categories
+                                    .map<DropdownMenuItem<String>>((String e) =>
+                                        DropdownMenuItem(
+                                            value: e, child: Text(e)))
+                                    .toList(),
+                                value: tipo,
+                                onChanged: (value) {
+                                  setState(() {
+                                    tipo = value!;
+                                  });
+                                });
+                          })),
                       Center(child: Text("Ingrediente")),
                       TagEditor(
                         length: ingredients.length,

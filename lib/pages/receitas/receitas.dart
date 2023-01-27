@@ -23,7 +23,9 @@ class _Receitas extends State<Receitas> with AutomaticKeepAliveClientMixin {
         .collection('recipes')
         .get()
         .then(((values) => values.docs.forEach((value) {
-              recipes.add(value.reference.id);
+              if (!recipes.contains(value.reference.id)) {
+                recipes.add(value.reference.id);
+              }
             })));
   }
 
@@ -32,7 +34,9 @@ class _Receitas extends State<Receitas> with AutomaticKeepAliveClientMixin {
         .collection('categories')
         .get()
         .then(((values) => values.docs.forEach((value) {
-              categories.add(value.reference.id);
+              if (!categories.contains(value.reference.id)) {
+                categories.add(value.reference.id);
+              }
             })));
   }
 
