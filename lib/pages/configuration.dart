@@ -14,21 +14,32 @@ class ConfigPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Column(children: [
-          Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-            Container(
-              width: 100,
-              height: 100,
-              color: Colors.white,
-              child: Center(child: Text("FOTO")),
-            ),
-            Center(
-                child: Text(
-                    FirebaseAuth.instance.currentUser?.displayName ?? "",
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white)))
-          ]),
+          Container(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                Container(
+                  margin: EdgeInsets.all(8.0),
+                  width: 100,
+                  height: 100,
+                  color: Colors.white,
+                  child: Center(child: Text("FOTO")),
+                ),
+                Center(
+                    child: Expanded(
+                        child: Text(
+                            (FirebaseAuth.instance.currentUser?.displayName ??
+                                "Usuário"),
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                overflow: TextOverflow.ellipsis,
+                                color: Colors.white)))),
+                Divider(
+                  height: 20,
+                  thickness: 5,
+                )
+              ])),
           Column(children: [
             Container(
                 height: 50,

@@ -30,8 +30,7 @@ class _Receitas extends State<Receitas> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-        body: SingleChildScrollView(
-            child: Column(children: [
+        body: Column(children: [
           Center(child: Text("Receitas", style: TextStyle(fontSize: 25))),
           FutureBuilder(
             future: getRecipes(),
@@ -51,7 +50,7 @@ class _Receitas extends State<Receitas> with AutomaticKeepAliveClientMixin {
               ));
             },
           ),
-        ])),
+        ]),
         floatingActionButton: FloatingActionButton(
             onPressed: () {
               //algo aqui

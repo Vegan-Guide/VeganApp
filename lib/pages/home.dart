@@ -20,6 +20,7 @@ class _Home extends State<HomePage> with AutomaticKeepAliveClientMixin {
   Future getRecipes() async {
     await FirebaseFirestore.instance
         .collection('recipes')
+        .limit(10)
         .get()
         .then(((values) => values.docs.forEach((value) {
               print(value);
@@ -30,6 +31,7 @@ class _Home extends State<HomePage> with AutomaticKeepAliveClientMixin {
   Future getRestaurants() async {
     await FirebaseFirestore.instance
         .collection('restaurants')
+        .limit(10)
         .get()
         .then(((values) => values.docs.forEach((value) {
               print(value);

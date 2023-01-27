@@ -35,9 +35,13 @@ class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-        body: Center(
-          child: _widgetOptions.elementAt(_selectedIndex),
+        body: IndexedStack(
+          children: _widgetOptions,
+          index: _selectedIndex,
         ),
+        // Center(
+        //   child: _widgetOptions.elementAt(_selectedIndex),
+        // ),
         appBar: AppBar(
           title: Text("Vegan Guide"),
           actions: [Center(child: Text("PESQUISA"))],
