@@ -21,19 +21,27 @@ class RecipeDetail extends StatelessWidget {
               Map<String, dynamic> data =
                   snapshot.data!.data() as Map<String, dynamic>;
               return Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Center(
+                  Container(
+                    margin: EdgeInsets.all(10.0),
+                    width: MediaQuery.of(context).size.width,
+                    height: 100,
+                  ),
+                  Container(
+                    margin: EdgeInsets.all(10.0),
                     child: Text(
                       "Nome: ${(data['name'] ?? "")}",
                       style: TextStyle(fontSize: 25),
                     ),
                   ),
-                  Center(
+                  Container(
+                    margin: EdgeInsets.all(5.0),
                     child: Text("Tipo: ${(data['type'] ?? "Não Informado")}"),
                   ),
-                  Center(
+                  Container(
+                    margin: EdgeInsets.all(5.0),
                     child: Text(
                         "Ingredientes: ${(data['ingredients'].toString())}"),
                     // child: Row(

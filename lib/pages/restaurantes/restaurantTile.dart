@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -28,6 +26,7 @@ class getRestaurant extends StatelessWidget {
             Map<String, dynamic> data =
                 snapshot.data!.data() as Map<String, dynamic>;
             return Container(
+              margin: EdgeInsets.all(5.00),
               width: ((tileWidth < 1.00)
                   ? MediaQuery.of(context).size.width * tileWidth
                   : tileWidth),
@@ -37,8 +36,8 @@ class getRestaurant extends StatelessWidget {
                 boxShadow: [
                   BoxShadow(
                     color: Color.fromARGB(0, 0, 0, 0).withAlpha(10),
-                    blurRadius: 4,
-                    offset: Offset(4, 8), // Shadow position
+                    blurRadius: 2,
+                    offset: Offset(2, 4), // Shadow position
                   ),
                 ],
               ),
@@ -67,8 +66,7 @@ class getRestaurant extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            padding: EdgeInsets.all(2),
-            margin: const EdgeInsets.only(left: 20.0, right: 20.0),
+            margin: EdgeInsets.all(5),
             color: Colors.white,
             width: 100,
             height: 100,
@@ -83,14 +81,13 @@ class getRestaurant extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            padding: EdgeInsets.all(5),
             margin: EdgeInsets.all(5),
             color: Colors.white,
             width: 100,
             height: 100,
             child: Center(child: Text("FOTO")),
           ),
-          Text(name),
+          Expanded(child: Center(child: Text(name))),
         ],
       );
     }

@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -28,6 +26,8 @@ class getRecipe extends StatelessWidget {
             Map<String, dynamic> data =
                 snapshot.data!.data() as Map<String, dynamic>;
             return Container(
+              margin: EdgeInsets.all(5.00),
+              padding: EdgeInsets.all(2.00),
               width: ((tileWidth < 1.00)
                   ? MediaQuery.of(context).size.width * tileWidth
                   : tileWidth),
@@ -90,7 +90,7 @@ class getRecipe extends StatelessWidget {
             height: 100,
             child: Center(child: Text("FOTO")),
           ),
-          Text(name),
+          Expanded(child: Center(child: Text(name))),
         ],
       );
     }

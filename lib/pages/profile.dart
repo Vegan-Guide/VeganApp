@@ -8,10 +8,12 @@ class Profile extends StatelessWidget {
     final user = FirebaseAuth.instance.currentUser;
 
     final name = TextEditingController();
+    final email = TextEditingController();
+    final username = TextEditingController();
+
     if (user?.displayName != null) {
       name.text = (user?.displayName).toString();
     }
-    final email = TextEditingController();
     if (user?.email != null) {
       email.text = (user?.email).toString();
     }
@@ -20,35 +22,61 @@ class Profile extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text("Editar perfil")),
       body: Card(
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Center(
-            child: Text("Nome"),
-          ),
-          TextField(
-            controller: name,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              hintText: 'Seu nome',
-            ),
-          ),
-          Center(
-            child: Text("Email"),
-          ),
-          TextField(
-            controller: email,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              hintText: 'example@example.com',
-            ),
-          ),
-          ElevatedButton(
-              onPressed: () {
-                user?.updateDisplayName(name.text);
-                user?.updateEmail(email.text);
-                Navigator.pop(context);
-              },
-              child: Text("Editar"))
-        ]),
+        child: Container(
+          margin: EdgeInsets.all(10.0),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Center(
+                  child: Text(
+                    "Perfil",
+                    style: TextStyle(fontSize: 25),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(15.0),
+                  child: Text("Nome"),
+                ),
+                TextField(
+                  controller: name,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Seu nome',
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(15.0),
+                  child: Text("Usuário"),
+                ),
+                TextField(
+                  controller: username,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Seu usuário',
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(15.0),
+                  child: Text("Email"),
+                ),
+                TextField(
+                  controller: email,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'example@example.com',
+                  ),
+                ),
+                Center(
+                    child: ElevatedButton(
+                        onPressed: () {
+                          user?.updateDisplayName(name.text);
+                          user?.updateEmail(email.text);
+                          Navigator.pop(context);
+                        },
+                        child: Text("Editar")))
+              ]),
+        ),
       ),
     );
   }

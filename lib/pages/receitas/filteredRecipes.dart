@@ -1,30 +1,32 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vegan_app/pages/receitas/add.dart';
+import 'package:vegan_app/pages/receitas/categorieTile.dart';
+import 'package:vegan_app/pages/receitas/recipeTile.dart';
 
-import 'package:vegan_app/pages/restaurantes/add.dart';
-import 'package:vegan_app/pages/restaurantes/restaurantTile.dart';
+class FilteredRecipes extends StatefulWidget {
+  final String category;
+  const FilteredRecipes({required this.category});
 
-class Restaurants extends StatefulWidget {
-  const Restaurants({super.key});
-
-  _Restaurants createState() => _Restaurants();
+  _Receitas createState() => _Receitas();
 }
 
-class _Restaurants extends State<Restaurants>
+class _Receitas extends State<FilteredRecipes>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
-  List<String> restaurants = [];
+  List<String> recipes = [];
+  List<String> categories = [];
 
-  Future getRestaurants() async {
+  Future getRecipes() async {
     await FirebaseFirestore.instance
-        .collection('restaurants')
+        .collection('recipes')
+        .where("type", isEqualTo: widget.category)
         .get()
         .then(((values) => values.docs.forEach((value) {
-              print(value);
-              restaurants.add(value.reference.id);
+              recipes.add(value.reference.id);
             })));
   }
 
@@ -32,24 +34,24 @@ class _Restaurants extends State<Restaurants>
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+        appBar: AppBar(title: Text("Receitas")),
         body: RefreshIndicator(
             onRefresh: () {
               setState(() {});
-              return getRestaurants();
+              return getRecipes();
             },
             child: Column(children: [
-              Center(
-                  child: Text("Restaurantes", style: TextStyle(fontSize: 25))),
+              Center(child: Text("Receitas", style: TextStyle(fontSize: 30))),
               FutureBuilder(
-                future: getRestaurants(),
+                future: getRecipes(),
                 builder: (context, snapshot) {
                   return Expanded(
                       child: ListView.builder(
-                    itemCount: restaurants.length,
+                    itemCount: recipes.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        title: getRestaurant(
-                          documentId: restaurants[index],
+                        title: getRecipe(
+                          documentId: recipes[index],
                           tileWidth: 0.9,
                           flexDirection: "horizontal",
                         ),
@@ -63,7 +65,7 @@ class _Restaurants extends State<Restaurants>
             onPressed: () {
               //algo aqui
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => addRestaurant()));
+                  MaterialPageRoute(builder: (context) => addReceita()));
             },
             child: Icon(Icons.add)));
   }

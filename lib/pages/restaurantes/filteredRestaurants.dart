@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,7 +7,9 @@ import 'package:vegan_app/pages/restaurantes/add.dart';
 import 'package:vegan_app/pages/restaurantes/restaurantTile.dart';
 
 class Restaurants extends StatefulWidget {
-  const Restaurants({super.key});
+  final String category;
+
+  const Restaurants({required this.category});
 
   _Restaurants createState() => _Restaurants();
 }
@@ -21,6 +24,7 @@ class _Restaurants extends State<Restaurants>
   Future getRestaurants() async {
     await FirebaseFirestore.instance
         .collection('restaurants')
+        .where("type", isEqualTo: widget.category)
         .get()
         .then(((values) => values.docs.forEach((value) {
               print(value);
@@ -32,6 +36,7 @@ class _Restaurants extends State<Restaurants>
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+        appBar: AppBar(title: Text("Restaurantes")),
         body: RefreshIndicator(
             onRefresh: () {
               setState(() {});

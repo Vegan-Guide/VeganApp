@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -40,43 +39,56 @@ class ConfigPage extends StatelessWidget {
                   thickness: 5,
                 )
               ])),
-          Column(children: [
-            Container(
-                height: 50,
-                child: Center(
-                    child: GestureDetector(
-                        onTap: (() {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => Profile()));
-                        }),
-                        child: Text("Perfil",
-                            style: TextStyle(color: Colors.white))))),
-            Container(
-                height: 50,
-                child: Center(
-                    child:
-                        Text("Amigos", style: TextStyle(color: Colors.white)))),
-            Container(
-                height: 50,
-                child: Center(
-                    child: Text("Localização",
-                        style: TextStyle(color: Colors.white)))),
-            Container(
-                height: 50,
-                child: Center(
-                    child: Text("Meus Pratos",
-                        style: TextStyle(color: Colors.white))))
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            ListTile(
+                title: Row(children: [
+              Icon(Icons.person),
+              Padding(
+                  padding: EdgeInsets.all(10.00),
+                  child: Center(
+                      child: GestureDetector(
+                          onTap: (() {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => Profile()));
+                          }),
+                          child: Text("Perfil",
+                              style: TextStyle(color: Colors.white)))))
+            ])),
+            ListTile(
+                title: Row(children: [
+              Icon(Icons.group),
+              Padding(
+                  padding: EdgeInsets.all(10.00),
+                  child: Center(
+                      child: Text("Amigos",
+                          style: TextStyle(color: Colors.white))))
+            ])),
+            ListTile(
+                title: Row(children: [
+              Icon(Icons.restaurant_menu),
+              Padding(
+                  padding: EdgeInsets.all(10.00),
+                  child: Center(
+                      child: Text("Meus Pratos",
+                          style: TextStyle(color: Colors.white))))
+            ]))
           ])
         ]),
-        ElevatedButton(
-          onPressed: () {
-            FirebaseAuth.instance.signOut().then((value) => {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => LoginPage()))
-                });
-          },
-          child: Text("Logout"),
-        )
+        Container(
+            margin: EdgeInsets.all(10.00),
+            child: ElevatedButton(
+              onPressed: () {
+                FirebaseAuth.instance.signOut().then((value) => {
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) => LoginPage()))
+                    });
+              },
+              child: Row(children: [
+                Padding(
+                    padding: EdgeInsets.all(2.00), child: Icon(Icons.settings)),
+                Text("Logout")
+              ]),
+            ))
       ],
     );
   }
