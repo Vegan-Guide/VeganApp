@@ -19,12 +19,17 @@ class _Home extends State<HomePage> with AutomaticKeepAliveClientMixin {
   List<String> recipes = [];
   List<String> restaurants = [];
 
+  final filterRating = 3.5;
+
   Future getRecipes() async {
     await FirebaseFirestore.instance
         .collection('recipes')
+        .orderBy("totalReviews", descending: true)
         .limit(10)
         .get()
-        .then(((values) => values.docs.forEach((value) {
+        .then(((values) => values.docs
+                .where((element) => element["averageReview"] >= filterRating)
+                .forEach((value) {
               print(value);
               if (!recipes.contains(value.reference.id)) {
                 recipes.add(value.reference.id);
@@ -35,9 +40,12 @@ class _Home extends State<HomePage> with AutomaticKeepAliveClientMixin {
   Future getRestaurants() async {
     await FirebaseFirestore.instance
         .collection('restaurants')
+        .orderBy("totalReviews", descending: true)
         .limit(10)
         .get()
-        .then(((values) => values.docs.forEach((value) {
+        .then(((values) => values.docs
+                .where((element) => element["averageReview"] >= filterRating)
+                .forEach((value) {
               print(value);
               if (!restaurants.contains(value.reference.id)) {
                 restaurants.add(value.reference.id);
@@ -67,7 +75,8 @@ class _Home extends State<HomePage> with AutomaticKeepAliveClientMixin {
           ),
           Container(
             width: MediaQuery.of(context).size.width,
-            child: Column(children: [
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Padding(
                   padding: EdgeInsets.all(5),
                   child: Text("Top Receitas", style: TextStyle(fontSize: 25))),

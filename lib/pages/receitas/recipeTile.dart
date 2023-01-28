@@ -70,7 +70,10 @@ class getRecipe extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(2),
             margin: const EdgeInsets.only(left: 20.0, right: 20.0),
-            color: Colors.white,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.0),
+              color: Colors.white,
+            ),
             width: 100,
             height: 100,
             child: Center(child: Text("FOTO")),
@@ -86,7 +89,10 @@ class getRecipe extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(5),
             margin: EdgeInsets.all(5),
-            color: Colors.white,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.0),
+              color: Colors.white,
+            ),
             width: 100,
             height: 100,
             child: Center(child: Text("FOTO")),

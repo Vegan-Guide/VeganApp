@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +13,24 @@ class Profile extends StatelessWidget {
     final name = TextEditingController();
     final email = TextEditingController();
     final username = TextEditingController();
+
+    Future getUserData() async {
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(user?.uid)
+          .get()
+          .then(
+        (value) {
+          value.reference.snapshots().first.then((value) => ((element) {
+                Map<String, dynamic> data =
+                    element.data() as Map<String, dynamic>;
+                print("username");
+                print(username);
+                username.text = data["username"];
+              }));
+        },
+      );
+    }
 
     if (user?.displayName != null) {
       name.text = (user?.displayName).toString();
@@ -24,10 +45,11 @@ class Profile extends StatelessWidget {
       body: Card(
         child: Container(
           margin: EdgeInsets.all(10.0),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
+          child: Expanded(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
                 Center(
                   child: Text(
                     "Perfil",
@@ -49,13 +71,17 @@ class Profile extends StatelessWidget {
                   padding: EdgeInsets.all(15.0),
                   child: Text("Usuário"),
                 ),
-                TextField(
-                  controller: username,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Seu usuário',
-                  ),
-                ),
+                FutureBuilder(
+                    future: getUserData(),
+                    builder: ((context, snapshot) {
+                      return TextField(
+                        controller: username,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: 'Seu usuário',
+                        ),
+                      );
+                    })),
                 Padding(
                   padding: EdgeInsets.all(15.0),
                   child: Text("Email"),
@@ -69,13 +95,19 @@ class Profile extends StatelessWidget {
                 ),
                 Center(
                     child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           user?.updateDisplayName(name.text);
                           user?.updateEmail(email.text);
+
+                          await FirebaseFirestore.instance
+                              .collection("users")
+                              .doc(user?.uid)
+                              .set({"username": username.text});
+
                           Navigator.pop(context);
                         },
                         child: Text("Editar")))
-              ]),
+              ])),
         ),
       ),
     );

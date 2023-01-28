@@ -68,38 +68,44 @@ class _Rating extends State<Rating> {
     CollectionReference ref = FirebaseFirestore.instance.collection(collection);
     final doc = ref.doc(id);
 
-    var data1 = doc.get().then((value) => value.data());
-
-    print("data1");
-    print(data1);
-
     await doc.get().then((value) async => {
-          await value.reference.snapshots().forEach((element) async {
-            Map<String, dynamic> data = element.data() as Map<String, dynamic>;
-            List reviewsList = data['reviews'] ?? [];
-            if (reviewsList.length > 0) {
-              final index = reviewsList.indexWhere((review) =>
-                  review["userId"] == FirebaseAuth.instance.currentUser?.uid);
-              if (index >= 0) {
-                reviewsList[index]["rating"] = newRatingReceived;
+          await value.reference.snapshots().first.then(
+            (element) async {
+              Map<String, dynamic> data =
+                  element.data() as Map<String, dynamic>;
+              List reviewsList = data['reviews'] ?? [];
+              if (reviewsList.length > 0) {
+                final index = reviewsList.indexWhere((review) =>
+                    review["userId"] == FirebaseAuth.instance.currentUser?.uid);
+                if (index >= 0) {
+                  reviewsList[index]["rating"] = newRatingReceived;
+                } else {
+                  reviewsList.add({
+                    "userId": FirebaseAuth.instance.currentUser?.uid,
+                    "rating": newRatingReceived
+                  });
+                }
               } else {
                 reviewsList.add({
                   "userId": FirebaseAuth.instance.currentUser?.uid,
                   "rating": newRatingReceived
                 });
               }
-            } else {
-              reviewsList.add({
-                "userId": FirebaseAuth.instance.currentUser?.uid,
-                "rating": newRatingReceived
-              });
-            }
-            print("reviewsList");
-            print(reviewsList);
-            data['reviews'] = reviewsList;
-            await doc.set(data);
-            setState(() {});
-          })
+              print("reviewsList");
+              print(reviewsList);
+              data['reviews'] = reviewsList;
+              data['totalReviews'] = reviewsList
+                  .map((e) => e["rating"])
+                  .reduce((value, element) => value + element);
+              data['quantityReviews'] = reviewsList.length;
+              data['averageReview'] = reviewsList
+                      .map((e) => e["rating"])
+                      .reduce((value, element) => value + element) /
+                  reviewsList.length;
+              await doc.set(data);
+              setState(() {});
+            },
+          )
         });
   }
 }

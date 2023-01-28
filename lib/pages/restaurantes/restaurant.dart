@@ -30,13 +30,13 @@ class _RestaurantDetail extends State<RestaurantDetail> {
               List totalReviews = data["reviews"] ?? [];
               return Column(
                 mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     width: MediaQuery.of(context).size.width,
                     height: 250,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
@@ -46,12 +46,32 @@ class _RestaurantDetail extends State<RestaurantDetail> {
                               child:
                                   Text("FOTO", style: TextStyle(fontSize: 25))),
                         ),
-                        Padding(
-                            padding: EdgeInsets.all(5.0),
-                            child: Text(
-                              "Nome: ${(data['name'] ?? "")}",
-                              style: TextStyle(fontSize: 25),
-                            )),
+                        Row(
+                          children: [
+                            Padding(
+                                padding: EdgeInsets.all(5.0),
+                                child: Text(
+                                  "Nome: ${(data['name'] ?? "")}",
+                                  style: TextStyle(fontSize: 25),
+                                )),
+                            Container(
+                              child: ((data['isVegan'] ?? false)
+                                  ? Icon(Icons.eco)
+                                  : Text("")),
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text("Rating médio: "),
+                            Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: Rating(
+                                    collection: "restaurants",
+                                    totalReviews: totalReviews,
+                                    documentId: widget.documentId)),
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -59,22 +79,26 @@ class _RestaurantDetail extends State<RestaurantDetail> {
                     height: 20,
                     thickness: 5,
                   ),
-                  Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Rating(
-                          type: "detail",
-                          collection: "restaurants",
-                          totalReviews: totalReviews,
-                          documentId: widget.documentId)),
-                  Center(
+                  Row(
+                    children: [
+                      Text("Seu rating: "),
+                      Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Rating(
+                              type: "detail",
+                              collection: "restaurants",
+                              totalReviews: totalReviews,
+                              documentId: widget.documentId)),
+                    ],
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(10.0),
                     child: Text("Tipo: ${(data['type'] ?? "Não Informado")}"),
                   ),
-                  Center(
+                  Container(
+                    padding: EdgeInsets.all(10.0),
                     child: Text("Endereço: ${(data['address'] ?? "")}"),
                   ),
-                  Center(
-                      child: Text(
-                          "Totalmente Vegano: ${((data['isVegan'] ?? false) ? "Sim" : "Não")}")),
                 ],
               );
             }

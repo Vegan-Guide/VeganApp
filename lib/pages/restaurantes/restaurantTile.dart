@@ -68,7 +68,10 @@ class getRestaurant extends StatelessWidget {
         children: [
           Container(
             margin: EdgeInsets.all(5),
-            color: Colors.white,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.0),
+              color: Colors.white,
+            ),
             width: 100,
             height: 100,
             child: Center(child: Text("FOTO")),
@@ -83,7 +86,10 @@ class getRestaurant extends StatelessWidget {
         children: [
           Container(
             margin: EdgeInsets.all(5),
-            color: Colors.white,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.0),
+              color: Colors.white,
+            ),
             width: 100,
             height: 100,
             child: Center(child: Text("FOTO")),

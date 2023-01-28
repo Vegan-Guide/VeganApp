@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:vegan_app/login.dart';
+import 'package:vegan_app/pages/admin/myRecipes.dart';
 import 'package:vegan_app/pages/profile.dart';
 
 class ConfigPage extends StatelessWidget {
@@ -69,8 +70,14 @@ class ConfigPage extends StatelessWidget {
               Padding(
                   padding: EdgeInsets.all(10.00),
                   child: Center(
-                      child: Text("Meus Pratos",
-                          style: TextStyle(color: Colors.white))))
+                      child: GestureDetector(
+                    child: Text("Meus Pratos",
+                        style: TextStyle(color: Colors.white)),
+                    onTap: (() {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => MinhasReceitas()));
+                    }),
+                  )))
             ]))
           ])
         ]),
