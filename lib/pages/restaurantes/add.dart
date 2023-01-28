@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -139,6 +140,8 @@ class _Restaurante extends State<addRestaurant> {
                           onPressed: () {
                             //algo
                             ref.add({
+                              "createdBy":
+                                  FirebaseAuth.instance.currentUser?.uid,
                               "name": nameController.text,
                               "type": tipo,
                               "isVegan": veggie,

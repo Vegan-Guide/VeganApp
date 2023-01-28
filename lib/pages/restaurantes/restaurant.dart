@@ -1,17 +1,18 @@
-import 'dart:async';
-
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:vegan_app/pages/components/rating.dart';
 
-class RestaurantDetail extends StatelessWidget {
+class RestaurantDetail extends StatefulWidget {
   final String documentId;
 
   RestaurantDetail({required this.documentId});
 
+  @override
+  _RestaurantDetail createState() => _RestaurantDetail();
+}
+
+class _RestaurantDetail extends State<RestaurantDetail> {
   @override
   Widget build(BuildContext context) {
     //get collection data
@@ -21,11 +22,12 @@ class RestaurantDetail extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text("Restaurante")),
       body: FutureBuilder<DocumentSnapshot>(
-          future: restaurants.doc(documentId).get(),
+          future: restaurants.doc(widget.documentId).get(),
           builder: ((context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               Map<String, dynamic> data =
                   snapshot.data!.data() as Map<String, dynamic>;
+              List totalReviews = data["reviews"] ?? [];
               return Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -59,23 +61,11 @@ class RestaurantDetail extends StatelessWidget {
                   ),
                   Padding(
                       padding: EdgeInsets.all(10.0),
-                      child: RatingBar.builder(
-                        initialRating: 3,
-                        minRating: 1,
-                        direction: Axis.horizontal,
-                        allowHalfRating: true,
-                        itemCount: 5,
-                        itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                        itemBuilder: (context, _) => Icon(
-                          Icons.star,
-                          color: Colors.amber,
-                        ),
-                        onRatingUpdate: (rating) {
-                          // print(rating);
-                          checkReview(
-                              rating, data['reviews'] ?? [], documentId);
-                        },
-                      )),
+                      child: Rating(
+                          type: "detail",
+                          collection: "restaurants",
+                          totalReviews: totalReviews,
+                          documentId: widget.documentId)),
                   Center(
                     child: Text("Tipo: ${(data['type'] ?? "Não Informado")}"),
                   ),
@@ -92,16 +82,4 @@ class RestaurantDetail extends StatelessWidget {
           })),
     );
   }
-}
-
-void checkReview(double rating, List reviews, id) async {
-  print("id");
-  print(id);
-  print("/restaurants/$id");
-
-  final ref = FirebaseDatabase.instance.ref();
-  final snapshot = await ref.child("/restaurants/$id").get();
-
-  print("snapshot");
-  print(snapshot.value);
 }

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:vegan_app/pages/components/rating.dart';
 
 import 'package:vegan_app/pages/receitas/recipe.dart';
 
@@ -52,7 +53,7 @@ class getRecipe extends StatelessWidget {
                           builder: (context) =>
                               RecipeDetail(documentId: documentId)));
                 },
-                child: Tile(data['name']),
+                child: Tile(data['name'], data['reviews']),
               ),
             );
           }
@@ -60,7 +61,7 @@ class getRecipe extends StatelessWidget {
         }));
   }
 
-  Widget Tile(name) {
+  Widget Tile(name, reviews) {
     if (flexDirection == "vertical") {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -90,7 +91,18 @@ class getRecipe extends StatelessWidget {
             height: 100,
             child: Center(child: Text("FOTO")),
           ),
-          Expanded(child: Center(child: Text(name))),
+          Expanded(
+              child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Text(name),
+              Rating(
+                  collection: "recipes",
+                  documentId: documentId,
+                  totalReviews: reviews ?? [])
+            ],
+          )),
         ],
       );
     }

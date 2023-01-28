@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -17,9 +18,9 @@ class _Receita extends State<addReceita> {
   final name = TextEditingController();
   List<String> ingredients = [];
   bool veggie = false;
-  String tipo = "";
+  String tipo = "Geral";
 
-  List<String> categories = <String>[];
+  List<String> categories = <String>["Geral"];
 
   Future getCategories() async {
     print("getting categories");
@@ -28,7 +29,9 @@ class _Receita extends State<addReceita> {
         .get()
         .then((value) => value.docs.forEach((element) async {
               await getCategorieName(element.reference.id);
-              tipo = categories.first;
+              if (tipo == "") {
+                tipo = categories.first;
+              }
             }));
     print("categories list");
     print(categories);
@@ -129,6 +132,8 @@ class _Receita extends State<addReceita> {
                           onPressed: () {
                             //algo
                             ref.add({
+                              "createdBy":
+                                  FirebaseAuth.instance.currentUser?.uid,
                               "name": name.text,
                               "type": tipo,
                               "ingredients": ingredients

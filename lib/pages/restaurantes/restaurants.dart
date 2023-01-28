@@ -49,6 +49,7 @@ class _Restaurants extends State<Restaurants>
                       child: ListView.builder(
                     itemCount: restaurants.length,
                     itemBuilder: (context, index) {
+                      print(restaurants[index]);
                       return ListTile(
                         title: getRestaurant(
                           documentId: restaurants[index],

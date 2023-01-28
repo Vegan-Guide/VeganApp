@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:vegan_app/pages/components/rating.dart';
 
 import 'package:vegan_app/pages/restaurantes/restaurant.dart';
 
@@ -51,7 +52,7 @@ class getRestaurant extends StatelessWidget {
                           builder: (context) =>
                               RestaurantDetail(documentId: documentId)));
                 },
-                child: Tile(data['name']),
+                child: Tile(data['name'], data["reviews"]),
               ),
             );
           }
@@ -59,7 +60,7 @@ class getRestaurant extends StatelessWidget {
         }));
   }
 
-  Widget Tile(name) {
+  Widget Tile(name, reviews) {
     if (flexDirection == "vertical") {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -87,7 +88,18 @@ class getRestaurant extends StatelessWidget {
             height: 100,
             child: Center(child: Text("FOTO")),
           ),
-          Expanded(child: Center(child: Text(name))),
+          Expanded(
+              child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Text(name),
+              Rating(
+                  collection: "restaurants",
+                  documentId: documentId,
+                  totalReviews: reviews ?? [])
+            ],
+          )),
         ],
       );
     }
