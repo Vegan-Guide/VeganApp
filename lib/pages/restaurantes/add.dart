@@ -74,10 +74,7 @@ class _Restaurante extends State<addRestaurant> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          TextFormField(
-                            validator: (value) => value!.isEmpty
-                                ? "Nome do restaurante não pode estar Vazio"
-                                : null,
+                          TextField(
                             controller: nameController,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
@@ -117,10 +114,7 @@ class _Restaurante extends State<addRestaurant> {
                           Center(
                             child: Text("Endereço"),
                           ),
-                          TextFormField(
-                            validator: (value) => value!.isEmpty
-                                ? "Coloque o endereço e ajude os outros à chegar la"
-                                : null,
+                          TextField(
                             controller: initialAddress,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
@@ -151,19 +145,22 @@ class _Restaurante extends State<addRestaurant> {
                           ElevatedButton(
                               onPressed: () {
                                 //algo
-                                ref.add({
-                                  "createdBy":
-                                      FirebaseAuth.instance.currentUser?.uid,
-                                  "name": nameController.text,
-                                  "type": tipo,
-                                  "isVegan": veggie,
-                                  "address": initialAddress.text,
-                                  "quantityReviews": 1,
-                                  "totalReviews": 1,
-                                  "averageReview": 1
-                                }).then((value) {
-                                  Navigator.pop(context);
-                                });
+                                if (nameController.text != "" &&
+                                    initialAddress.text != "") {
+                                  ref.add({
+                                    "createdBy":
+                                        FirebaseAuth.instance.currentUser?.uid,
+                                    "name": nameController.text,
+                                    "type": tipo,
+                                    "isVegan": veggie,
+                                    "address": initialAddress.text,
+                                    "quantityReviews": 1,
+                                    "totalReviews": 1,
+                                    "averageReview": 1
+                                  }).then((value) {
+                                    Navigator.pop(context);
+                                  });
+                                }
                               },
                               child: Text("Adicionar"))
                         ],

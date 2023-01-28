@@ -28,7 +28,9 @@ class _Restaurants extends State<Restaurants>
         .get()
         .then(((values) => values.docs.forEach((value) {
               print(value);
-              restaurants.add(value.reference.id);
+              if (!restaurants.contains(value.reference.id)) {
+                restaurants.add(value.reference.id);
+              }
             })));
   }
 

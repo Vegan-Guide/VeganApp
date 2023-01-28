@@ -107,7 +107,10 @@ class RecipeDetail extends StatelessWidget {
                           "Instruções",
                           style: TextStyle(fontSize: 25),
                         ),
-                        Text(data["instructions"] ?? "")
+                        Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: Text(data["instructions"] ??
+                                "Nenhuma instrução passada"))
                       ],
                     ),
                   ),

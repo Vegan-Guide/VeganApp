@@ -18,7 +18,6 @@ class _Receitas extends State<FilteredRecipes>
   bool get wantKeepAlive => true;
 
   List<String> recipes = [];
-  List<String> categories = [];
 
   Future getRecipes() async {
     await FirebaseFirestore.instance
@@ -26,7 +25,9 @@ class _Receitas extends State<FilteredRecipes>
         .where("type", isEqualTo: widget.category)
         .get()
         .then(((values) => values.docs.forEach((value) {
-              recipes.add(value.reference.id);
+              if (!recipes.contains(value.reference.id)) {
+                recipes.add(value.reference.id);
+              }
             })));
   }
 

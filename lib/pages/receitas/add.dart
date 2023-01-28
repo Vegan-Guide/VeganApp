@@ -153,19 +153,22 @@ class _Receita extends State<addReceita> {
                           ElevatedButton(
                               onPressed: () {
                                 //algo
-                                ref.add({
-                                  "createdBy":
-                                      FirebaseAuth.instance.currentUser?.uid,
-                                  "name": name.text,
-                                  "type": tipo,
-                                  "ingredients": ingredients,
-                                  "instructions": instructions,
-                                  "quantityReviews": 1,
-                                  "totalReviews": 1,
-                                  "averageReview": 1
-                                }).then((value) {
-                                  Navigator.pop(context);
-                                });
+                                if (name.text != "" &&
+                                    instructions.text != "") {
+                                  ref.add({
+                                    "createdBy":
+                                        FirebaseAuth.instance.currentUser?.uid,
+                                    "name": name.text,
+                                    "type": tipo,
+                                    "ingredients": ingredients,
+                                    "instructions": instructions.text,
+                                    "quantityReviews": 1,
+                                    "totalReviews": 1,
+                                    "averageReview": 1
+                                  }).then((value) {
+                                    Navigator.pop(context);
+                                  });
+                                }
                               },
                               child: Text("Adicionar"))
                         ],
