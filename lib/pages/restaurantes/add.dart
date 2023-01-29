@@ -1,11 +1,16 @@
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:address_search_field/address_search_field.dart';
+
+import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 List<String> list = <String>["Geral", "Massa", "Salgados"];
 
@@ -17,6 +22,9 @@ class addRestaurant extends StatefulWidget {
 }
 
 class _Restaurante extends State<addRestaurant> {
+  var imageUuid = Uuid().v4();
+  XFile? _recipeImage;
+
   final controller = TextEditingController();
   final nameController = TextEditingController();
   final initialAddress = TextEditingController();
@@ -78,6 +86,23 @@ class _Restaurante extends State<addRestaurant> {
                               border: OutlineInputBorder(),
                               hintText: 'Nome',
                             ),
+                          ),
+                          ElevatedButton(
+                            onPressed: () async {
+                              final file = await ImagePicker()
+                                  .pickImage(source: ImageSource.gallery);
+                              setState(() {
+                                _recipeImage = file;
+                              });
+                            },
+                            child: Text('Subir arquivo'),
+                          ),
+                          Container(
+                            height: 100.0,
+                            width: 100.0,
+                            child: _recipeImage == null
+                                ? Text('No Image')
+                                : Image.file(File(_recipeImage!.path)),
                           ),
                           Center(
                             child: Text("Tipo do Restaurante"),
@@ -141,10 +166,22 @@ class _Restaurante extends State<addRestaurant> {
                           //   ),
                           // ),
                           ElevatedButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 //algo
+                                String photoURL = "";
                                 if (nameController.text != "" &&
                                     initialAddress.text != "") {
+                                  if (_recipeImage != null) {
+                                    final storageRef = FirebaseStorage.instance
+                                        .ref()
+                                        .child('restaurants/$imageUuid.jpg');
+                                    final uploadTask = storageRef
+                                        .putFile(File(_recipeImage!.path));
+                                    await uploadTask.then((res) async => {
+                                          photoURL =
+                                              await res.ref.getDownloadURL()
+                                        });
+                                  }
                                   ref.add({
                                     "createdBy":
                                         FirebaseAuth.instance.currentUser?.uid,
@@ -152,6 +189,7 @@ class _Restaurante extends State<addRestaurant> {
                                     "type": tipo,
                                     "isVegan": veggie,
                                     "address": initialAddress.text,
+                                    "photoURL": photoURL,
                                     "quantityReviews": 1,
                                     "totalReviews": 1,
                                     "averageReview": 1

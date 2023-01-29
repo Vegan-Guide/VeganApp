@@ -39,13 +39,7 @@ class _RestaurantDetail extends State<RestaurantDetail> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          height: 150,
-                          width: 150,
-                          child: Center(
-                              child:
-                                  Text("FOTO", style: TextStyle(fontSize: 25))),
-                        ),
+                        FotoContainer(context, data),
                         Row(
                           children: [
                             Padding(
@@ -104,6 +98,35 @@ class _RestaurantDetail extends State<RestaurantDetail> {
             }
             return Text("Loading...");
           })),
+    );
+  }
+}
+
+Widget FotoContainer(context, data) {
+  if (data.keys.contains("photoURL") && data["photoURL"] != "") {
+    print("${data["photoURL"]}");
+    print(data["photoURL"]);
+    return Container(
+      padding: EdgeInsets.all(2),
+      margin: const EdgeInsets.only(left: 20.0, right: 20.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20.0),
+        color: Colors.white,
+      ),
+      width: MediaQuery.of(context).size.width,
+      child: Image.network(data["photoURL"], fit: BoxFit.cover),
+    );
+  } else {
+    return Container(
+      padding: EdgeInsets.all(2),
+      margin: const EdgeInsets.only(left: 20.0, right: 20.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20.0),
+        color: Colors.white,
+      ),
+      width: 100,
+      height: 100,
+      child: Center(child: Text("FOTO")),
     );
   }
 }

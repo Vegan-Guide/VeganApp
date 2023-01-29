@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:vegan_app/pages/components/rating.dart';
 
@@ -18,17 +19,7 @@ class Tile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            padding: EdgeInsets.all(2),
-            margin: const EdgeInsets.only(left: 20.0, right: 20.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.0),
-              color: Colors.white,
-            ),
-            width: 100,
-            height: 100,
-            child: Center(child: Text("FOTO")),
-          ),
+          FotoContainer(data),
           Text(data["name"]),
         ],
       );
@@ -37,17 +28,7 @@ class Tile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            padding: EdgeInsets.all(5),
-            margin: EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.0),
-              color: Colors.white,
-            ),
-            width: 100,
-            height: 100,
-            child: Center(child: Text("FOTO")),
-          ),
+          FotoContainer(data),
           Expanded(
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,5 +44,35 @@ class Tile extends StatelessWidget {
         ],
       );
     }
+  }
+}
+
+Widget FotoContainer(data) {
+  if (data.keys.contains("photoURL") && data["photoURL"] != "") {
+    print("${data["photoURL"]}");
+    print(data["photoURL"]);
+    return Container(
+      padding: EdgeInsets.all(2),
+      margin: const EdgeInsets.only(left: 20.0, right: 20.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20.0),
+        color: Colors.white,
+      ),
+      width: 100,
+      height: 100,
+      child: Image.network(data["photoURL"], fit: BoxFit.cover),
+    );
+  } else {
+    return Container(
+      padding: EdgeInsets.all(2),
+      margin: const EdgeInsets.only(left: 20.0, right: 20.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20.0),
+        color: Colors.white,
+      ),
+      width: 100,
+      height: 100,
+      child: Center(child: Text("FOTO")),
+    );
   }
 }

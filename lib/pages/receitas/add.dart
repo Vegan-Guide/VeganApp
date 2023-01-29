@@ -1,10 +1,17 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:uuid/uuid.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:material_tag_editor/tag_editor.dart';
+
+import 'package:image_picker/image_picker.dart';
 
 class addReceita extends StatefulWidget {
   const addReceita({super.key});
@@ -14,7 +21,8 @@ class addReceita extends StatefulWidget {
 }
 
 class _Receita extends State<addReceita> {
-  @override
+  var imageUuid = Uuid().v4();
+  XFile? _recipeImage;
   final name = TextEditingController();
   final instructions = TextEditingController();
   List<String> ingredients = [];
@@ -24,7 +32,6 @@ class _Receita extends State<addReceita> {
   List<String> categories = <String>["Geral"];
 
   Future getCategories() async {
-    print("getting categories");
     await FirebaseFirestore.instance
         .collection('categories')
         .get()
@@ -34,8 +41,6 @@ class _Receita extends State<addReceita> {
                 tipo = categories.first;
               }
             }));
-    print("categories list");
-    print(categories);
   }
 
   Future getCategorieName(id) async {
@@ -99,6 +104,23 @@ class _Receita extends State<addReceita> {
                               hintText: 'Nome',
                             ),
                           ),
+                          ElevatedButton(
+                            onPressed: () async {
+                              final file = await ImagePicker()
+                                  .pickImage(source: ImageSource.gallery);
+                              setState(() {
+                                _recipeImage = file;
+                              });
+                            },
+                            child: Text('Subir arquivo'),
+                          ),
+                          Container(
+                            height: 100.0,
+                            width: 100.0,
+                            child: _recipeImage == null
+                                ? Text('No Image')
+                                : Image.file(File(_recipeImage!.path)),
+                          ),
                           Center(
                             child: Text("Tipo da receita"),
                           ),
@@ -151,10 +173,22 @@ class _Receita extends State<addReceita> {
                             ),
                           ),
                           ElevatedButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 //algo
+                                String photoURL = "";
                                 if (name.text != "" &&
                                     instructions.text != "") {
+                                  if (_recipeImage != null) {
+                                    final storageRef = FirebaseStorage.instance
+                                        .ref()
+                                        .child('recipes/$imageUuid.jpg');
+                                    final uploadTask = storageRef
+                                        .putFile(File(_recipeImage!.path));
+                                    await uploadTask.then((res) async => {
+                                          photoURL =
+                                              await res.ref.getDownloadURL()
+                                        });
+                                  }
                                   ref.add({
                                     "createdBy":
                                         FirebaseAuth.instance.currentUser?.uid,
@@ -162,10 +196,11 @@ class _Receita extends State<addReceita> {
                                     "type": tipo,
                                     "ingredients": ingredients,
                                     "instructions": instructions.text,
+                                    "photoURL": photoURL,
                                     "quantityReviews": 1,
                                     "totalReviews": 1,
                                     "averageReview": 1
-                                  }).then((value) {
+                                  }).then((value) async {
                                     Navigator.pop(context);
                                   });
                                 }
