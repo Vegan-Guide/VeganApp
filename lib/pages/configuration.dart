@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:vegan_app/login.dart';
+import 'package:vegan_app/pages/admin/myFavoriteRecipes.dart';
+import 'package:vegan_app/pages/admin/myFavoriteRestaurants.dart';
 import 'package:vegan_app/pages/admin/myRecipes.dart';
 import 'package:vegan_app/pages/profile.dart';
 
@@ -76,6 +78,36 @@ class ConfigPage extends StatelessWidget {
                     onTap: (() {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => MinhasReceitas()));
+                    }),
+                  )))
+            ])),
+            ListTile(
+                title: Row(children: [
+              Icon(Icons.favorite),
+              Padding(
+                  padding: EdgeInsets.all(10.00),
+                  child: Center(
+                      child: GestureDetector(
+                    child: Text("Minhas Receitas Favoritas",
+                        style: TextStyle(color: Colors.white)),
+                    onTap: (() {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => MinhasReceitasFavoritas()));
+                    }),
+                  )))
+            ])),
+            ListTile(
+                title: Row(children: [
+              Icon(Icons.favorite),
+              Padding(
+                  padding: EdgeInsets.all(10.00),
+                  child: Center(
+                      child: GestureDetector(
+                    child: Text("Meus Restaurantes Favoritos",
+                        style: TextStyle(color: Colors.white)),
+                    onTap: (() {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => MeusRestaurantesFavoritos()));
                     }),
                   )))
             ]))

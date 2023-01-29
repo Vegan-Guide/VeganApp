@@ -1,38 +1,65 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:vegan_app/pages/components/favorite.dart';
 import 'package:vegan_app/pages/components/rating.dart';
 
-class RecipeDetail extends StatelessWidget {
+class RecipeDetail extends StatefulWidget {
   final String documentId;
-
   RecipeDetail({required this.documentId});
 
+  _recipeDetail createState() => _recipeDetail();
+}
+
+class _recipeDetail extends State<RecipeDetail> {
   @override
   Widget build(BuildContext context) {
     //get collection data
     CollectionReference recipes =
         FirebaseFirestore.instance.collection('recipes');
+    DocumentReference doc = recipes.doc(widget.documentId);
 
     return Scaffold(
-      appBar: AppBar(title: Text("Receita")),
+      appBar: AppBar(
+        title: Text("Receita"),
+        backgroundColor: Color.fromARGB(255, 94, 177, 112),
+      ),
       body: FutureBuilder<DocumentSnapshot>(
-          future: recipes.doc(documentId).get(),
+          future: doc.get(),
           builder: ((context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               Map<String, dynamic> data =
                   snapshot.data!.data() as Map<String, dynamic>;
               List totalReviews = data["reviews"] ?? [];
               List ingredients = data["ingredients"] ?? [];
+              List favorites = data["favorites"] ?? [];
+              Color heartColor = Colors.white;
+
+              if (favorites.contains(FirebaseAuth.instance.currentUser?.uid)) {
+                heartColor = Colors.red;
+              }
+
               return Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   FotoContainer(context, data),
                   Container(
-                    margin: EdgeInsets.all(10.0),
-                    child: Text(
-                      "Nome: ${(data['name'] ?? "")}",
-                      style: TextStyle(fontSize: 25),
+                    width: MediaQuery.of(context).size.width * 0.95,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.6,
+                          margin: EdgeInsets.all(10.0),
+                          child: Expanded(
+                              child: Text(
+                            "Nome: ${(data['name'] ?? "")}",
+                            style: TextStyle(fontSize: 25),
+                          )),
+                        ),
+                        Favorite(favorites: favorites, doc: doc, data: data)
+                      ],
                     ),
                   ),
                   Row(
@@ -43,7 +70,7 @@ class RecipeDetail extends StatelessWidget {
                           child: Rating(
                               collection: "recipes",
                               totalReviews: totalReviews,
-                              documentId: documentId)),
+                              documentId: widget.documentId)),
                     ],
                   ),
                   Divider(
@@ -59,7 +86,7 @@ class RecipeDetail extends StatelessWidget {
                               type: "detail",
                               collection: "recipes",
                               totalReviews: totalReviews,
-                              documentId: documentId)),
+                              documentId: widget.documentId)),
                     ],
                   ),
                   Container(
@@ -96,18 +123,22 @@ class RecipeDetail extends StatelessWidget {
                       )),
                   Container(
                     width: MediaQuery.of(context).size.width,
-                    child: Column(
-                      children: [
-                        Text(
-                          "Instruções",
-                          style: TextStyle(fontSize: 25),
-                        ),
-                        Padding(
-                            padding: EdgeInsets.all(10.0),
-                            child: Text(data["instructions"] ??
-                                "Nenhuma instrução passada"))
-                      ],
-                    ),
+                    child: Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Center(
+                                child: Text(
+                              "Instruções",
+                              style: TextStyle(fontSize: 25),
+                            )),
+                            Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: Text(data["instructions"] ??
+                                    "Nenhuma instrução passada"))
+                          ],
+                        )),
                   ),
                 ],
               );
@@ -123,8 +154,6 @@ Widget FotoContainer(context, data) {
     print("${data["photoURL"]}");
     print(data["photoURL"]);
     return Container(
-      padding: EdgeInsets.all(2),
-      margin: const EdgeInsets.only(left: 20.0, right: 20.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.0),
         color: Colors.white,
@@ -134,14 +163,12 @@ Widget FotoContainer(context, data) {
     );
   } else {
     return Container(
-      padding: EdgeInsets.all(2),
-      margin: const EdgeInsets.only(left: 20.0, right: 20.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.0),
         color: Colors.white,
       ),
-      width: 100,
-      height: 100,
+      width: MediaQuery.of(context).size.width,
+      height: 200,
       child: Center(child: Text("FOTO")),
     );
   }
