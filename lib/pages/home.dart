@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:vegan_app/pages/components/tile.dart';
 import 'package:vegan_app/pages/receitas/recipe.dart';
+import 'package:vegan_app/pages/restaurantes/restaurant.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -47,7 +48,7 @@ class _Home extends State<HomePage> {
       Container(
           width: MediaQuery.of(context).size.width,
           height: 150,
-          child: _buildBody(context, recipesReference)),
+          child: _buildBody(context, recipesReference, "recipe")),
       Padding(
         padding: EdgeInsets.all(10),
         child: Text(
@@ -58,38 +59,43 @@ class _Home extends State<HomePage> {
       Container(
           width: MediaQuery.of(context).size.width,
           height: 150,
-          child: _buildBody(context, restaurantsReference))
+          child: _buildBody(context, restaurantsReference, "restaurant"))
     ]));
   }
 
-  Widget _buildBody(
-      BuildContext context, Query<Map<String, dynamic>> reference) {
+  Widget _buildBody(BuildContext context, Query<Map<String, dynamic>> reference,
+      String collection) {
     return StreamBuilder<QuerySnapshot>(
       stream: reference.snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return LinearProgressIndicator();
 
-        return _buildList(context, snapshot.data!.docs);
+        return _buildList(context, snapshot.data!.docs, collection);
       },
     );
   }
 
-  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
+  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot,
+      String collection) {
     return ListView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.only(top: 20.0),
-      children: snapshot.map((data) => _buildListItem(context, data)).toList(),
+      children: snapshot
+          .map((data) => _buildListItem(context, data, collection))
+          .toList(),
     );
   }
 
-  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
+  Widget _buildListItem(
+      BuildContext context, DocumentSnapshot data, String collection) {
     final documentId = data.id;
     final row = data.data() as Map<String, dynamic>;
-    return rowContainer(context, documentId, row);
+    return rowContainer(context, documentId, row, collection);
   }
 }
 
-Widget rowContainer(context, documentId, row) {
+Widget rowContainer(
+    BuildContext context, String documentId, row, String collection) {
   return Container(
       margin: EdgeInsets.only(left: 5, right: 5),
       width: 150,
@@ -102,8 +108,9 @@ Widget rowContainer(context, documentId, row) {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        RecipeDetail(documentId: documentId)));
+                    builder: (context) => (collection == "recipe")
+                        ? RecipeDetail(documentId: documentId)
+                        : RestaurantDetail(documentId: documentId)));
           },
           child: Tile(
               documentId: documentId, data: row, flexDirection: "vertical")));
