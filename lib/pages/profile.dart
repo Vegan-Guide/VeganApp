@@ -1,11 +1,45 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class Profile extends StatelessWidget {
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
+
+class Profile extends StatefulWidget {
+  const Profile({super.key});
+
+  @override
+  _Profile createState() => _Profile();
+}
+
+class _Profile extends State<Profile> {
+  String imageUrl = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _getImageUrl();
+  }
+
+  void _getImageUrl() async {
+    final ref = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .get();
+    setState(() {
+      imageUrl = ref.data()!['photoURL'];
+    });
+  }
+
+  var imageUuid = Uuid().v4();
+  XFile? _recipeImage;
+  bool _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
@@ -14,23 +48,11 @@ class Profile extends StatelessWidget {
     final email = TextEditingController();
     final username = TextEditingController();
 
-    Future getUserData() async {
-      await FirebaseFirestore.instance
-          .collection("users")
-          .doc(user?.uid)
-          .get()
-          .then(
-        (value) {
-          value.reference.snapshots().first.then((value) => ((element) {
-                Map<String, dynamic> data =
-                    element.data() as Map<String, dynamic>;
-                print("username");
-                print(username);
-                username.text = data["username"];
-              }));
-        },
-      );
-    }
+    Stream<DocumentSnapshot<Map<String, dynamic>>> ref = FirebaseFirestore
+        .instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .snapshots();
 
     if (user?.displayName != null) {
       name.text = (user?.displayName).toString();
@@ -42,74 +64,157 @@ class Profile extends StatelessWidget {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(title: Text("Editar perfil")),
-      body: Card(
-        child: Container(
-          margin: EdgeInsets.all(10.0),
-          child: Expanded(
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                Center(
-                  child: Text(
-                    "Perfil",
-                    style: TextStyle(fontSize: 25),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(15.0),
-                  child: Text("Nome"),
-                ),
-                TextField(
-                  controller: name,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Seu nome',
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(15.0),
-                  child: Text("Usuário"),
-                ),
-                FutureBuilder(
-                    future: getUserData(),
-                    builder: ((context, snapshot) {
-                      return TextField(
-                        controller: username,
+      body: SingleChildScrollView(
+          child: Column(children: [
+        Padding(
+            padding: EdgeInsets.all(10),
+            child: Center(
+              child: Text(
+                "Perfil",
+                style: TextStyle(fontSize: 25),
+              ),
+            )),
+        Stack(
+          children: [
+            Card(
+              child: Container(
+                margin: EdgeInsets.all(10.0),
+                child: Expanded(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Container(
+                            height: 100.0,
+                            width: 100.0,
+                            child: _recipeImage == null
+                                ? (imageUrl == "")
+                                    ? Container(
+                                        height: 100.0,
+                                        child: CircularProgressIndicator())
+                                    : CachedNetworkImage(
+                                        imageUrl: imageUrl,
+                                        height: 200.0,
+                                        placeholder: (context, url) =>
+                                            CircularProgressIndicator(),
+                                        errorWidget: (context, url, error) =>
+                                            Icon(Icons.error),
+                                        fit: BoxFit.cover,
+                                      )
+                                : Image.file(File(_recipeImage!.path)),
+                          ),
+                          ElevatedButton(
+                            onPressed: () async {
+                              final file = await ImagePicker()
+                                  .pickImage(source: ImageSource.gallery);
+                              setState(() {
+                                _recipeImage = file;
+                              });
+                            },
+                            child: Text('Subir arquivo'),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(15.0),
+                        child: Text("Nome"),
+                      ),
+                      TextField(
+                        controller: name,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          hintText: 'Seu usuário',
+                          hintText: 'Seu nome',
                         ),
-                      );
-                    })),
-                Padding(
-                  padding: EdgeInsets.all(15.0),
-                  child: Text("Email"),
-                ),
-                TextField(
-                  controller: email,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'example@example.com',
-                  ),
-                ),
-                Center(
-                    child: ElevatedButton(
-                        onPressed: () async {
-                          user?.updateDisplayName(name.text);
-                          user?.updateEmail(email.text);
-
-                          await FirebaseFirestore.instance
-                              .collection("users")
-                              .doc(user?.uid)
-                              .set({"username": username.text});
-
-                          Navigator.pop(context);
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(15.0),
+                        child: Text("Usuário"),
+                      ),
+                      StreamBuilder(
+                        stream: ref,
+                        builder: (context, snapshot) {
+                          dynamic data = snapshot.data;
+                          username.text = data["username"];
+                          return TextField(
+                            controller: username,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'Seu usuário',
+                            ),
+                          );
                         },
-                        child: Text("Editar")))
-              ])),
-        ),
-      ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(15.0),
+                        child: Text("Email"),
+                      ),
+                      TextField(
+                        controller: email,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: 'example@example.com',
+                        ),
+                      ),
+                      Center(
+                          child: ElevatedButton(
+                              onPressed: () async {
+                                _showLoading();
+                                user?.updateDisplayName(name.text);
+                                user?.updateEmail(email.text);
+                                String photoURL = "";
+
+                                if (_recipeImage != null) {
+                                  final storageRef = FirebaseStorage.instance
+                                      .ref()
+                                      .child('users/$imageUuid.jpg');
+                                  final uploadTask = storageRef
+                                      .putFile(File(_recipeImage!.path));
+                                  await uploadTask.then((res) async => {
+                                        photoURL =
+                                            await res.ref.getDownloadURL()
+                                      });
+                                }
+                                await FirebaseFirestore.instance
+                                    .collection("users")
+                                    .doc(user?.uid)
+                                    .set({
+                                  "username": username.text,
+                                  'photoURL': photoURL,
+                                });
+                                _hideLoading();
+                                Navigator.pop(context);
+                              },
+                              child: Text("Editar")))
+                    ])),
+              ),
+            ),
+            _isLoading
+                ? Container(
+                    color: Colors.black26,
+                    height: MediaQuery.of(context).size.height,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                : Container()
+          ],
+        )
+      ])),
     );
+  }
+
+  void _showLoading() {
+    setState(() {
+      _isLoading = true;
+    });
+  }
+
+  void _hideLoading() {
+    setState(() {
+      _isLoading = false;
+    });
   }
 }

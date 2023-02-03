@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vegan_app/pages/components/favorite.dart';
+import 'package:vegan_app/pages/components/photo.dart';
 import 'package:vegan_app/pages/components/rating.dart';
 
 class RestaurantDetail extends StatefulWidget {
@@ -41,7 +42,10 @@ class _RestaurantDetail extends State<RestaurantDetail> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        FotoContainer(context, data),
+                        FotoContainer(
+                            context: context,
+                            data: data,
+                            width: MediaQuery.of(context).size.width),
                         Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -112,33 +116,6 @@ class _RestaurantDetail extends State<RestaurantDetail> {
             }
             return Text("Loading...");
           })),
-    );
-  }
-}
-
-Widget FotoContainer(context, data) {
-  if (data.keys.contains("photoURL") && data["photoURL"] != "") {
-    print("${data["photoURL"]}");
-    print(data["photoURL"]);
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.0),
-        color: Colors.white,
-      ),
-      width: MediaQuery.of(context).size.width,
-      child: Image.network(data["photoURL"], fit: BoxFit.cover),
-    );
-  } else {
-    return Container(
-      padding: EdgeInsets.all(2),
-      margin: const EdgeInsets.only(left: 10.0, right: 10.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.0),
-        color: Colors.white,
-      ),
-      width: MediaQuery.of(context).size.width,
-      height: 200,
-      child: Center(child: Text("FOTO")),
     );
   }
 }

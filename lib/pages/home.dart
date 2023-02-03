@@ -45,10 +45,7 @@ class _Home extends State<HomePage> {
           style: TextStyle(fontSize: 25),
         ),
       ),
-      Container(
-          width: MediaQuery.of(context).size.width,
-          height: 150,
-          child: _buildBody(context, recipesReference, "recipe")),
+      ListContainerRow(context, recipesReference, "recipe"),
       Padding(
         padding: EdgeInsets.all(10),
         child: Text(
@@ -56,11 +53,15 @@ class _Home extends State<HomePage> {
           style: TextStyle(fontSize: 25),
         ),
       ),
-      Container(
-          width: MediaQuery.of(context).size.width,
-          height: 150,
-          child: _buildBody(context, restaurantsReference, "restaurant"))
+      ListContainerRow(context, recipesReference, "restaurant"),
     ]));
+  }
+
+  Widget ListContainerRow(context, restaurantsReference, collection) {
+    return Container(
+        width: MediaQuery.of(context).size.width,
+        height: 200,
+        child: _buildBody(context, restaurantsReference, collection));
   }
 
   Widget _buildBody(BuildContext context, Query<Map<String, dynamic>> reference,
@@ -96,22 +97,15 @@ class _Home extends State<HomePage> {
 
 Widget rowContainer(
     BuildContext context, String documentId, row, String collection) {
-  return Container(
-      margin: EdgeInsets.only(left: 5, right: 5),
-      width: 150,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(5.0),
-      ),
-      child: GestureDetector(
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => (collection == "recipe")
-                        ? RecipeDetail(documentId: documentId)
-                        : RestaurantDetail(documentId: documentId)));
-          },
-          child: Tile(
-              documentId: documentId, data: row, flexDirection: "vertical")));
+  return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => (collection == "recipe")
+                    ? RecipeDetail(documentId: documentId)
+                    : RestaurantDetail(documentId: documentId)));
+      },
+      child:
+          Tile(documentId: documentId, data: row, flexDirection: "vertical"));
 }

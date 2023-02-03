@@ -66,18 +66,7 @@ class _Restaurants extends State<Restaurants> {
                   builder: (context) =>
                       RestaurantDetail(documentId: documentId)));
         },
-        child: Container(
-          margin: EdgeInsets.only(left: 10, right: 10, top: 5),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.circular(5.0),
-          ),
-          child: Container(
-              padding: EdgeInsets.all(15),
-              child: Tile(
-                  documentId: documentId,
-                  data: row,
-                  flexDirection: "horizontal")),
-        ));
+        child: Tile(
+            documentId: documentId, data: row, flexDirection: "horizontal"));
   }
 }

@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,13 +8,39 @@ import 'package:vegan_app/login.dart';
 import 'package:vegan_app/pages/admin/myFavoriteRecipes.dart';
 import 'package:vegan_app/pages/admin/myFavoriteRestaurants.dart';
 import 'package:vegan_app/pages/admin/myRecipes.dart';
+import 'package:vegan_app/pages/components/photo.dart';
 import 'package:vegan_app/pages/profile.dart';
 
-class ConfigPage extends StatelessWidget {
+class ConfigPage extends StatefulWidget {
+  ConfigPage({super.key});
+
+  _config createState() => _config();
+}
+
+class _config extends State<ConfigPage> {
+  String imageUrl = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _getImageUrl();
+  }
+
+  void _getImageUrl() async {
+    final ref = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .get();
+    setState(() {
+      imageUrl = ref.data()!['photoURL'];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Column(
+    return SingleChildScrollView(
+        child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Column(children: [
@@ -21,11 +49,20 @@ class ConfigPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                 Container(
-                  margin: EdgeInsets.all(8.0),
-                  width: 100,
-                  height: 100,
-                  color: Colors.white,
-                  child: Center(child: Text("FOTO")),
+                  decoration: BoxDecoration(shape: BoxShape.circle),
+                  padding: EdgeInsets.all(10),
+                  child: (imageUrl == "")
+                      ? Container(
+                          height: 100.0, child: CircularProgressIndicator())
+                      : CachedNetworkImage(
+                          imageUrl: imageUrl,
+                          height: 200.0,
+                          placeholder: (context, url) =>
+                              CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error),
+                          fit: BoxFit.cover,
+                        ),
                 ),
                 Center(
                     child: Expanded(
@@ -129,6 +166,6 @@ class ConfigPage extends StatelessWidget {
               ]),
             ))
       ],
-    );
+    ));
   }
 }
