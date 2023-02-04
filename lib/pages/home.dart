@@ -53,15 +53,15 @@ class _Home extends State<HomePage> {
           style: TextStyle(fontSize: 25),
         ),
       ),
-      ListContainerRow(context, recipesReference, "restaurant"),
+      ListContainerRow(context, restaurantsReference, "restaurant"),
     ]));
   }
 
-  Widget ListContainerRow(context, restaurantsReference, collection) {
+  Widget ListContainerRow(context, reference, collection) {
     return Container(
         width: MediaQuery.of(context).size.width,
         height: 200,
-        child: _buildBody(context, restaurantsReference, collection));
+        child: _buildBody(context, reference, collection));
   }
 
   Widget _buildBody(BuildContext context, Query<Map<String, dynamic>> reference,

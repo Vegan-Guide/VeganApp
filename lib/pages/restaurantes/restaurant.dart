@@ -52,14 +52,14 @@ class _RestaurantDetail extends State<RestaurantDetail> {
                               Container(
                                   width:
                                       MediaQuery.of(context).size.width * 0.6,
+                                  margin: EdgeInsets.all(10.0),
                                   child: Row(
                                     children: [
-                                      Padding(
-                                          padding: EdgeInsets.all(5.0),
+                                      Expanded(
                                           child: Text(
-                                            "Nome: ${(data['name'] ?? "")}",
-                                            style: TextStyle(fontSize: 25),
-                                          )),
+                                        "Nome: ${(data['name'] ?? "")}",
+                                        style: TextStyle(fontSize: 25),
+                                      )),
                                       Container(
                                         child: ((data['isVegan'] ?? false)
                                             ? Icon(Icons.eco)
