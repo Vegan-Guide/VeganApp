@@ -76,12 +76,6 @@ Widget recipeContainer(context, documentId, row) {
             MaterialPageRoute(
                 builder: (context) => RecipeDetail(documentId: documentId)));
       },
-      child: Container(
-          margin: EdgeInsets.only(left: 5, right: 5, top: 5),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.circular(5.0),
-          ),
-          child: Tile(
-              documentId: documentId, data: row, flexDirection: "horizontal")));
+      child:
+          Tile(documentId: documentId, data: row, flexDirection: "horizontal"));
 }

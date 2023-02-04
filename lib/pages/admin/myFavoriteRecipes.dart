@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:vegan_app/pages/components/tile.dart';
 
-import 'package:vegan_app/pages/receitas/add.dart';
 import 'package:vegan_app/pages/receitas/recipe.dart';
 
 class MinhasReceitasFavoritas extends StatefulWidget {
@@ -70,12 +69,6 @@ Widget recipeContainer(context, documentId, row) {
             MaterialPageRoute(
                 builder: (context) => RecipeDetail(documentId: documentId)));
       },
-      child: Container(
-          margin: EdgeInsets.only(left: 5, right: 5, top: 5),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.circular(5.0),
-          ),
-          child: Tile(
-              documentId: documentId, data: row, flexDirection: "horizontal")));
+      child:
+          Tile(documentId: documentId, data: row, flexDirection: "horizontal"));
 }
