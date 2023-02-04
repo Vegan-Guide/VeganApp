@@ -6,8 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:address_search_field/address_search_field.dart';
+import 'package:geocoding/geocoding.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
@@ -30,6 +29,11 @@ class _Restaurante extends State<addRestaurant> {
   final initialAddress = TextEditingController();
   String tipo = list.first;
   bool veggie = false;
+  double latitude = 0.0;
+  double longitude = 0.0;
+  String country = "";
+  String state = "";
+  String city = "";
 
   final _formKey = new GlobalKey<FormState>();
 
@@ -38,31 +42,9 @@ class _Restaurante extends State<addRestaurant> {
     CollectionReference ref =
         FirebaseFirestore.instance.collection("restaurants");
 
-    // final geoMethods = GeoMethods(
-    //   googleApiKey: 'GOOGLE_API_KEY',
-    //   language: 'pt-BR',
-    //   countryCode: 'br',
-    //   countryCodes: ['br'],
-    //   country: 'Brazil',
-    //   city: 'Sao Paulo',
-    // );
-    // final coords = Coords(-23.550087, -46.634066);
-
-    // // It will search in unite states, espain and colombia. It just can filter up to 5 countries.
-    // geoMethods.autocompletePlace(query: 'place streets or reference');
-
-    // geoMethods.geoLocatePlace(coords: coords);
-
-    // geoMethods.getPlaceGeometry(
-    //   reference: 'place streets',
-    //   placeId: 'ajFDN3662fNsa4hhs42FAjeb5n',
-    // );
-
-    // var initialAddress = Address.fromCoords(coords: coords);
-
     // TODO: implement build
     return Scaffold(
-        resizeToAvoidBottomInset: false,
+        // resizeToAvoidBottomInset: false,
         appBar: AppBar(title: Text("Adicionar Restaurante")),
         body: Padding(
             padding: EdgeInsets.all(10),
@@ -70,11 +52,14 @@ class _Restaurante extends State<addRestaurant> {
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                  Center(
-                      child: Text(
-                    "Adicionar Restaurante",
-                    style: TextStyle(fontSize: 20),
-                  )),
+                  Padding(
+                    padding: EdgeInsets.all(15),
+                    child: Center(
+                        child: Text(
+                      "Adicionar Restaurante",
+                      style: TextStyle(fontSize: 20),
+                    )),
+                  ),
                   Form(
                       key: _formKey,
                       child: Column(
@@ -134,43 +119,41 @@ class _Restaurante extends State<addRestaurant> {
                                   }),
                             ],
                           ),
-                          Center(
-                            child: Text("Endereço"),
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Center(
+                              child: Text("Endereço"),
+                            ),
                           ),
                           TextField(
                             controller: initialAddress,
+                            onChanged: ((value) {
+                              getLocation(value);
+                            }),
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               hintText: 'Endereço',
                             ),
                           ),
-                          // AddressLocator(
-                          //   coords: coords,
-                          //   geoMethods: geoMethods,
-                          //   controller: controller,
-                          //   child: TextField(
-                          //     controller: controller,
-                          //     decoration: InputDecoration(
-                          //       border: OutlineInputBorder(),
-                          //       hintText: 'Endereco',
-                          //     ),
-                          //     onTap: () => showDialog(
-                          //       context: context,
-                          //       builder: (BuildContext context) =>
-                          //           AddressSearchDialog(
-                          //               controller: controller,
-                          //               geoMethods: geoMethods,
-                          //               onDone: (Address address) =>
-                          //                   initialAddress = address),
-                          //     ),
-                          //   ),
-                          // ),
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: (latitude != 0.0 && longitude != 0.0)
+                                ? Icon(Icons.check)
+                                : Icon(Icons.error),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Text(
+                                "Latitude: ${latitude}; Longitude: ${longitude}"),
+                          ),
                           ElevatedButton(
                               onPressed: () async {
                                 //algo
                                 String photoURL = "";
                                 if (nameController.text != "" &&
-                                    initialAddress.text != "") {
+                                    initialAddress.text != "" &&
+                                    latitude != 0.0 &&
+                                    longitude != 0.0) {
                                   if (_recipeImage != null) {
                                     final storageRef = FirebaseStorage.instance
                                         .ref()
@@ -189,6 +172,11 @@ class _Restaurante extends State<addRestaurant> {
                                     "type": tipo,
                                     "isVegan": veggie,
                                     "address": initialAddress.text,
+                                    "latitude": latitude,
+                                    "longitude": longitude,
+                                    "country": country,
+                                    "state": state,
+                                    "city": city,
                                     "photoURL": photoURL,
                                     "quantityReviews": 1,
                                     "totalReviews": 1,
@@ -202,5 +190,20 @@ class _Restaurante extends State<addRestaurant> {
                         ],
                       )),
                 ]))));
+  }
+
+  void getLocation(address) async {
+    List<Location> coordenates =
+        await locationFromAddress(address, localeIdentifier: 'pt');
+    List<Placemark> placemarks = await placemarkFromCoordinates(
+        coordenates[0].latitude, coordenates[0].longitude);
+
+    setState(() {
+      latitude = coordenates[0].latitude;
+      longitude = coordenates[0].longitude;
+      country = placemarks[0].country as String;
+      city = placemarks[0].locality as String;
+      state = placemarks[0].administrativeArea as String;
+    });
   }
 }

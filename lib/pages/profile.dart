@@ -9,9 +9,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
-import 'package:http/http.dart' as http;
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -21,14 +21,30 @@ class Profile extends StatefulWidget {
 }
 
 class _Profile extends State<Profile> {
-  String imageUrl = "";
-
   @override
   void initState() {
     super.initState();
     _getImageUrl();
     // fetchStates();
   }
+
+  String imageUrl = "";
+  var imageUuid = Uuid().v4();
+  XFile? _recipeImage;
+  bool _isLoading = false;
+
+  final initialAddress = TextEditingController();
+  double latitude = 0.0;
+  double longitude = 0.0;
+  String country = "";
+  String state = "";
+  String city = "";
+
+  final user = FirebaseAuth.instance.currentUser;
+
+  final name = TextEditingController();
+  final email = TextEditingController();
+  final username = TextEditingController();
 
   void _getImageUrl() async {
     final ref = await FirebaseFirestore.instance
@@ -40,65 +56,8 @@ class _Profile extends State<Profile> {
     });
   }
 
-  var imageUuid = Uuid().v4();
-  XFile? _recipeImage;
-  bool _isLoading = false;
-
-  String selectedState = "SP";
-  String selectedCity = "São Paulo";
-  List<dynamic> states = [
-    {"sigla": "SP", "name": "São Paulo"}
-  ];
-  List<String> cities = ["São Paulo"];
-
-  fetchStates() async {
-    final response = await http.get(Uri.parse(
-        "https://servicodados.ibge.gov.br/api/v1/localidades/estados"));
-
-    if (response.statusCode == 200) {
-      final statesData = json.decode(response.body);
-      for (var state in statesData) {
-        List siglas = states.map((e) => e['sigla']).toList();
-        if (!siglas.contains(state['sigla'])) {
-          setState(() {
-            states.add({"sigla": state['sigla'], "name": state['nome']});
-          });
-        }
-      }
-    } else {
-      throw Exception('Failed to load states');
-    }
-  }
-
-  fetchCities() async {
-    final response = await http.get(Uri.parse(
-        "https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedState}/distritos"));
-
-    if (response.statusCode == 200) {
-      final citiesData = json.decode(response.body);
-      for (var city in citiesData) {
-        print(cities);
-        print(city['nome']);
-        if (!cities.contains(city['nome'])) {
-          setState(() {
-            cities.add(city['nome']);
-          });
-        }
-      }
-    } else {
-      throw Exception('Failed to load states');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-
-    final name = TextEditingController();
-    final email = TextEditingController();
-    final username = TextEditingController();
-    final city = TextEditingController();
-
     Stream<DocumentSnapshot<Map<String, dynamic>>> ref = FirebaseFirestore
         .instance
         .collection("users")
@@ -180,49 +139,20 @@ class _Profile extends State<Profile> {
                           hintText: 'Seu nome',
                         ),
                       ),
-                      FutureBuilder(
-                          future: fetchStates(),
-                          builder: ((context, snapshot) {
-                            return DropdownButton(
-                                value: selectedState,
-                                items: states
-                                    .map((dynamic e) => DropdownMenuItem(
-                                        value: e['sigla'],
-                                        child: Text(e['name'])))
-                                    .toList(),
-                                onChanged: ((value) {
-                                  setState(() {
-                                    selectedState = value as String;
-                                  });
-                                  fetchCities();
-                                }));
-                          })),
                       Padding(
-                        padding: EdgeInsets.all(15.0),
-                        child: Text("Sua Cidade"),
+                        padding: EdgeInsets.all(10),
+                        child: Text("Endereço: "),
                       ),
                       TextField(
-                          controller: city,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: 'Sua cidade',
-                          ),
-                          autofillHints: cities),
-                      // FutureBuilder(
-                      //     future: fetchCities(),
-                      //     builder: ((context, snapshot) {
-                      //       return DropdownButton(
-                      //           value: selectedCity,
-                      //           items: cities
-                      //               .map((String e) =>
-                      //                   DropdownMenuItem(child: Text(e)))
-                      //               .toList(),
-                      //           onChanged: ((value) {
-                      //             setState(() {
-                      //               selectedCity = value as String;
-                      //             });
-                      //           }));
-                      //     })),
+                        controller: initialAddress,
+                        onChanged: ((value) {
+                          getLocation(value);
+                        }),
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: 'Endereço',
+                        ),
+                      ),
                       Padding(
                         padding: EdgeInsets.all(15.0),
                         child: Text("Usuário"),
@@ -277,6 +207,12 @@ class _Profile extends State<Profile> {
                                     .set({
                                   "username": username.text,
                                   'photoURL': photoURL,
+                                  "address": initialAddress.text,
+                                  "latitude": latitude,
+                                  "longitude": longitude,
+                                  "country": country,
+                                  "state": state,
+                                  "city": city,
                                 });
                                 _hideLoading();
                                 Navigator.pop(context);
@@ -309,6 +245,22 @@ class _Profile extends State<Profile> {
   void _hideLoading() {
     setState(() {
       _isLoading = false;
+    });
+  }
+
+  void getLocation(address) async {
+    List<Location> coordenates =
+        await locationFromAddress(address, localeIdentifier: 'pt');
+
+    List<Placemark> placemarks = await placemarkFromCoordinates(
+        coordenates[0].latitude, coordenates[0].longitude);
+
+    setState(() {
+      latitude = coordenates[0].latitude;
+      longitude = coordenates[0].longitude;
+      country = placemarks[0].country as String;
+      city = placemarks[0].locality as String;
+      state = placemarks[0].administrativeArea as String;
     });
   }
 }
