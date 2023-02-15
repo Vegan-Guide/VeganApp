@@ -6,13 +6,16 @@ import 'package:vegan_app/pages/receitas/recipe.dart';
 
 class Receitas extends StatefulWidget {
   final category;
+  final searchText;
 
-  const Receitas({this.category});
+  const Receitas({this.category, this.searchText});
   @override
   _Receitas createState() => _Receitas();
 }
 
 class _Receitas extends State<Receitas> {
+  final searchValue = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     Query<Map<String, dynamic>> recipesReference = (widget.category != null)
@@ -26,6 +29,7 @@ class _Receitas extends State<Receitas> {
 
     List<Widget> bodyContent = (widget.category != null)
         ? <Widget>[
+            SearchBar(searchValue, context),
             Padding(
               padding: EdgeInsets.all(10),
               child: Text(
@@ -33,9 +37,12 @@ class _Receitas extends State<Receitas> {
                 style: TextStyle(fontSize: 25),
               ),
             ),
-            Expanded(child: _buildBody(context, recipesReference, false))
+            Expanded(
+                child: _buildBody(
+                    context, recipesReference, false, widget.searchText))
           ].toList()
         : <Widget>[
+            SearchBar(searchValue, context),
             Padding(
                 padding: EdgeInsets.all(10),
                 child: Text(
@@ -46,7 +53,8 @@ class _Receitas extends State<Receitas> {
                 width: MediaQuery.of(context).size.width,
                 height: 150,
                 child: Center(
-                    child: _buildBody(context, categoryReference, true))),
+                    child: _buildBody(
+                        context, categoryReference, true, widget.searchText))),
             Padding(
               padding: EdgeInsets.all(10),
               child: Text(
@@ -54,11 +62,13 @@ class _Receitas extends State<Receitas> {
                 style: TextStyle(fontSize: 25),
               ),
             ),
-            Expanded(child: _buildBody(context, recipesReference, false))
+            Expanded(
+                child: _buildBody(
+                    context, recipesReference, false, widget.searchText))
           ].toList();
     ;
 
-    if ((widget.category != null)) {
+    if ((widget.category != null || widget.searchText != null)) {
       return Scaffold(
         appBar: AppBar(title: Text("Receitas")),
         body: Column(children: bodyContent),
@@ -76,37 +86,43 @@ class _Receitas extends State<Receitas> {
     }
   }
 
-  Widget _buildBody(BuildContext context, reference, bool row) {
+  Widget _buildBody(BuildContext context, reference, bool row, searchText) {
     return StreamBuilder<QuerySnapshot>(
       stream: reference.snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return LinearProgressIndicator();
 
-        return _buildList(context, snapshot.data!.docs, row);
+        return _buildList(context, snapshot.data!.docs, row, searchText);
       },
     );
   }
 
-  Widget _buildList(
-      BuildContext context, List<DocumentSnapshot> snapshot, bool row) {
+  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot,
+      bool row, searchText) {
     return ListView(
       scrollDirection: (row == false) ? Axis.vertical : Axis.horizontal,
-      children:
-          snapshot.map((data) => _buildListItem(context, data, row)).toList(),
+      children: snapshot
+          .map((data) => _buildListItem(context, data, row, searchText))
+          .toList(),
     );
   }
 
   Widget _buildListItem(
-      BuildContext context, DocumentSnapshot data, bool isRow) {
+      BuildContext context, DocumentSnapshot data, bool isRow, searchText) {
     final documentId = data.id;
     final row = data.data() as Map<String, dynamic>;
     return (isRow == false)
-        ? recipeContainer(context, documentId, row)
+        ? recipeContainer(context, documentId, row, searchText)
         : categoryContainer(context, documentId, row);
   }
 }
 
-Widget recipeContainer(context, documentId, row) {
+Widget recipeContainer(context, documentId, row, searchText) {
+  if (searchText != null &&
+      searchText.isNotEmpty &&
+      row['name'].toLowerCase().contains(searchText.toLowerCase()) == false) {
+    return Container();
+  }
   return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -116,6 +132,21 @@ Widget recipeContainer(context, documentId, row) {
       },
       child:
           Tile(documentId: documentId, data: row, flexDirection: "horizontal"));
+}
+
+Widget SearchBar(searchValue, context) {
+  return TextField(
+    decoration: InputDecoration(
+      prefixIcon: Icon(Icons.search),
+    ),
+    controller: searchValue,
+    onSubmitted: (value) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Receitas(searchText: searchValue.text)));
+    },
+  );
 }
 
 Widget categoryContainer(context, documentId, row) {

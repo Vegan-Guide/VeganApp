@@ -52,8 +52,7 @@ class _config extends State<ConfigPage> {
                   decoration: BoxDecoration(shape: BoxShape.circle),
                   padding: EdgeInsets.all(10),
                   child: (imageUrl == "")
-                      ? Container(
-                          height: 100.0, child: CircularProgressIndicator())
+                      ? Container(child: CircularProgressIndicator())
                       : CachedNetworkImage(
                           imageUrl: imageUrl,
                           height: 200.0,
