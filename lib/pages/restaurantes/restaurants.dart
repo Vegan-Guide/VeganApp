@@ -19,6 +19,10 @@ class _Restaurants extends State<Restaurants> {
   final CollectionReference collectionReference =
       FirebaseFirestore.instance.collection('restaurants');
 
+  Future<void> refreshPage() async {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.searchText != null) {
@@ -28,13 +32,23 @@ class _Restaurants extends State<Restaurants> {
     if (widget.searchText != null) {
       return Scaffold(
           appBar: AppBar(title: Text("Restaurantes")),
-          body: Column(
-            children: bodyContent(searchValue, context),
+          body: RefreshIndicator(
+            child: Column(
+              children: bodyContent(searchValue, context),
+            ),
+            onRefresh: () {
+              return refreshPage();
+            },
           ));
     }
     return Scaffold(
-        body: Column(
-          children: bodyContent(searchValue, context),
+        body: RefreshIndicator(
+          child: Column(
+            children: bodyContent(searchValue, context),
+          ),
+          onRefresh: () {
+            return refreshPage();
+          },
         ),
         floatingActionButton: FloatingActionButton(
             onPressed: () {
@@ -109,6 +123,10 @@ class _Restaurants extends State<Restaurants> {
                       RestaurantDetail(documentId: documentId)));
         },
         child: Tile(
-            documentId: documentId, data: row, flexDirection: "horizontal"));
+          documentId: documentId,
+          data: row,
+          flexDirection: "horizontal",
+          collection: "restaurants",
+        ));
   }
 }

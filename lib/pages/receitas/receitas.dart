@@ -16,6 +16,10 @@ class Receitas extends StatefulWidget {
 class _Receitas extends State<Receitas> {
   final searchValue = TextEditingController();
 
+  Future<void> refreshPage() async {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     Query<Map<String, dynamic>> recipesReference = (widget.category != null)
@@ -30,13 +34,6 @@ class _Receitas extends State<Receitas> {
     List<Widget> bodyContent = (widget.category != null)
         ? <Widget>[
             SearchBar(searchValue, context),
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: Text(
-                "Receitas",
-                style: TextStyle(fontSize: 25),
-              ),
-            ),
             Expanded(
                 child: _buildBody(
                     context, recipesReference, false, widget.searchText))
@@ -55,13 +52,6 @@ class _Receitas extends State<Receitas> {
                 child: Center(
                     child: _buildBody(
                         context, categoryReference, true, widget.searchText))),
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: Text(
-                "Receitas",
-                style: TextStyle(fontSize: 25),
-              ),
-            ),
             Expanded(
                 child: _buildBody(
                     context, recipesReference, false, widget.searchText))
@@ -71,11 +61,21 @@ class _Receitas extends State<Receitas> {
     if ((widget.category != null || widget.searchText != null)) {
       return Scaffold(
         appBar: AppBar(title: Text("Receitas")),
-        body: Column(children: bodyContent),
+        body: RefreshIndicator(
+          child: Column(children: bodyContent),
+          onRefresh: () {
+            return refreshPage();
+          },
+        ),
       );
     } else {
       return Scaffold(
-          body: Column(children: bodyContent),
+          body: RefreshIndicator(
+            child: Column(children: bodyContent),
+            onRefresh: () {
+              return refreshPage();
+            },
+          ),
           floatingActionButton: FloatingActionButton(
               onPressed: () {
                 //algo aqui
@@ -130,8 +130,11 @@ Widget recipeContainer(context, documentId, row, searchText) {
             MaterialPageRoute(
                 builder: (context) => RecipeDetail(documentId: documentId)));
       },
-      child:
-          Tile(documentId: documentId, data: row, flexDirection: "horizontal"));
+      child: Tile(
+          documentId: documentId,
+          data: row,
+          flexDirection: "horizontal",
+          collection: "recipes"));
 }
 
 Widget SearchBar(searchValue, context) {
