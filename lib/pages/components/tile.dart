@@ -6,11 +6,13 @@ class Tile extends StatelessWidget {
   final documentId;
   final data;
   final String flexDirection;
+  final String collection;
 
   Tile(
       {required this.documentId,
       required this.data,
-      required this.flexDirection});
+      required this.flexDirection,
+      required this.collection});
 
   @override
   Widget build(BuildContext context) {
@@ -65,10 +67,15 @@ class Tile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text(data["name"]),
-                Rating(
-                    collection: "recipes",
-                    documentId: documentId,
-                    totalReviews: data['reviews'] ?? [])
+                Row(
+                  children: [
+                    Rating(
+                        collection: collection,
+                        documentId: documentId,
+                        totalReviews: data['reviews'] ?? []),
+                    Text(" (${data.length})")
+                  ],
+                )
               ],
             )),
           ],

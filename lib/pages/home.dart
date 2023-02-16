@@ -106,6 +106,10 @@ Widget rowContainer(
                     ? RecipeDetail(documentId: documentId)
                     : RestaurantDetail(documentId: documentId)));
       },
-      child:
-          Tile(documentId: documentId, data: row, flexDirection: "vertical"));
+      child: Tile(
+        documentId: documentId,
+        data: row,
+        flexDirection: "vertical",
+        collection: collection,
+      ));
 }

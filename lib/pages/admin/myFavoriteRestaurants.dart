@@ -70,6 +70,10 @@ Widget restaurantContainer(context, documentId, row) {
                 builder: (context) =>
                     RestaurantDetail(documentId: documentId)));
       },
-      child:
-          Tile(documentId: documentId, data: row, flexDirection: "horizontal"));
+      child: Tile(
+        documentId: documentId,
+        data: row,
+        flexDirection: "horizontal",
+        collection: "restaurants",
+      ));
 }
