@@ -59,6 +59,8 @@ dependencies:
 
   cached_network_image: ^3.2.3
 
+  geolocator: ^7.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
