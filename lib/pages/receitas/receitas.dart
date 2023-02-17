@@ -97,7 +97,7 @@ class _Receitas extends State<Receitas> {
       bool row, searchText) {
     return ListView.builder(
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: (row == false) ? NeverScrollableScrollPhysics() : null,
       scrollDirection: (row == false) ? Axis.vertical : Axis.horizontal,
       itemCount: snapshot.length,
       itemBuilder: (context, index) {
