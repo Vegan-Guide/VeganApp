@@ -43,9 +43,10 @@ class _Restaurants extends State<Restaurants> {
     }
     return Scaffold(
         body: RefreshIndicator(
-          child: Column(
+          child: SingleChildScrollView(
+              child: Column(
             children: bodyContent(searchValue, context),
-          ),
+          )),
           onRefresh: () {
             return refreshPage();
           },
@@ -84,7 +85,7 @@ class _Restaurants extends State<Restaurants> {
           style: TextStyle(fontSize: 25),
         ),
       ),
-      Expanded(child: _buildBody(context, collectionReference))
+      _buildBody(context, collectionReference)
     ];
   }
 
@@ -101,6 +102,8 @@ class _Restaurants extends State<Restaurants> {
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
     return ListView(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.only(top: 20.0),
       children: snapshot.map((data) => _buildListItem(context, data)).toList(),
     );

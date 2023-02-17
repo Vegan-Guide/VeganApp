@@ -34,9 +34,7 @@ class _Receitas extends State<Receitas> {
     List<Widget> bodyContent = (widget.category != null)
         ? <Widget>[
             SearchBar(searchValue, context),
-            Expanded(
-                child: _buildBody(
-                    context, recipesReference, false, widget.searchText))
+            _buildBody(context, recipesReference, false, widget.searchText)
           ].toList()
         : <Widget>[
             SearchBar(searchValue, context),
@@ -52,9 +50,7 @@ class _Receitas extends State<Receitas> {
                 child: Center(
                     child: _buildBody(
                         context, categoryReference, true, widget.searchText))),
-            Expanded(
-                child: _buildBody(
-                    context, recipesReference, false, widget.searchText))
+            _buildBody(context, recipesReference, false, widget.searchText)
           ].toList();
     ;
 
@@ -62,7 +58,7 @@ class _Receitas extends State<Receitas> {
       return Scaffold(
         appBar: AppBar(title: Text("Receitas")),
         body: RefreshIndicator(
-          child: Column(children: bodyContent),
+          child: SingleChildScrollView(child: Column(children: bodyContent)),
           onRefresh: () {
             return refreshPage();
           },
@@ -71,7 +67,7 @@ class _Receitas extends State<Receitas> {
     } else {
       return Scaffold(
           body: RefreshIndicator(
-            child: Column(children: bodyContent),
+            child: SingleChildScrollView(child: Column(children: bodyContent)),
             onRefresh: () {
               return refreshPage();
             },
@@ -99,11 +95,18 @@ class _Receitas extends State<Receitas> {
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot,
       bool row, searchText) {
-    return ListView(
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
       scrollDirection: (row == false) ? Axis.vertical : Axis.horizontal,
-      children: snapshot
-          .map((data) => _buildListItem(context, data, row, searchText))
-          .toList(),
+      itemCount: snapshot.length,
+      itemBuilder: (context, index) {
+        final data = snapshot[index];
+        return _buildListItem(context, data, row, searchText);
+      },
+      // children: snapshot
+      //     .map((data) => _buildListItem(context, data, row, searchText))
+      //     .toList(),
     );
   }
 
