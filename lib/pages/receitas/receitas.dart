@@ -13,7 +13,10 @@ class Receitas extends StatefulWidget {
   _Receitas createState() => _Receitas();
 }
 
-class _Receitas extends State<Receitas> {
+class _Receitas extends State<Receitas> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   final searchValue = TextEditingController();
 
   Future<void> refreshPage() async {

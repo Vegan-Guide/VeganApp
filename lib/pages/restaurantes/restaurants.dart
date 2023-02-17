@@ -13,7 +13,11 @@ class Restaurants extends StatefulWidget {
   _Restaurants createState() => _Restaurants();
 }
 
-class _Restaurants extends State<Restaurants> {
+class _Restaurants extends State<Restaurants>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   final searchValue = TextEditingController();
 
   final CollectionReference collectionReference =

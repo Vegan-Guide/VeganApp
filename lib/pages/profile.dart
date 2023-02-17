@@ -11,7 +11,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:uuid/uuid.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -24,13 +23,11 @@ class _Profile extends State<Profile> {
   @override
   void initState() {
     super.initState();
-    _getImageUrl();
-    // fetchStates();
+    _getDocumentData();
   }
 
   String imageUrl = "";
-  var imageUuid = Uuid().v4();
-  XFile? _recipeImage;
+  XFile? _profileImage;
   bool _isLoading = false;
 
   final initialAddress = TextEditingController();
@@ -39,6 +36,7 @@ class _Profile extends State<Profile> {
   String country = "";
   String state = "";
   String city = "";
+  dynamic docData;
 
   final user = FirebaseAuth.instance.currentUser;
 
@@ -46,13 +44,21 @@ class _Profile extends State<Profile> {
   final email = TextEditingController();
   final username = TextEditingController();
 
-  void _getImageUrl() async {
+  Future<void> _getDocumentData() async {
     final ref = await FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser?.uid)
         .get();
+    final data = ref.data()!;
     setState(() {
-      imageUrl = ref.data()!['photoURL'];
+      docData = data;
+      imageUrl = data['photoURL'];
+      initialAddress.text = data['address'];
+      latitude = data["latitude"];
+      longitude = data["longitude"];
+      country = data["country"];
+      state = data["state"];
+      city = data["city"];
     });
   }
 
@@ -100,7 +106,7 @@ class _Profile extends State<Profile> {
                           Container(
                             height: 100.0,
                             width: 100.0,
-                            child: _recipeImage == null
+                            child: _profileImage == null
                                 ? (imageUrl == "")
                                     ? Container(
                                         height: 100.0,
@@ -114,14 +120,14 @@ class _Profile extends State<Profile> {
                                             Icon(Icons.error),
                                         fit: BoxFit.cover,
                                       )
-                                : Image.file(File(_recipeImage!.path)),
+                                : Image.file(File(_profileImage!.path)),
                           ),
                           ElevatedButton(
                             onPressed: () async {
                               final file = await ImagePicker()
                                   .pickImage(source: ImageSource.gallery);
                               setState(() {
-                                _recipeImage = file;
+                                _profileImage = file;
                               });
                             },
                             child: Text('Subir arquivo'),
@@ -152,6 +158,15 @@ class _Profile extends State<Profile> {
                           border: OutlineInputBorder(),
                           hintText: 'Endereço',
                         ),
+                      ),
+                      Column(
+                        children: [
+                          Text("Latitude: ${latitude}"),
+                          Text("longitude: ${longitude}"),
+                          Text("country: ${country}"),
+                          Text("state: ${state}"),
+                          Text("city: ${city}"),
+                        ],
                       ),
                       Padding(
                         padding: EdgeInsets.all(15.0),
@@ -190,30 +205,34 @@ class _Profile extends State<Profile> {
                                 user?.updateEmail(email.text);
                                 String photoURL = "";
 
-                                if (_recipeImage != null) {
+                                if (_profileImage != null) {
                                   final storageRef = FirebaseStorage.instance
                                       .ref()
-                                      .child('users/$imageUuid.jpg');
+                                      .child(
+                                          'users/${FirebaseAuth.instance.currentUser?.uid}.jpg');
                                   final uploadTask = storageRef
-                                      .putFile(File(_recipeImage!.path));
+                                      .putFile(File(_profileImage!.path));
                                   await uploadTask.then((res) async => {
                                         photoURL =
                                             await res.ref.getDownloadURL()
                                       });
                                 }
+                                docData["username"] = username.text;
+                                if (photoURL != "") {
+                                  docData['photoURL'] = photoURL;
+                                }
+                                if (initialAddress.text != "") {
+                                  docData["address"] = initialAddress.text;
+                                  docData["latitude"] = latitude;
+                                  docData["longitude"] = longitude;
+                                  docData["country"] = country;
+                                  docData["state"] = state;
+                                  docData["city"] = city;
+                                }
                                 await FirebaseFirestore.instance
                                     .collection("users")
                                     .doc(user?.uid)
-                                    .set({
-                                  "username": username.text,
-                                  'photoURL': photoURL,
-                                  "address": initialAddress.text,
-                                  "latitude": latitude,
-                                  "longitude": longitude,
-                                  "country": country,
-                                  "state": state,
-                                  "city": city,
-                                });
+                                    .set(docData);
                                 _hideLoading();
                                 Navigator.pop(context);
                               },

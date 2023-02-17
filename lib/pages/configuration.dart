@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -12,28 +13,30 @@ import 'package:vegan_app/pages/components/photo.dart';
 import 'package:vegan_app/pages/profile.dart';
 
 class ConfigPage extends StatefulWidget {
-  ConfigPage({super.key});
+  final photoUrl;
+
+  ConfigPage({this.photoUrl});
 
   _config createState() => _config();
 }
 
-class _config extends State<ConfigPage> {
-  String imageUrl = "";
-
+class _config extends State<ConfigPage> with AutomaticKeepAliveClientMixin {
   @override
-  void initState() {
-    super.initState();
-    _getImageUrl();
-  }
+  bool get wantKeepAlive => true;
 
-  void _getImageUrl() async {
-    final ref = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser?.uid)
-        .get();
+  String url = "";
+
+  Future getImage() async {
+    Reference ref = FirebaseStorage.instance
+        .ref()
+        .child('users/${FirebaseAuth.instance.currentUser?.uid}.jpg');
+    String fileUrl = await ref.getDownloadURL();
+    print("fileUrl");
+    print(fileUrl);
     setState(() {
-      imageUrl = ref.data()!['photoURL'];
+      url = fileUrl;
     });
+    return url;
   }
 
   @override
@@ -49,20 +52,23 @@ class _config extends State<ConfigPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                 Container(
-                  decoration: BoxDecoration(shape: BoxShape.circle),
-                  padding: EdgeInsets.all(10),
-                  child: (imageUrl == "")
-                      ? Container(child: CircularProgressIndicator())
-                      : CachedNetworkImage(
-                          imageUrl: imageUrl,
-                          height: 200.0,
-                          placeholder: (context, url) =>
-                              CircularProgressIndicator(),
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.error),
-                          fit: BoxFit.cover,
-                        ),
-                ),
+                    decoration: BoxDecoration(shape: BoxShape.circle),
+                    padding: EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getImage(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          if (url != "") {
+                            return Container(
+                                height: 100, child: Image.network(url));
+                          }
+                          return FotoContainer(
+                              context: context, data: {}, width: 200);
+                        } else {
+                          return CircularProgressIndicator();
+                        }
+                      },
+                    )),
                 Center(
                     child: Expanded(
                         child: Text(

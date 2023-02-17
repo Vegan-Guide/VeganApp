@@ -41,7 +41,6 @@ class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
         // ),
         appBar: AppBar(
           title: Text("Vegan Guide"),
-          actions: [Center(child: Text("PESQUISA"))],
           backgroundColor: Color.fromARGB(255, 94, 177, 112),
         ),
         drawer: Drawer(
