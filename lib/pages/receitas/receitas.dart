@@ -144,18 +144,21 @@ Widget recipeContainer(context, documentId, row, searchText) {
 }
 
 Widget SearchBar(searchValue, context) {
-  return TextField(
-    decoration: InputDecoration(
-      prefixIcon: Icon(Icons.search),
-    ),
-    controller: searchValue,
-    onSubmitted: (value) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => Receitas(searchText: searchValue.text)));
-    },
-  );
+  return Padding(
+      padding: EdgeInsets.all(10),
+      child: TextField(
+        decoration: InputDecoration(
+          prefixIcon: Icon(Icons.search),
+        ),
+        controller: searchValue,
+        onSubmitted: (value) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      Receitas(searchText: searchValue.text)));
+        },
+      ));
 }
 
 Widget categoryContainer(context, documentId, row) {
