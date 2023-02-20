@@ -73,7 +73,8 @@ class Tile extends StatelessWidget {
                         collection: collection,
                         documentId: documentId,
                         totalReviews: data['reviews'] ?? []),
-                    Text(" (${data.length})")
+                    Text(
+                        " (${data['reviews'] != null ? data['reviews'].length : 0})")
                   ],
                 )
               ],
