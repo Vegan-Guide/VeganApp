@@ -11,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:vegan_app/globals/globalVariables.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -31,11 +32,8 @@ class _Profile extends State<Profile> {
   bool _isLoading = false;
 
   final initialAddress = TextEditingController();
-  double latitude = 0.0;
-  double longitude = 0.0;
-  String country = "";
-  String state = "";
-  String city = "";
+  dynamic address;
+  List possibleAddresses = [];
   dynamic docData;
 
   final user = FirebaseAuth.instance.currentUser;
@@ -54,11 +52,7 @@ class _Profile extends State<Profile> {
       docData = data;
       imageUrl = data['photoURL'];
       initialAddress.text = data['address'];
-      latitude = data["latitude"];
-      longitude = data["longitude"];
-      country = data["country"];
-      state = data["state"];
-      city = data["city"];
+      address = data["address"];
     });
   }
 
@@ -79,7 +73,10 @@ class _Profile extends State<Profile> {
 
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(title: Text("Editar perfil")),
+      appBar: AppBar(
+        title: Text("Editar perfil"),
+        backgroundColor: Globals.appBarBackgroundColor,
+      ),
       body: SingleChildScrollView(
           child: Column(children: [
         Padding(
@@ -141,8 +138,21 @@ class _Profile extends State<Profile> {
                       TextField(
                         controller: name,
                         decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: 'Seu nome',
+                          filled: true,
+                          fillColor: Colors.grey[200],
+                          hintText: 'Digite aqui...',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
                         ),
                       ),
                       Padding(
@@ -155,19 +165,56 @@ class _Profile extends State<Profile> {
                           getLocation(value);
                         }),
                         decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: 'Endereço',
+                          filled: true,
+                          fillColor: Colors.grey[200],
+                          hintText: 'Digite aqui...',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
                         ),
                       ),
-                      Column(
-                        children: [
-                          Text("Latitude: ${latitude}"),
-                          Text("longitude: ${longitude}"),
-                          Text("country: ${country}"),
-                          Text("state: ${state}"),
-                          Text("city: ${city}"),
-                        ],
-                      ),
+                      ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: possibleAddresses.length,
+                          itemBuilder: (context, index) {
+                            final row = possibleAddresses[index];
+                            if (possibleAddresses.length > 0) {
+                              return Card(
+                                  child: ListTile(
+                                      onTap: () {
+                                        setState(() {
+                                          address = row;
+                                          possibleAddresses = [];
+                                          print("address");
+                                          print(address);
+                                        });
+                                      },
+                                      title: Text(row.street +
+                                          ", " +
+                                          row.subLocality +
+                                          " - " +
+                                          row.subAdministrativeArea +
+                                          ", " +
+                                          row.administrativeArea +
+                                          " - " +
+                                          row.isoCountryCode)));
+                            } else {
+                              return Card(
+                                  child: ListTile(
+                                title: Text("Nenhum endereço encontrado"),
+                              ));
+                            }
+                          }),
                       Padding(
                         padding: EdgeInsets.all(15.0),
                         child: Text("Usuário"),
@@ -180,8 +227,21 @@ class _Profile extends State<Profile> {
                           return TextField(
                             controller: username,
                             decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Seu usuário',
+                              filled: true,
+                              fillColor: Colors.grey[200],
+                              hintText: 'Digite aqui...',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
                             ),
                           );
                         },
@@ -193,8 +253,21 @@ class _Profile extends State<Profile> {
                       TextField(
                         controller: email,
                         decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: 'example@example.com',
+                          filled: true,
+                          fillColor: Colors.grey[200],
+                          hintText: 'Digite aqui...',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
                         ),
                       ),
                       Center(
@@ -223,11 +296,7 @@ class _Profile extends State<Profile> {
                                 }
                                 if (initialAddress.text != "") {
                                   docData["address"] = initialAddress.text;
-                                  docData["latitude"] = latitude;
-                                  docData["longitude"] = longitude;
-                                  docData["country"] = country;
-                                  docData["state"] = state;
-                                  docData["city"] = city;
+                                  docData["address"] = address;
                                 }
                                 await FirebaseFirestore.instance
                                     .collection("users")
@@ -270,16 +339,12 @@ class _Profile extends State<Profile> {
   void getLocation(address) async {
     List<Location> coordenates =
         await locationFromAddress(address, localeIdentifier: 'pt');
-
     List<Placemark> placemarks = await placemarkFromCoordinates(
         coordenates[0].latitude, coordenates[0].longitude);
-
+    // print("placemarks");
+    // print(placemarks);
     setState(() {
-      latitude = coordenates[0].latitude;
-      longitude = coordenates[0].longitude;
-      country = placemarks[0].country as String;
-      city = placemarks[0].locality as String;
-      state = placemarks[0].administrativeArea as String;
+      possibleAddresses = placemarks;
     });
   }
 }

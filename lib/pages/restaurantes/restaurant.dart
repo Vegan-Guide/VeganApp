@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vegan_app/globals/globalVariables.dart';
 import 'package:vegan_app/pages/components/favorite.dart';
 import 'package:vegan_app/pages/components/photo.dart';
 import 'package:vegan_app/pages/components/rating.dart';
@@ -23,7 +24,10 @@ class _RestaurantDetail extends State<RestaurantDetail> {
     DocumentReference doc = restaurants.doc(widget.documentId);
 
     return Scaffold(
-      appBar: AppBar(title: Text("Restaurante")),
+      appBar: AppBar(
+        title: Text("Restaurante"),
+        backgroundColor: Globals.appBarBackgroundColor,
+      ),
       body: FutureBuilder<DocumentSnapshot>(
           future: doc.get(),
           builder: ((context, snapshot) {
@@ -32,7 +36,8 @@ class _RestaurantDetail extends State<RestaurantDetail> {
                   snapshot.data!.data() as Map<String, dynamic>;
               List totalReviews = data["reviews"] ?? [];
               List favorites = data["favorites"] ?? [];
-              return Column(
+              return SingleChildScrollView(
+                  child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -89,7 +94,15 @@ class _RestaurantDetail extends State<RestaurantDetail> {
                   ),
                   Divider(
                     height: 20,
-                    thickness: 5,
+                    thickness: 1,
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(10.0),
+                    child: Text("Tipo: ${(data['type'] ?? "Não Informado")}"),
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(10.0),
+                    child: Text("Endereço: ${(data['address'] ?? "")}"),
                   ),
                   Row(
                     children: [
@@ -103,16 +116,58 @@ class _RestaurantDetail extends State<RestaurantDetail> {
                               documentId: widget.documentId)),
                     ],
                   ),
-                  Container(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text("Tipo: ${(data['type'] ?? "Não Informado")}"),
+                  Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Text("Reviews"),
+                  ),
+                  ListView(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: [
+                      ListTile(
+                        title: Text("Review 1"),
+                      ),
+                      ListTile(
+                        title: Text("Review 2"),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Text("Escreva sua review"),
                   ),
                   Container(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text("Endereço: ${(data['address'] ?? "")}"),
+                    margin: EdgeInsets.all(5),
+                    padding: EdgeInsets.all(5),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                        hintText: 'Digite aqui...',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                      minLines: 4,
+                      maxLines: 20,
+                    ),
                   ),
+                  ElevatedButton(
+                      onPressed: () {
+                        //ação
+                      },
+                      child: Text("Enviar Comentário"))
                 ],
-              );
+              ));
             }
             return Text("Loading...");
           })),

@@ -12,6 +12,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:material_tag_editor/tag_editor.dart';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:vegan_app/globals/globalVariables.dart';
 
 class addReceita extends StatefulWidget {
   const addReceita({super.key});
@@ -76,58 +77,88 @@ class _Receita extends State<addReceita> {
 
     // TODO: implement build
     return Scaffold(
-        appBar: AppBar(title: Text("Adicionar Receita")),
+        appBar: AppBar(
+          title: Text("Adicionar Receita"),
+          backgroundColor: Globals.appBarBackgroundColor,
+        ),
         body: Padding(
             padding: EdgeInsets.all(10),
             child: SingleChildScrollView(
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Center(
-                        child: Text(
-                      "Adicionar Receita",
-                      style: TextStyle(fontSize: 20),
-                    )),
                     Form(
                       key: _formKey,
                       child: Container(
                           child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          Padding(
+                              padding: EdgeInsets.all(10), child: Text("Nome")),
                           TextFormField(
                             validator: (value) => value!.isEmpty
                                 ? "Nome da Receita não pode estar Vazio"
                                 : null,
                             controller: name,
                             decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Nome',
+                              filled: true,
+                              fillColor: Colors.grey[200],
+                              hintText: 'Digite aqui...',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
                             ),
                           ),
-                          ElevatedButton(
-                            onPressed: () async {
-                              final file = await ImagePicker()
-                                  .pickImage(source: ImageSource.gallery);
-                              setState(() {
-                                _recipeImage = file;
-                              });
-                            },
-                            child: Text('Subir arquivo'),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () async {
+                                  final file = await ImagePicker()
+                                      .pickImage(source: ImageSource.gallery);
+                                  setState(() {
+                                    _recipeImage = file;
+                                  });
+                                },
+                                child: Text('Subir arquivo'),
+                              ),
+                              Container(
+                                height: 100.0,
+                                width: 100.0,
+                                child: _recipeImage == null
+                                    ? Center(child: Text('No Image'))
+                                    : Image.file(File(_recipeImage!.path)),
+                              ),
+                            ],
                           ),
-                          Container(
-                            height: 100.0,
-                            width: 100.0,
-                            child: _recipeImage == null
-                                ? Text('No Image')
-                                : Image.file(File(_recipeImage!.path)),
-                          ),
-                          Center(
+                          Padding(
+                            padding: EdgeInsets.all(10),
                             child: Text("Tipo da receita"),
                           ),
                           FutureBuilder(
                               future: getCategories(),
                               builder: ((context, snapshot) {
-                                return DropdownButton(
+                                return DropdownButtonFormField(
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.grey[200],
+                                      border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          horizontal: 16.0, vertical: 12.0),
+                                    ),
                                     items: categories
                                         .map<DropdownMenuItem<String>>(
                                             (String e) => DropdownMenuItem(
@@ -140,26 +171,58 @@ class _Receita extends State<addReceita> {
                                       });
                                     });
                               })),
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Text("Instruções"),
+                          ),
                           TextFormField(
                             validator: (value) => value!.isEmpty
                                 ? "Dê o passo a passo para que sua receita faça sucesso!"
                                 : null,
                             controller: instructions,
                             decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Instruções',
+                              filled: true,
+                              fillColor: Colors.grey[200],
+                              hintText: 'Digite aqui...',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
                             ),
                             minLines: 4,
                             maxLines: 20,
                           ),
-                          Center(child: Text("Ingredientes")),
+                          Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Text("Ingredientes")),
                           TagEditor(
                             length: ingredients.length,
-                            delimiters: [',', ' '],
+                            delimiters: [','],
                             hasAddButton: true,
-                            inputDecoration: const InputDecoration(
-                              border: InputBorder.none,
-                              hintText: 'Hint Text...',
+                            inputDecoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.grey[200],
+                              hintText: 'Digite aqui...',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
                             ),
                             onTagChanged: (newValue) {
                               setState(() {

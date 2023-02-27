@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vegan_app/globals/globalVariables.dart';
 import 'package:vegan_app/pages/components/tile.dart';
 import 'package:vegan_app/pages/receitas/add.dart';
 import 'package:vegan_app/pages/receitas/recipe.dart';
@@ -58,8 +59,35 @@ class _Receitas extends State<Receitas> with AutomaticKeepAliveClientMixin {
     ;
 
     if ((widget.category != null || widget.searchText != null)) {
+      if (widget.category != null) {
+        final String category = widget.category;
+        bodyContent.insert(
+            1,
+            Center(
+              child: Text(
+                category.toUpperCase(),
+                style: TextStyle(
+                  fontSize: 25,
+                ),
+              ),
+            ));
+      }
+
+      if (widget.searchText != null) {
+        final String searched = widget.searchText;
+        searchValue.text = widget.searchText;
+        bodyContent.insert(
+            3,
+            Text(
+              searched.toUpperCase(),
+              style: TextStyle(fontSize: 25),
+            ));
+      }
       return Scaffold(
-        appBar: AppBar(title: Text("Receitas")),
+        appBar: AppBar(
+          title: Text("Receitas"),
+          backgroundColor: Globals.appBarBackgroundColor,
+        ),
         body: RefreshIndicator(
           child: SingleChildScrollView(child: Column(children: bodyContent)),
           onRefresh: () {

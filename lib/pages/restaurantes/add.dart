@@ -10,6 +10,7 @@ import 'package:geocoding/geocoding.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
+import 'package:vegan_app/globals/globalVariables.dart';
 
 List<String> list = <String>["Geral", "Massa", "Salgados"];
 
@@ -27,13 +28,10 @@ class _Restaurante extends State<addRestaurant> {
   final controller = TextEditingController();
   final nameController = TextEditingController();
   final initialAddress = TextEditingController();
+  List possibleAddresses = [];
   String tipo = list.first;
   bool veggie = false;
-  double latitude = 0.0;
-  double longitude = 0.0;
-  String country = "";
-  String state = "";
-  String city = "";
+  dynamic address;
 
   final _formKey = new GlobalKey<FormState>();
 
@@ -45,7 +43,10 @@ class _Restaurante extends State<addRestaurant> {
     // TODO: implement build
     return Scaffold(
         // resizeToAvoidBottomInset: false,
-        appBar: AppBar(title: Text("Adicionar Restaurante")),
+        appBar: AppBar(
+          title: Text("Adicionar Restaurante"),
+          backgroundColor: Globals.appBarBackgroundColor,
+        ),
         body: Padding(
             padding: EdgeInsets.all(10),
             child: SingleChildScrollView(
@@ -65,34 +66,66 @@ class _Restaurante extends State<addRestaurant> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Text("Nome"),
+                          ),
                           TextField(
                             controller: nameController,
                             decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Nome',
+                              filled: true,
+                              fillColor: Colors.grey[200],
+                              hintText: 'Digite aqui...',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
                             ),
                           ),
-                          ElevatedButton(
-                            onPressed: () async {
-                              final file = await ImagePicker()
-                                  .pickImage(source: ImageSource.gallery);
-                              setState(() {
-                                _recipeImage = file;
-                              });
-                            },
-                            child: Text('Subir arquivo'),
-                          ),
-                          Container(
-                            height: 100.0,
-                            width: 100.0,
-                            child: _recipeImage == null
-                                ? Text('No Image')
-                                : Image.file(File(_recipeImage!.path)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () async {
+                                  final file = await ImagePicker()
+                                      .pickImage(source: ImageSource.gallery);
+                                  setState(() {
+                                    _recipeImage = file;
+                                  });
+                                },
+                                child: Text('Escolher Imagem'),
+                              ),
+                              Container(
+                                height: 100.0,
+                                width: 100.0,
+                                child: _recipeImage == null
+                                    ? Center(child: Text('No Image'))
+                                    : Image.file(File(_recipeImage!.path)),
+                              ),
+                            ],
                           ),
                           Center(
                             child: Text("Tipo do Restaurante"),
                           ),
-                          DropdownButton(
+                          DropdownButtonFormField(
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.grey[200],
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                                borderSide: BorderSide.none,
+                              ),
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 12.0),
+                            ),
                             items: list
                                 .map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
@@ -106,6 +139,7 @@ class _Restaurante extends State<addRestaurant> {
                             },
                           ),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Center(
                                 child: Text("Totalmente Vegano"),
@@ -131,29 +165,64 @@ class _Restaurante extends State<addRestaurant> {
                               getLocation(value);
                             }),
                             decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Endereço',
+                              filled: true,
+                              fillColor: Colors.grey[200],
+                              hintText: 'Digite aqui...',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.all(10),
-                            child: (latitude != 0.0 && longitude != 0.0)
-                                ? Icon(Icons.check)
-                                : Icon(Icons.error),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Text(
-                                "Latitude: ${latitude}; Longitude: ${longitude}"),
-                          ),
+                          ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: possibleAddresses.length,
+                              itemBuilder: (context, index) {
+                                final row = possibleAddresses[index];
+                                if (possibleAddresses.length > 0) {
+                                  return Card(
+                                      child: ListTile(
+                                          onTap: () {
+                                            setState(() {
+                                              address = row;
+                                              possibleAddresses = [];
+                                              print("address");
+                                              print(address);
+                                            });
+                                          },
+                                          title: Text(row.street +
+                                              ", " +
+                                              row.subLocality +
+                                              " - " +
+                                              row.subAdministrativeArea +
+                                              ", " +
+                                              row.administrativeArea +
+                                              " - " +
+                                              row.isoCountryCode)));
+                                } else {
+                                  return Card(
+                                      child: ListTile(
+                                    title: Text("Nenhum endereço encontrado"),
+                                  ));
+                                }
+                              }),
                           ElevatedButton(
                               onPressed: () async {
                                 //algo
                                 String photoURL = "";
                                 if (nameController.text != "" &&
                                     initialAddress.text != "" &&
-                                    latitude != 0.0 &&
-                                    longitude != 0.0) {
+                                    address.latitude != 0.0 &&
+                                    address.longitude != 0.0) {
                                   if (_recipeImage != null) {
                                     final storageRef = FirebaseStorage.instance
                                         .ref()
@@ -171,12 +240,7 @@ class _Restaurante extends State<addRestaurant> {
                                     "name": nameController.text,
                                     "type": tipo,
                                     "isVegan": veggie,
-                                    "address": initialAddress.text,
-                                    "latitude": latitude,
-                                    "longitude": longitude,
-                                    "country": country,
-                                    "state": state,
-                                    "city": city,
+                                    "address": address,
                                     "photoURL": photoURL,
                                     "quantityReviews": 1,
                                     "totalReviews": 1,
@@ -197,13 +261,10 @@ class _Restaurante extends State<addRestaurant> {
         await locationFromAddress(address, localeIdentifier: 'pt');
     List<Placemark> placemarks = await placemarkFromCoordinates(
         coordenates[0].latitude, coordenates[0].longitude);
-
+    // print("placemarks");
+    // print(placemarks);
     setState(() {
-      latitude = coordenates[0].latitude;
-      longitude = coordenates[0].longitude;
-      country = placemarks[0].country as String;
-      city = placemarks[0].locality as String;
-      state = placemarks[0].administrativeArea as String;
+      possibleAddresses = placemarks;
     });
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vegan_app/globals/globalVariables.dart';
 import 'package:vegan_app/pages/components/tile.dart';
 import 'package:vegan_app/pages/restaurantes/add.dart';
 import 'package:vegan_app/pages/restaurantes/restaurant.dart';
@@ -35,7 +36,10 @@ class _Restaurants extends State<Restaurants>
 
     if (widget.searchText != null) {
       return Scaffold(
-          appBar: AppBar(title: Text("Restaurantes")),
+          appBar: AppBar(
+            title: Text("Restaurantes"),
+            backgroundColor: Globals.appBarBackgroundColor,
+          ),
           body: RefreshIndicator(
             child: Column(
               children: bodyContent(searchValue, context),

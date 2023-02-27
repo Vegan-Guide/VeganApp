@@ -22,36 +22,89 @@ class SignInPage extends StatelessWidget {
           Center(
               child: Column(
             children: [
-              Text("Nome"),
+              Padding(padding: EdgeInsets.all(10), child: Text("Nome")),
               TextField(
                 controller: name,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Seu nome',
+                  filled: true,
+                  fillColor: Colors.grey[200],
+                  hintText: 'Digite aqui...',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
               ),
-              Text("Usuário"),
+              Padding(padding: EdgeInsets.all(10), child: Text("Usuário")),
               TextField(
                 controller: username,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Seu usuário',
+                  filled: true,
+                  fillColor: Colors.grey[200],
+                  hintText: 'Digite aqui...',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
               ),
-              Text("Email"),
+              Padding(padding: EdgeInsets.all(10), child: Text("Email")),
               TextField(
                 controller: email,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'example@example.com',
+                  filled: true,
+                  fillColor: Colors.grey[200],
+                  hintText: 'Digite aqui...',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
               ),
-              Text("Password"),
+              Padding(padding: EdgeInsets.all(10), child: Text("Senha")),
               TextField(
                 controller: password,
                 obscureText: true,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
+                  filled: true,
+                  fillColor: Colors.grey[200],
+                  hintText: 'Digite aqui...',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
               ),
               ElevatedButton(

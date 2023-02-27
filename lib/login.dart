@@ -30,23 +30,50 @@ class _Login extends State<LoginPage> {
               children: [
                 Image.asset('assets/images/logo.png', width: 200),
                 // Text("Login", style: TextStyle(fontSize: 25)),
-                Card(
-                    child: Column(
+                Column(
                   children: [
-                    Text("Email"),
+                    Padding(padding: EdgeInsets.all(10), child: Text("Email")),
                     TextField(
                       controller: emailController,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: 'example@example.com',
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                        hintText: 'Seu Email',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
                       ),
                     ),
-                    Text("Password"),
+                    Padding(
+                        padding: EdgeInsets.all(10), child: Text("Password")),
                     TextField(
                       controller: passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                        hintText: 'Sua Senha',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
                       ),
                     ),
                     ElevatedButton(
@@ -80,18 +107,31 @@ class _Login extends State<LoginPage> {
                                                   SignInPage()));
                                     }),
                               TextSpan(text: " Aqui")
-                            ])))
-                    // ElevatedButton(
-                    //   onPressed: () {
-                    //     Navigator.push(
-                    //         context,
-                    //         MaterialPageRoute(
-                    //             builder: ((context) => SignInPage())));
-                    //   },
-                    //   child: Text("Registrar"),
-                    // ),
+                            ]))),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Ainda não possui sua conta? "),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: ((context) => SignInPage())));
+                            },
+                            child: Text(
+                              "Registrar",
+                              style: TextStyle(
+                                  decoration: TextDecoration.underline),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
                   ],
-                ))
+                )
               ],
             )));
   }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:vegan_app/globals/globalVariables.dart';
 import 'package:vegan_app/pages/components/favorite.dart';
 import 'package:vegan_app/pages/components/photo.dart';
 import 'package:vegan_app/pages/components/rating.dart';
@@ -23,7 +24,7 @@ class _recipeDetail extends State<RecipeDetail> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Receita"),
-        backgroundColor: Color.fromARGB(255, 94, 177, 112),
+        backgroundColor: Globals.appBarBackgroundColor,
       ),
       body: FutureBuilder<DocumentSnapshot>(
           future: doc.get(),
@@ -35,12 +36,11 @@ class _recipeDetail extends State<RecipeDetail> {
               List ingredients = data["ingredients"] ?? [];
               List favorites = data["favorites"] ?? [];
               Color heartColor = Colors.white;
-
               if (favorites.contains(FirebaseAuth.instance.currentUser?.uid)) {
                 heartColor = Colors.red;
               }
-
-              return Column(
+              return SingleChildScrollView(
+                  child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -56,11 +56,10 @@ class _recipeDetail extends State<RecipeDetail> {
                         Container(
                           width: MediaQuery.of(context).size.width * 0.6,
                           margin: EdgeInsets.all(10.0),
-                          child: Expanded(
-                              child: Text(
+                          child: Text(
                             "Nome: ${(data['name'] ?? "")}",
                             style: TextStyle(fontSize: 25),
-                          )),
+                          ),
                         ),
                         Favorite(favorites: favorites, doc: doc, data: data)
                       ],
@@ -79,19 +78,7 @@ class _recipeDetail extends State<RecipeDetail> {
                   ),
                   Divider(
                     height: 20,
-                    thickness: 5,
-                  ),
-                  Row(
-                    children: [
-                      Text("Seu rating: "),
-                      Padding(
-                          padding: EdgeInsets.all(10.0),
-                          child: Rating(
-                              type: "detail",
-                              collection: "recipes",
-                              totalReviews: totalReviews,
-                              documentId: widget.documentId)),
-                    ],
+                    thickness: 1,
                   ),
                   Container(
                     margin: EdgeInsets.all(5.0),
@@ -144,8 +131,76 @@ class _recipeDetail extends State<RecipeDetail> {
                           ],
                         )),
                   ),
+                  Divider(
+                    thickness: 1,
+                    color: Colors.grey[300],
+                    indent: 20, // espaço à esquerda
+                    endIndent: 20, // espaço à direita
+                  ),
+                  Row(
+                    children: [
+                      Text("Seu rating: "),
+                      Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Rating(
+                              type: "detail",
+                              collection: "recipes",
+                              totalReviews: totalReviews,
+                              documentId: widget.documentId)),
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Text("Reviews"),
+                  ),
+                  ListView(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: [
+                      ListTile(
+                        title: Text("Review 1"),
+                      ),
+                      ListTile(
+                        title: Text("Review 2"),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Text("Escreva sua review"),
+                  ),
+                  Container(
+                    margin: EdgeInsets.all(5),
+                    padding: EdgeInsets.all(5),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                        hintText: 'Digite aqui...',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                      minLines: 4,
+                      maxLines: 20,
+                    ),
+                  ),
+                  ElevatedButton(
+                      onPressed: () {
+                        //ação
+                      },
+                      child: Text("Enviar Comentário"))
                 ],
-              );
+              ));
             }
             return Text("Loading...");
           })),

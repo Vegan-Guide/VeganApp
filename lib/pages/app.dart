@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vegan_app/globals/globalVariables.dart';
 
 import 'package:vegan_app/pages/configuration.dart';
 import 'package:vegan_app/pages/home.dart';
@@ -30,6 +31,8 @@ class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
   }
 
   Widget build(BuildContext context) {
+    final searchValue = TextEditingController();
+
     // TODO: implement build
     return Scaffold(
         body: IndexedStack(
@@ -40,11 +43,48 @@ class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
         //   child: _widgetOptions.elementAt(_selectedIndex),
         // ),
         appBar: AppBar(
-          title: Text("Vegan Guide"),
-          backgroundColor: Color.fromARGB(255, 94, 177, 112),
+          title: Text(""),
+          actions: [
+            Container(
+              margin: EdgeInsets.all(5),
+              width: MediaQuery.of(context).size.width * 0.6,
+              child: Expanded(
+                child: Container(
+                    height: 50.0,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        filled: true,
+                        hintText: 'Pesquisar',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        suffixIcon: Icon(Icons.search),
+                      ),
+                      controller: searchValue,
+                      onSubmitted: (value) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    Receitas(searchText: searchValue.text)));
+                      },
+                    )),
+              ),
+            )
+          ],
+          backgroundColor: Globals.appBarBackgroundColor,
         ),
         drawer: Drawer(
-            backgroundColor: Color.fromARGB(255, 94, 177, 112),
+            backgroundColor: Globals.appBarBackgroundColor,
             width: MediaQuery.of(context).size.width * 0.75,
             child: ConfigPage()),
         bottomNavigationBar: BottomNavigationBar(
@@ -66,8 +106,9 @@ class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
             )
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Color.fromARGB(255, 198, 223, 209),
-          backgroundColor: Color.fromARGB(255, 94, 177, 112),
+          selectedItemColor: Color.fromARGB(255, 39, 196, 55),
+          unselectedItemColor: Color.fromARGB(255, 110, 133, 112),
+          backgroundColor: Color.fromARGB(255, 219, 219, 219),
           onTap: _onItemTapped,
         ));
   }

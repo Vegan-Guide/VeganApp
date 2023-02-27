@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vegan_app/globals/globalVariables.dart';
 
 import 'package:vegan_app/pages/components/tile.dart';
 
@@ -33,7 +34,10 @@ class _MinhasReceitas extends State<MinhasReceitas> {
     ].toList();
 
     return Scaffold(
-        appBar: AppBar(title: Text("Minhas Receitas")),
+        appBar: AppBar(
+          title: Text("Minhas Receitas"),
+          backgroundColor: Globals.appBarBackgroundColor,
+        ),
         body: Column(children: bodyContent),
         floatingActionButton: FloatingActionButton(
             onPressed: () {
