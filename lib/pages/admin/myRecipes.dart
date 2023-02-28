@@ -20,7 +20,7 @@ class _MinhasReceitas extends State<MinhasReceitas> {
   Widget build(BuildContext context) {
     Query<Map<String, dynamic>> recipesReference = FirebaseFirestore.instance
         .collection('recipes')
-        .where("createdBy", isEqualTo: FirebaseAuth.instance.currentUser?.uid);
+        .where("author_uid", isEqualTo: FirebaseAuth.instance.currentUser?.uid);
 
     List<Widget> bodyContent = <Widget>[
       Padding(

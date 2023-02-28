@@ -34,6 +34,8 @@ class _Profile extends State<Profile> {
   final initialAddress = TextEditingController();
   dynamic address;
   List possibleAddresses = [];
+  late double latitude;
+  late double longitude;
   dynamic docData;
 
   final user = FirebaseAuth.instance.currentUser;
@@ -51,7 +53,8 @@ class _Profile extends State<Profile> {
     setState(() {
       docData = data;
       imageUrl = data['photoURL'];
-      initialAddress.text = data['address'];
+      initialAddress.text =
+          data['address']['street'] + ", " + data['address']['name'];
       address = data["address"];
     });
   }
@@ -101,24 +104,26 @@ class _Profile extends State<Profile> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Container(
-                            height: 100.0,
-                            width: 100.0,
-                            child: _profileImage == null
-                                ? (imageUrl == "")
-                                    ? Container(
-                                        height: 100.0,
-                                        child: CircularProgressIndicator())
-                                    : CachedNetworkImage(
-                                        imageUrl: imageUrl,
-                                        height: 200.0,
-                                        placeholder: (context, url) =>
-                                            CircularProgressIndicator(),
-                                        errorWidget: (context, url, error) =>
-                                            Icon(Icons.error),
-                                        fit: BoxFit.cover,
-                                      )
-                                : Image.file(File(_profileImage!.path)),
-                          ),
+                              height: 100.0,
+                              width: 100.0,
+                              child: _profileImage == null
+                                  ? (imageUrl == "")
+                                      ? Container(
+                                          height: 100.0,
+                                          child: CircularProgressIndicator())
+                                      : CachedNetworkImage(
+                                          imageUrl: imageUrl,
+                                          height: 200.0,
+                                          placeholder: (context, url) =>
+                                              CircularProgressIndicator(),
+                                          errorWidget: (context, url, error) =>
+                                              Icon(Icons.error),
+                                          fit: BoxFit.cover,
+                                        )
+                                  : Card(
+                                      child:
+                                          Image.file(File(_profileImage!.path)),
+                                    )),
                           ElevatedButton(
                             onPressed: () async {
                               final file = await ImagePicker()
@@ -193,10 +198,10 @@ class _Profile extends State<Profile> {
                                   child: ListTile(
                                       onTap: () {
                                         setState(() {
-                                          address = row;
+                                          address = row.toJson();
+                                          address['latitude'] = latitude;
+                                          address['longitude'] = longitude;
                                           possibleAddresses = [];
-                                          print("address");
-                                          print(address);
                                         });
                                       },
                                       title: Text(row.street +
@@ -295,7 +300,6 @@ class _Profile extends State<Profile> {
                                   docData['photoURL'] = photoURL;
                                 }
                                 if (initialAddress.text != "") {
-                                  docData["address"] = initialAddress.text;
                                   docData["address"] = address;
                                 }
                                 await FirebaseFirestore.instance
@@ -344,6 +348,8 @@ class _Profile extends State<Profile> {
     // print("placemarks");
     // print(placemarks);
     setState(() {
+      latitude = coordenates[0].latitude;
+      longitude = coordenates[0].longitude;
       possibleAddresses = placemarks;
     });
   }

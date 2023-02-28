@@ -29,8 +29,6 @@ class _config extends State<ConfigPage> with AutomaticKeepAliveClientMixin {
         .ref()
         .child('users/${FirebaseAuth.instance.currentUser?.uid}.jpg');
     String fileUrl = await ref.getDownloadURL();
-    print("fileUrl");
-    print(fileUrl);
     setState(() {
       url = fileUrl;
     });
@@ -58,7 +56,8 @@ class _config extends State<ConfigPage> with AutomaticKeepAliveClientMixin {
                         if (snapshot.hasData) {
                           if (url != "") {
                             return Container(
-                                height: 100, child: Image.network(url));
+                                height: 150,
+                                child: Image.network(url.toString()));
                           }
                           return FotoContainer(
                               context: context, data: {}, width: 200);

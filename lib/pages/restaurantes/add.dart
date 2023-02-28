@@ -29,9 +29,13 @@ class _Restaurante extends State<addRestaurant> {
   final nameController = TextEditingController();
   final initialAddress = TextEditingController();
   List possibleAddresses = [];
+  late double latitude;
+  late double longitude;
   String tipo = list.first;
   bool veggie = false;
-  dynamic address;
+  dynamic address = null;
+  bool _isLoading = false;
+  String errorMessage = "";
 
   final _formKey = new GlobalKey<FormState>();
 
@@ -42,26 +46,36 @@ class _Restaurante extends State<addRestaurant> {
 
     // TODO: implement build
     return Scaffold(
-        // resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          title: Text("Adicionar Restaurante"),
-          backgroundColor: Globals.appBarBackgroundColor,
-        ),
-        body: Padding(
-            padding: EdgeInsets.all(10),
-            child: SingleChildScrollView(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                  Padding(
-                    padding: EdgeInsets.all(15),
-                    child: Center(
-                        child: Text(
-                      "Adicionar Restaurante",
-                      style: TextStyle(fontSize: 20),
-                    )),
-                  ),
-                  Form(
+      // resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        title: Text("Adicionar Restaurante"),
+        backgroundColor: Globals.appBarBackgroundColor,
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(10),
+        child: SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(15),
+                  child: Center(
+                      child: Text(
+                    errorMessage,
+                    style: TextStyle(fontSize: 20),
+                  )),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(15),
+                  child: Center(
+                      child: Text(
+                    "Adicionar Restaurante",
+                    style: TextStyle(fontSize: 20),
+                  )),
+                ),
+                Stack(
+                  children: [
+                    Form(
                       key: _formKey,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -193,10 +207,10 @@ class _Restaurante extends State<addRestaurant> {
                                       child: ListTile(
                                           onTap: () {
                                             setState(() {
-                                              address = row;
+                                              address = row.toJson();
                                               possibleAddresses = [];
-                                              print("address");
-                                              print(address);
+                                              address['latitude'] = latitude;
+                                              address['longitude'] = longitude;
                                             });
                                           },
                                           title: Text(row.street +
@@ -221,8 +235,9 @@ class _Restaurante extends State<addRestaurant> {
                                 String photoURL = "";
                                 if (nameController.text != "" &&
                                     initialAddress.text != "" &&
-                                    address.latitude != 0.0 &&
-                                    address.longitude != 0.0) {
+                                    address != "") {
+                                  errorMessage = "";
+                                  _showLoading();
                                   if (_recipeImage != null) {
                                     final storageRef = FirebaseStorage.instance
                                         .ref()
@@ -234,8 +249,9 @@ class _Restaurante extends State<addRestaurant> {
                                               await res.ref.getDownloadURL()
                                         });
                                   }
-                                  ref.add({
-                                    "createdBy":
+                                  print("creating document");
+                                  await ref.add({
+                                    "author_uid":
                                         FirebaseAuth.instance.currentUser?.uid,
                                     "name": nameController.text,
                                     "type": tipo,
@@ -246,14 +262,47 @@ class _Restaurante extends State<addRestaurant> {
                                     "totalReviews": 1,
                                     "averageReview": 1
                                   }).then((value) {
+                                    _hideLoading();
                                     Navigator.pop(context);
+                                  });
+                                } else {
+                                  setState(() {
+                                    errorMessage =
+                                        "Por favor, preencha todos os campos";
                                   });
                                 }
                               },
                               child: Text("Adicionar"))
                         ],
-                      )),
-                ]))));
+                      ),
+                    ),
+                    _isLoading
+                        ? Container(
+                            color: Colors.black26,
+                            height: MediaQuery.of(context).size.height,
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          )
+                        : Container()
+                  ],
+                )
+              ]),
+        ),
+      ),
+    );
+  }
+
+  void _showLoading() {
+    setState(() {
+      _isLoading = true;
+    });
+  }
+
+  void _hideLoading() {
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   void getLocation(address) async {
@@ -264,6 +313,8 @@ class _Restaurante extends State<addRestaurant> {
     // print("placemarks");
     // print(placemarks);
     setState(() {
+      latitude = coordenates[0].latitude;
+      longitude = coordenates[0].longitude;
       possibleAddresses = placemarks;
     });
   }
