@@ -36,6 +36,8 @@ class _RestaurantDetail extends State<RestaurantDetail> {
                   snapshot.data!.data() as Map<String, dynamic>;
               List totalReviews = data["reviews"] ?? [];
               List favorites = data["favorites"] ?? [];
+              print("data");
+              print(data['address']);
               return SingleChildScrollView(
                   child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -103,7 +105,7 @@ class _RestaurantDetail extends State<RestaurantDetail> {
                   Container(
                     padding: EdgeInsets.all(10.0),
                     child: Text(
-                        "Endereço: ${(data['address']['street'] ?? "")}, ${(data['address']['name'] ?? "")} - ${(data['address']['subAdministrativeArea'] ?? "")}, ${(data['address']['administrativeArea'] ?? "")} - ${(data['address']['isoCountryCode'] ?? "")}"),
+                        "Endereço: ${(data['address'] != null ? data['address']['street'] : "")}, ${(data['address'] != null ? data['address']['name'] : "")} - ${(data['address'] != null ? data['address']['subAdministrativeArea'] : "")}, ${(data['address'] != null ? data['address']['administrativeArea'] : "")} - ${(data['address'] != null ? data['address']['isoCountryCode'] : "")}"),
                   ),
                   Row(
                     children: [
