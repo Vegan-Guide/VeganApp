@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:vegan_app/globals/globalVariables.dart';
 import 'package:vegan_app/pages/components/rating.dart';
 
 class Tile extends StatelessWidget {
@@ -21,7 +22,7 @@ class Tile extends StatelessWidget {
           margin: EdgeInsets.all(10),
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 180, 235, 205),
+            color: Globals.tileBackgroundColor,
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
@@ -45,7 +46,7 @@ class Tile extends StatelessWidget {
         margin: EdgeInsets.all(10),
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Color.fromARGB(255, 180, 235, 205),
+          color: Globals.tileBackgroundColor,
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(

@@ -100,23 +100,7 @@ class _Receita extends State<addReceita> {
                           ? "Nome da Receita não pode estar Vazio"
                           : null,
                       controller: name,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                        hintText: 'Digite aqui...',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
+                      decoration: Globals.inputDecorationStyling,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -148,16 +132,7 @@ class _Receita extends State<addReceita> {
                         future: getCategories(),
                         builder: ((context, snapshot) {
                           return DropdownButtonFormField(
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.grey[200],
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  borderSide: BorderSide.none,
-                                ),
-                                contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 16.0, vertical: 12.0),
-                              ),
+                              decoration: Globals.inputDecorationStyling,
                               items: categories
                                   .map<DropdownMenuItem<String>>((String e) =>
                                       DropdownMenuItem(
@@ -179,23 +154,7 @@ class _Receita extends State<addReceita> {
                           ? "Dê o passo a passo para que sua receita faça sucesso!"
                           : null,
                       controller: instructions,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                        hintText: 'Digite aqui...',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
+                      decoration: Globals.inputDecorationStyling,
                       minLines: 4,
                       maxLines: 20,
                     ),
@@ -206,23 +165,7 @@ class _Receita extends State<addReceita> {
                       length: ingredients.length,
                       delimiters: [','],
                       hasAddButton: true,
-                      inputDecoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                        hintText: 'Digite aqui...',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
+                      inputDecoration: Globals.inputDecorationStyling,
                       onTagChanged: (newValue) {
                         setState(() {
                           ingredients.add(newValue);
@@ -260,7 +203,8 @@ class _Receita extends State<addReceita> {
                               "photoURL": photoURL,
                               "quantityReviews": 1,
                               "totalReviews": 1,
-                              "averageReview": 1
+                              "averageReview": 1,
+                              "created_at": Timestamp.fromDate(DateTime.now())
                             }).then((value) async {
                               _hideLoading();
                               Navigator.pop(context);

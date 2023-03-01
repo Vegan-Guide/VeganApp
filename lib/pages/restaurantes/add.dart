@@ -12,7 +12,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'package:vegan_app/globals/globalVariables.dart';
 
-List<String> list = <String>["Geral", "Massa", "Salgados"];
+List<String> list = <String>[
+  "Geral",
+  "Massa",
+  "Salgados",
+  "Hamburguer",
+  "Asiático"
+];
 
 class addRestaurant extends StatefulWidget {
   const addRestaurant({super.key});
@@ -38,6 +44,38 @@ class _Restaurante extends State<addRestaurant> {
   String errorMessage = "";
 
   final _formKey = new GlobalKey<FormState>();
+
+  List<String> categories = <String>["Geral"];
+
+  Future getCategories() async {
+    await FirebaseFirestore.instance
+        .collection('restaurantTypes')
+        .get()
+        .then((value) => value.docs.forEach((element) async {
+              await getCategorieName(element.reference.id);
+              if (tipo == "") {
+                tipo = categories.first;
+              }
+            }));
+  }
+
+  Future getCategorieName(id) async {
+    CollectionReference ref =
+        FirebaseFirestore.instance.collection('restaurantTypes');
+    final doc = ref.doc(id).get();
+    return await doc.then((value) => {
+          value.reference.snapshots().forEach((element) {
+            Map<String, dynamic> data = element.data() as Map<String, dynamic>;
+            String name = data["name"];
+            if (categories.contains(name) == false) {
+              setState(() {
+                categories.add(name);
+              });
+            }
+            return data["name"];
+          })
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,25 +123,8 @@ class _Restaurante extends State<addRestaurant> {
                             child: Text("Nome"),
                           ),
                           TextField(
-                            controller: nameController,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.grey[200],
-                              hintText: 'Digite aqui...',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none,
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
-                          ),
+                              controller: nameController,
+                              decoration: Globals.inputDecorationStyling),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -129,29 +150,33 @@ class _Restaurante extends State<addRestaurant> {
                           Center(
                             child: Text("Tipo do Restaurante"),
                           ),
-                          DropdownButtonFormField(
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.grey[200],
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide.none,
-                              ),
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 16.0, vertical: 12.0),
-                            ),
-                            items: list
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                  value: value, child: Text(value));
-                            }).toList(),
-                            value: tipo,
-                            onChanged: (value) {
-                              setState(() {
-                                tipo = value!;
-                              });
-                            },
-                          ),
+                          FutureBuilder(
+                              future: getCategories(),
+                              builder: ((context, snapshot) {
+                                return DropdownButtonFormField(
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.grey[200],
+                                      border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          horizontal: 16.0, vertical: 12.0),
+                                    ),
+                                    items: categories
+                                        .map<DropdownMenuItem<String>>(
+                                            (String e) => DropdownMenuItem(
+                                                value: e, child: Text(e)))
+                                        .toList(),
+                                    value: tipo,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        tipo = value!;
+                                      });
+                                    });
+                              })),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -174,28 +199,11 @@ class _Restaurante extends State<addRestaurant> {
                             ),
                           ),
                           TextField(
-                            controller: initialAddress,
-                            onChanged: ((value) {
-                              getLocation(value);
-                            }),
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.grey[200],
-                              hintText: 'Digite aqui...',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none,
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
-                          ),
+                              controller: initialAddress,
+                              onChanged: ((value) {
+                                getLocation(value);
+                              }),
+                              decoration: Globals.inputDecorationStyling),
                           ListView.builder(
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
@@ -260,7 +268,9 @@ class _Restaurante extends State<addRestaurant> {
                                     "photoURL": photoURL,
                                     "quantityReviews": 1,
                                     "totalReviews": 1,
-                                    "averageReview": 1
+                                    "averageReview": 1,
+                                    "created_at":
+                                        Timestamp.fromDate(DateTime.now())
                                   }).then((value) {
                                     _hideLoading();
                                     Navigator.pop(context);

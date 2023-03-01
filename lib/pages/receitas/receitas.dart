@@ -7,9 +7,10 @@ import 'package:vegan_app/pages/receitas/recipe.dart';
 
 class Receitas extends StatefulWidget {
   final category;
+  final categoryName;
   final searchText;
 
-  const Receitas({this.category, this.searchText});
+  const Receitas({this.category, this.categoryName, this.searchText});
   @override
   _Receitas createState() => _Receitas();
 }
@@ -19,6 +20,7 @@ class _Receitas extends State<Receitas> with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive => true;
 
   final searchValue = TextEditingController();
+  String categoryName = "";
 
   Future<void> refreshPage() async {
     setState(() {});
@@ -26,6 +28,8 @@ class _Receitas extends State<Receitas> with AutomaticKeepAliveClientMixin {
 
   @override
   Widget build(BuildContext context) {
+    print("widget.category");
+    print(widget.category);
     Query<Map<String, dynamic>> recipesReference = (widget.category != null)
         ? FirebaseFirestore.instance
             .collection('recipes')
@@ -60,16 +64,12 @@ class _Receitas extends State<Receitas> with AutomaticKeepAliveClientMixin {
 
     if ((widget.category != null || widget.searchText != null)) {
       if (widget.category != null) {
-        final String category = widget.category;
+        final String category = widget.categoryName;
         bodyContent.insert(
             1,
-            Center(
-              child: Text(
-                category.toUpperCase(),
-                style: TextStyle(
-                  fontSize: 25,
-                ),
-              ),
+            Text(
+              category.toUpperCase(),
+              style: TextStyle(fontSize: 25),
             ));
       }
 
@@ -195,7 +195,10 @@ Widget categoryContainer(context, documentId, row) {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => Receitas(category: row['name'])));
+              builder: (context) => Receitas(
+                    category: documentId,
+                    categoryName: row['name'],
+                  )));
     },
     child: Container(
       width: 110,

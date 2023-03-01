@@ -11,9 +11,9 @@ import 'package:vegan_app/pages/components/photo.dart';
 import 'package:vegan_app/pages/profile.dart';
 
 class ConfigPage extends StatefulWidget {
-  final photoUrl;
+  final userData;
 
-  ConfigPage({this.photoUrl});
+  ConfigPage({this.userData});
 
   _config createState() => _config();
 }
@@ -23,17 +23,6 @@ class _config extends State<ConfigPage> with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive => true;
 
   String url = "";
-
-  Future getImage() async {
-    Reference ref = FirebaseStorage.instance
-        .ref()
-        .child('users/${FirebaseAuth.instance.currentUser?.uid}.jpg');
-    String fileUrl = await ref.getDownloadURL();
-    setState(() {
-      url = fileUrl;
-    });
-    return url;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,22 +39,13 @@ class _config extends State<ConfigPage> with AutomaticKeepAliveClientMixin {
                 Container(
                     decoration: BoxDecoration(shape: BoxShape.circle),
                     padding: EdgeInsets.all(10),
-                    child: FutureBuilder(
-                      future: getImage(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          if (url != "") {
-                            return Container(
-                                height: 150,
-                                child: Image.network(url.toString()));
-                          }
-                          return FotoContainer(
-                              context: context, data: {}, width: 200);
-                        } else {
-                          return CircularProgressIndicator();
-                        }
-                      },
-                    )),
+                    child: (widget.userData['photoURL'] != null)
+                        ? Container(
+                            height: 150,
+                            width: 150,
+                            child: Image.network(widget.userData['photoURL']))
+                        : FotoContainer(
+                            context: context, data: {}, width: 200)),
                 Center(
                     child: Expanded(
                         child: Text(

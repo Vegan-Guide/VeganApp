@@ -6,6 +6,8 @@ import 'package:vegan_app/pages/receitas/recipe.dart';
 import 'package:vegan_app/pages/restaurantes/restaurant.dart';
 
 class HomePage extends StatefulWidget {
+  final userData;
+  const HomePage({this.userData});
   @override
   _Home createState() => _Home();
 }
@@ -24,6 +26,8 @@ class _Home extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final userName = widget.userData['name'];
+
     return SingleChildScrollView(
         child: Column(children: [
       Container(

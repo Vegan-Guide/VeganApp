@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vegan_app/globals/globalVariables.dart';
 
@@ -16,13 +18,26 @@ class App extends StatefulWidget {
 class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
+  late dynamic userData;
   int _selectedIndex = 0;
   @override
-  static List<Widget> _widgetOptions = <Widget>[
-    HomePage(),
-    Restaurants(),
-    Receitas()
-  ];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getDocumentData();
+  }
+
+  Future<void> _getDocumentData() async {
+    final ref = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .get();
+    final data = ref.data()!;
+    setState(() {
+      userData = data;
+    });
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -31,6 +46,11 @@ class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
   }
 
   Widget build(BuildContext context) {
+    List<Widget> _widgetOptions = <Widget>[
+      HomePage(userData: userData),
+      Restaurants(userData: userData),
+      Receitas()
+    ];
     final searchValue = TextEditingController();
 
     // TODO: implement build
@@ -43,7 +63,7 @@ class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
         //   child: _widgetOptions.elementAt(_selectedIndex),
         // ),
         appBar: AppBar(
-          title: Text(""),
+          // title: Text(""),
           actions: [
             Container(
               margin: EdgeInsets.all(5),
@@ -52,23 +72,7 @@ class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
                 child: Container(
                     height: 50.0,
                     child: TextField(
-                      decoration: InputDecoration(
-                        filled: true,
-                        hintText: 'Pesquisar',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                        suffixIcon: Icon(Icons.search),
-                      ),
+                      decoration: Globals.inputDecorationStyling,
                       controller: searchValue,
                       onSubmitted: (value) {
                         Navigator.push(
@@ -86,7 +90,7 @@ class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
         drawer: Drawer(
             backgroundColor: Globals.appBarBackgroundColor,
             width: MediaQuery.of(context).size.width * 0.75,
-            child: ConfigPage()),
+            child: ConfigPage(userData: userData)),
         bottomNavigationBar: BottomNavigationBar(
           items: [
             BottomNavigationBarItem(
