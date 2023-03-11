@@ -5,6 +5,7 @@ import 'package:vegan_app/globals/globalVariables.dart';
 
 import 'package:vegan_app/pages/configuration.dart';
 import 'package:vegan_app/pages/home.dart';
+import 'package:vegan_app/pages/news/newsList.dart';
 import 'package:vegan_app/pages/restaurantes/restaurants.dart';
 import 'package:vegan_app/pages/receitas/receitas.dart';
 
@@ -20,7 +21,6 @@ class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive => true;
   late dynamic userData;
   int _selectedIndex = 0;
-  @override
   @override
   void initState() {
     // TODO: implement initState
@@ -48,6 +48,7 @@ class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     List<Widget> _widgetOptions = <Widget>[
       HomePage(userData: userData),
+      NewsList(userData: userData),
       Restaurants(userData: userData),
       Receitas()
     ];
@@ -94,17 +95,18 @@ class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
         bottomNavigationBar: BottomNavigationBar(
           items: [
             BottomNavigationBarItem(
-              backgroundColor: Color.fromARGB(255, 82, 153, 97),
               label: "Home",
               icon: Icon(Icons.home),
             ),
             BottomNavigationBarItem(
-              backgroundColor: Color.fromARGB(255, 82, 153, 97),
+              label: "Notícias",
+              icon: Icon(Icons.newspaper),
+            ),
+            BottomNavigationBarItem(
               label: "Restaurantes",
               icon: Icon(Icons.restaurant),
             ),
             BottomNavigationBarItem(
-              backgroundColor: Color.fromARGB(255, 82, 153, 97),
               label: "Receitas",
               icon: Icon(Icons.restaurant_menu),
             )
@@ -112,7 +114,7 @@ class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
           currentIndex: _selectedIndex,
           selectedItemColor: Color.fromARGB(255, 39, 196, 55),
           unselectedItemColor: Color.fromARGB(255, 110, 133, 112),
-          backgroundColor: Color.fromARGB(255, 219, 219, 219),
+          backgroundColor: Color.fromARGB(255, 230, 228, 228),
           onTap: _onItemTapped,
         ));
   }

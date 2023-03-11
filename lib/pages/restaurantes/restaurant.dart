@@ -123,6 +123,12 @@ class _RestaurantDetail extends State<RestaurantDetail> {
                     padding: EdgeInsets.all(10),
                     child: Text("Reviews"),
                   ),
+
+                  //  Comments(
+                  //                     collection: "restaurants",
+                  //                     totalReviews: totalReviews,
+                  //                     documentId: widget.documentId)
+
                   ListView(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
