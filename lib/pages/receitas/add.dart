@@ -15,7 +15,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:vegan_app/globals/globalVariables.dart';
 
 class addReceita extends StatefulWidget {
-  const addReceita({super.key});
+  final doc_id;
+
+  const addReceita({super.key, this.doc_id});
 
   @override
   _Receita createState() => _Receita();
@@ -26,11 +28,51 @@ class _Receita extends State<addReceita> {
   XFile? _recipeImage;
   final name = TextEditingController();
   final instructions = TextEditingController();
-  List<String> ingredients = [];
+  final time = TextEditingController();
+  List ingredients = [];
   bool veggie = false;
+  String photoURL = "";
   String tipo = "Geral";
+  int quantityReviews = 1;
+  int totalReviews = 1;
+  int averageReview = 1;
 
   List<String> categories = <String>["Geral"];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.doc_id != null) {
+      getDocument();
+    }
+  }
+
+  Future getDocument() async {
+    DocumentSnapshot<Map<String, dynamic>> document = await FirebaseFirestore
+        .instance
+        .collection('recipes')
+        .doc(widget.doc_id)
+        .get();
+    Map<String, dynamic>? snapshot = document.data();
+
+    name.text = snapshot?['name'] ?? "";
+    instructions.text = snapshot?['instructions'] ?? "";
+    time.text = snapshot?['time'] ?? "";
+    veggie = snapshot?['veggie'] ?? false;
+    tipo = snapshot?['tipo'] ?? "";
+    final ingredientsList = snapshot?['ingredients'] as List;
+
+    if (ingredientsList.length > 0) {
+      setState(() {
+        ingredients = ingredientsList;
+      });
+    }
+    quantityReviews = snapshot?['quantityReviews'] ?? 1;
+    totalReviews = snapshot?['totalReviews'] ?? 1;
+    averageReview = snapshot?['averageReview'] ?? 1;
+    photoURL = snapshot?['photoURL'] ?? "";
+  }
 
   Future getCategories() async {
     await FirebaseFirestore.instance
@@ -47,8 +89,9 @@ class _Receita extends State<addReceita> {
   Future getCategorieName(id) async {
     CollectionReference ref =
         FirebaseFirestore.instance.collection('categories');
-    final doc = ref.doc(id).get();
-    return await doc.then((value) => {
+    final doc = ref.doc(id);
+    final docGet = doc.get();
+    return await docGet.then((value) => {
           value.reference.snapshots().forEach((element) {
             Map<String, dynamic> data = element.data() as Map<String, dynamic>;
             String name = data["name"];
@@ -159,6 +202,17 @@ class _Receita extends State<addReceita> {
                       maxLines: 20,
                     ),
                     Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text("Tempo de Preparo (min)"),
+                    ),
+                    TextFormField(
+                      validator: (value) => value!.isEmpty
+                          ? "Coloque o tempo de preparo por favor!"
+                          : null,
+                      controller: time,
+                      decoration: Globals.inputDecorationStyling,
+                    ),
+                    Padding(
                         padding: EdgeInsets.all(10),
                         child: Text("Ingredientes")),
                     TagEditor(
@@ -181,7 +235,6 @@ class _Receita extends State<addReceita> {
                         onPressed: () async {
                           //algo
                           _showLoading();
-                          String photoURL = "";
                           if (name.text != "" && instructions.text != "") {
                             if (_recipeImage != null) {
                               final storageRef = FirebaseStorage.instance
@@ -193,22 +246,30 @@ class _Receita extends State<addReceita> {
                                   {photoURL = await res.ref.getDownloadURL()});
                             }
                             print("adicionando no FB");
-                            ref.add({
+                            final payload = {
                               "author_uid":
                                   FirebaseAuth.instance.currentUser?.uid,
                               "name": name.text,
                               "type": tipo,
                               "ingredients": ingredients,
                               "instructions": instructions.text,
+                              "time": time.text,
                               "photoURL": photoURL,
-                              "quantityReviews": 1,
-                              "totalReviews": 1,
-                              "averageReview": 1,
+                              "quantityReviews": quantityReviews,
+                              "totalReviews": totalReviews,
+                              "averageReview": averageReview,
                               "created_at": Timestamp.fromDate(DateTime.now())
-                            }).then((value) async {
+                            };
+                            if (widget.doc_id != null) {
+                              ref.doc(widget.doc_id).update(payload);
                               _hideLoading();
                               Navigator.pop(context);
-                            });
+                            } else {
+                              ref.add(payload).then((value) async {
+                                _hideLoading();
+                                Navigator.pop(context);
+                              });
+                            }
                           }
                         },
                         child: Text("Adicionar"))

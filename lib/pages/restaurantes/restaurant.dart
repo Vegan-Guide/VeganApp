@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vegan_app/globals/globalVariables.dart';
+import 'package:vegan_app/pages/components/comments.dart';
 import 'package:vegan_app/pages/components/favorite.dart';
 import 'package:vegan_app/pages/components/photo.dart';
 import 'package:vegan_app/pages/components/rating.dart';
@@ -49,10 +50,13 @@ class _RestaurantDetail extends State<RestaurantDetail> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        FotoContainer(
-                            context: context,
-                            data: data,
-                            width: MediaQuery.of(context).size.width),
+                        Padding(
+                          padding: EdgeInsets.all(20),
+                          child: FotoContainer(
+                              context: context,
+                              data: data,
+                              width: MediaQuery.of(context).size.width),
+                        ),
                         Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -119,62 +123,12 @@ class _RestaurantDetail extends State<RestaurantDetail> {
                               documentId: widget.documentId)),
                     ],
                   ),
-                  Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text("Reviews"),
-                  ),
-
-                  //  Comments(
-                  //                     collection: "restaurants",
-                  //                     totalReviews: totalReviews,
-                  //                     documentId: widget.documentId)
-
-                  ListView(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    children: [
-                      ListTile(
-                        title: Text("Review 1"),
-                      ),
-                      ListTile(
-                        title: Text("Review 2"),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text("Escreva sua review"),
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(5),
-                    padding: EdgeInsets.all(5),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                        hintText: 'Digite aqui...',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                      minLines: 4,
-                      maxLines: 20,
-                    ),
-                  ),
-                  ElevatedButton(
-                      onPressed: () {
-                        //ação
-                      },
-                      child: Text("Enviar Comentário"))
+                  Comments(
+                      collection: "restaurants",
+                      comments: totalReviews
+                          .where((element) => element['comment'] != null)
+                          .toList(),
+                      documentId: widget.documentId)
                 ],
               ));
             }

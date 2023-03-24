@@ -19,7 +19,7 @@ class App extends StatefulWidget {
 class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-  late dynamic userData;
+  late dynamic userData = null;
   int _selectedIndex = 0;
   @override
   void initState() {
@@ -54,12 +54,18 @@ class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
     ];
     final searchValue = TextEditingController();
 
+    //colocar para enquanto userData ainda nao foi carregado, colocar tela de carregamento que substitui IndexedStack
+
     // TODO: implement build
     return Scaffold(
-        body: IndexedStack(
-          children: _widgetOptions,
-          index: _selectedIndex,
-        ),
+        body: (userData == null)
+            ? Container(
+                child: CircularProgressIndicator(),
+              )
+            : IndexedStack(
+                children: _widgetOptions,
+                index: _selectedIndex,
+              ),
         // Center(
         //   child: _widgetOptions.elementAt(_selectedIndex),
         // ),

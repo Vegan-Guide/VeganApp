@@ -107,7 +107,10 @@ Widget rowContainer(
             context,
             MaterialPageRoute(
                 builder: (context) => (collection == "recipe")
-                    ? RecipeDetail(documentId: documentId)
+                    ? RecipeDetail(
+                        documentId: documentId,
+                        created_by: null,
+                      )
                     : RestaurantDetail(documentId: documentId)));
       },
       child: Tile(

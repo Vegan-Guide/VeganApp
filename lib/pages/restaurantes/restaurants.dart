@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vegan_app/globals/globalVariables.dart';
 import 'package:vegan_app/pages/components/tile.dart';
 import 'package:vegan_app/pages/restaurantes/add.dart';
+import 'package:vegan_app/pages/restaurantes/filter.dart';
 import 'package:vegan_app/pages/restaurantes/restaurant.dart';
 
 class Restaurants extends StatefulWidget {
@@ -90,9 +91,28 @@ class _Restaurants extends State<Restaurants> {
         ),
       ),
       Padding(
+          padding: EdgeInsets.all(10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Restaurantes",
+                style: TextStyle(fontSize: 25),
+              ),
+              GestureDetector(
+                  onTap: () async {
+                    dynamic result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => filterRestaurant()));
+                  },
+                  child: Icon(Icons.filter_alt)),
+            ],
+          )),
+      Padding(
         padding: EdgeInsets.all(10),
         child: Text(
-          "Restaurantes Próximos de você",
+          "Próximos de você",
           style: TextStyle(fontSize: 25),
         ),
       ),
@@ -143,15 +163,16 @@ class _Restaurants extends State<Restaurants> {
   Widget _buildListNear(
       BuildContext context, List<DocumentSnapshot> snapshot, dynamic userData) {
     return Container(
-        width: MediaQuery.of(context).size.width,
-        height: 200,
-        child: ListView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.only(top: 20.0),
-            children: snapshot
-                .map((data) =>
-                    _buildListItemNear(context, data, widget.userData))
-                .toList()));
+      width: MediaQuery.of(context).size.width,
+      height: 200,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.only(top: 20.0),
+        children: snapshot
+            .map((data) => _buildListItemNear(context, data, widget.userData))
+            .toList(),
+      ),
+    );
   }
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {

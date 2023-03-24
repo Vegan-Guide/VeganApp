@@ -78,7 +78,10 @@ Widget recipeContainer(context, documentId, row) {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => RecipeDetail(documentId: documentId)));
+                builder: (context) => RecipeDetail(
+                      documentId: documentId,
+                      created_by: row['author_uid'],
+                    )));
       },
       child: Tile(
           documentId: documentId,
