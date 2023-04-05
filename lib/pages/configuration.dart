@@ -129,24 +129,28 @@ class _config extends State<ConfigPage> with AutomaticKeepAliveClientMixin {
                           builder: (context) => MeusRestaurantesFavoritos()));
                     }),
                   )))
+            ])),
+            ListTile(
+                title: Row(children: [
+              Icon(Icons.logout),
+              Padding(
+                  padding: EdgeInsets.all(10.00),
+                  child: Center(
+                      child: GestureDetector(
+                    child:
+                        Text("Logout", style: TextStyle(color: Colors.white)),
+                    onTap: (() {
+                      FirebaseAuth.instance.signOut().then((value) => {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginPage()))
+                          });
+                    }),
+                  )))
             ]))
           ])
         ]),
-        Container(
-            margin: EdgeInsets.all(10.00),
-            child: ElevatedButton(
-              onPressed: () {
-                FirebaseAuth.instance.signOut().then((value) => {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => LoginPage()))
-                    });
-              },
-              child: Row(children: [
-                Padding(
-                    padding: EdgeInsets.all(2.00), child: Icon(Icons.settings)),
-                Text("Logout")
-              ]),
-            ))
       ],
     ));
   }

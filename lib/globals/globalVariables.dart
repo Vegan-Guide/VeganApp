@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class Globals {
   static Color appBarBackgroundColor = Color.fromRGBO(65, 179, 103, 1);
-  static Color tileBackgroundColor = Color.fromRGBO(234, 234, 234, 1);
+  static Color tileBackgroundColor = Color.fromRGBO(243, 243, 243, 1);
   static InputDecoration inputDecorationStyling = InputDecoration(
     filled: true,
     fillColor: Colors.grey[200],

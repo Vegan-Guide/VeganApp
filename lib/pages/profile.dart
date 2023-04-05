@@ -142,23 +142,7 @@ class _Profile extends State<Profile> {
                       ),
                       TextField(
                         controller: name,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.grey[200],
-                          hintText: 'Digite aqui...',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
+                        decoration: Globals.inputDecorationStyling,
                       ),
                       Padding(
                         padding: EdgeInsets.all(10),
@@ -169,23 +153,7 @@ class _Profile extends State<Profile> {
                         onChanged: ((value) {
                           getLocation(value);
                         }),
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.grey[200],
-                          hintText: 'Digite aqui...',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
+                        decoration: Globals.inputDecorationStyling,
                       ),
                       ListView.builder(
                           shrinkWrap: true,
@@ -230,25 +198,8 @@ class _Profile extends State<Profile> {
                           dynamic data = snapshot.data;
                           username.text = data["username"];
                           return TextField(
-                            controller: username,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.grey[200],
-                              hintText: 'Digite aqui...',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none,
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
-                          );
+                              controller: username,
+                              decoration: Globals.inputDecorationStyling);
                         },
                       ),
                       Padding(
@@ -257,23 +208,7 @@ class _Profile extends State<Profile> {
                       ),
                       TextField(
                         controller: email,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.grey[200],
-                          hintText: 'Digite aqui...',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
+                        decoration: Globals.inputDecorationStyling,
                       ),
                       Center(
                           child: ElevatedButton(

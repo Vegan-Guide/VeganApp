@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vegan_app/globals/globalVariables.dart';
 
 class Comments extends StatefulWidget {
   final collection;
@@ -27,25 +28,9 @@ class _comments extends State<Comments> {
           margin: EdgeInsets.all(5),
           padding: EdgeInsets.all(5),
           child: TextField(
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.grey[200],
-              hintText: 'Digite aqui...',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide.none,
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide.none,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide.none,
-              ),
-            ),
             minLines: 4,
             maxLines: 20,
+            decoration: Globals.inputDecorationStyling,
           ),
         ),
         ElevatedButton(

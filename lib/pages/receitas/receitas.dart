@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vegan_app/globals/globalVariables.dart';
 import 'package:vegan_app/pages/components/tile.dart';
 import 'package:vegan_app/pages/receitas/add.dart';
+import 'package:vegan_app/pages/receitas/filter.dart';
 import 'package:vegan_app/pages/receitas/recipe.dart';
 
 class Receitas extends StatefulWidget {
@@ -18,23 +19,31 @@ class Receitas extends StatefulWidget {
 class _Receitas extends State<Receitas> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
+  var min = null;
+  var max = null;
 
   final searchValue = TextEditingController();
   String categoryName = "";
-
   Future<void> refreshPage() async {
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    print("widget.category");
-    print(widget.category);
     Query<Map<String, dynamic>> recipesReference = (widget.category != null)
         ? FirebaseFirestore.instance
             .collection('recipes')
             .where("type", isEqualTo: widget.category)
         : FirebaseFirestore.instance.collection('recipes');
+
+    if (min != null) {
+      recipesReference = recipesReference.where("time",
+          isGreaterThanOrEqualTo: int.parse(min));
+    }
+    if (max != null) {
+      recipesReference =
+          recipesReference.where("time", isLessThanOrEqualTo: int.parse(max));
+    }
 
     final CollectionReference categoryReference =
         FirebaseFirestore.instance.collection('categories');
@@ -47,17 +56,39 @@ class _Receitas extends State<Receitas> with AutomaticKeepAliveClientMixin {
         : <Widget>[
             SearchBar(searchValue, context),
             Padding(
-                padding: EdgeInsets.all(10),
-                child: Text(
-                  "Categorias",
-                  style: TextStyle(fontSize: 25),
-                )),
+              padding: EdgeInsets.all(15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        "Categorias",
+                        style: TextStyle(fontSize: 25),
+                      )),
+                  GestureDetector(
+                      onTap: () async {
+                        dynamic result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    filterRecipe(min: min, max: max)));
+                        setState(() {
+                          min = result['min'] ?? null;
+                          max = result['max'] ?? null;
+                        });
+                      },
+                      child: Icon(Icons.filter_alt)),
+                ],
+              ),
+            ),
             Container(
                 width: MediaQuery.of(context).size.width,
                 height: 150,
                 child: Center(
-                    child: _buildBody(
-                        context, categoryReference, true, widget.searchText))),
+                  child: _buildBody(
+                      context, categoryReference, true, widget.searchText),
+                )),
             _buildBody(context, recipesReference, false, widget.searchText)
           ].toList();
     ;

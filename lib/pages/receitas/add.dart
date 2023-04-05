@@ -253,7 +253,7 @@ class _Receita extends State<addReceita> {
                               "type": tipo,
                               "ingredients": ingredients,
                               "instructions": instructions.text,
-                              "time": time.text,
+                              "time": int.parse(time.text),
                               "photoURL": photoURL,
                               "quantityReviews": quantityReviews,
                               "totalReviews": totalReviews,
