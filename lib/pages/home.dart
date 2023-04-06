@@ -26,6 +26,14 @@ class _Home extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final Query<Map<String, dynamic>> restaurantsReferenceNear =
+        FirebaseFirestore.instance
+            .collection('restaurants')
+            .where("address.isoCountryCode",
+                isEqualTo: widget.userData["address"]["isoCountryCode"])
+            .where("address.administrativeArea",
+                isEqualTo: widget.userData["address"]["administrativeArea"]);
+
     final userName = widget.userData['name'];
 
     return SingleChildScrollView(
@@ -58,6 +66,14 @@ class _Home extends State<HomePage> {
         ),
       ),
       ListContainerRow(context, restaurantsReference, "restaurant"),
+      Padding(
+        padding: EdgeInsets.all(10),
+        child: Text(
+          "Restaurantes na sua cidade!",
+          style: TextStyle(fontSize: 25),
+        ),
+      ),
+      ListContainerRow(context, restaurantsReferenceNear, "restaurant"),
     ]));
   }
 

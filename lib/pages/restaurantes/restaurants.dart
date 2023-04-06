@@ -109,21 +109,6 @@ class _Restaurants extends State<Restaurants> {
                   child: Icon(Icons.filter_alt)),
             ],
           )),
-      Padding(
-        padding: EdgeInsets.all(10),
-        child: Text(
-          "Próximos de você",
-          style: TextStyle(fontSize: 25),
-        ),
-      ),
-      _buildNear(context, collectionReference, userData),
-      Padding(
-        padding: EdgeInsets.all(10),
-        child: Text(
-          "Ver Todos",
-          style: TextStyle(fontSize: 25),
-        ),
-      ),
       _buildBody(context, collectionReference)
     ];
   }
@@ -139,39 +124,12 @@ class _Restaurants extends State<Restaurants> {
     );
   }
 
-  Widget _buildNear(
-      BuildContext context, CollectionReference reference, dynamic userData) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: reference.snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return LinearProgressIndicator();
-
-        return _buildListNear(context, snapshot.data!.docs, userData);
-      },
-    );
-  }
-
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
     return ListView(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.only(top: 20.0),
       children: snapshot.map((data) => _buildListItem(context, data)).toList(),
-    );
-  }
-
-  Widget _buildListNear(
-      BuildContext context, List<DocumentSnapshot> snapshot, dynamic userData) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: 200,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.only(top: 20.0),
-        children: snapshot
-            .map((data) => _buildListItemNear(context, data, widget.userData))
-            .toList(),
-      ),
     );
   }
 
@@ -195,34 +153,6 @@ class _Restaurants extends State<Restaurants> {
           documentId: documentId,
           data: row,
           flexDirection: "horizontal",
-          collection: "restaurants",
-        ));
-  }
-
-  Widget _buildListItemNear(
-      BuildContext context, DocumentSnapshot data, userData) {
-    final documentId = data.id;
-    final row = data.data() as Map<String, dynamic>;
-    final userLatitude = userData['address']['latitude'];
-    final userLongitude = userData['address']['longitude'];
-    print(row['address']['latitude']);
-    print(userLatitude);
-    if (((row['address']['latitude'] - userLatitude).abs() > 0.3) ||
-        ((row['address']['longitude'] - userLongitude).abs() > 0.3)) {
-      return Container();
-    }
-    return GestureDetector(
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      RestaurantDetail(documentId: documentId)));
-        },
-        child: Tile(
-          documentId: documentId,
-          data: row,
-          flexDirection: "vertical",
           collection: "restaurants",
         ));
   }

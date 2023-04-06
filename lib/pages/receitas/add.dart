@@ -245,7 +245,6 @@ class _Receita extends State<addReceita> {
                               await uploadTask.then((res) async =>
                                   {photoURL = await res.ref.getDownloadURL()});
                             }
-                            print("adicionando no FB");
                             final payload = {
                               "author_uid":
                                   FirebaseAuth.instance.currentUser?.uid,
