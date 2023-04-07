@@ -20,7 +20,7 @@ class Tile extends StatelessWidget {
     if (flexDirection == "vertical") {
       return Container(
           margin: EdgeInsets.all(10),
-          padding: EdgeInsets.all(10),
+          padding: EdgeInsets.all(5),
           decoration: BoxDecoration(
             color: Globals.tileBackgroundColor,
             borderRadius: BorderRadius.circular(10),
@@ -28,7 +28,7 @@ class Tile extends StatelessWidget {
               BoxShadow(
                 color: Colors.grey,
                 offset: Offset(2, 2),
-                blurRadius: 5,
+                blurRadius: 3,
                 spreadRadius: 1,
               ),
             ],

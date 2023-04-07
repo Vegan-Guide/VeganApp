@@ -36,7 +36,7 @@ class _Restaurants extends State<Restaurants> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Receitas",
+                      "Restaurantes",
                       style: TextStyle(fontSize: 25),
                     ),
                     GestureDetector(
