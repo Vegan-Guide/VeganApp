@@ -1,11 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:vegan_app/globals/globalVariables.dart';
-import 'package:vegan_app/pages/components/tile.dart';
+import 'package:vegan_app/pages/components/listView.dart';
 import 'package:vegan_app/pages/restaurantes/add.dart';
 import 'package:vegan_app/pages/restaurantes/filter.dart';
-import 'package:vegan_app/pages/restaurantes/restaurant.dart';
 
 class Restaurants extends StatefulWidget {
   final searchText;
@@ -19,48 +16,31 @@ class Restaurants extends StatefulWidget {
 
 class _Restaurants extends State<Restaurants> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  final searchValue = TextEditingController();
-
-  final CollectionReference collectionReference =
-      FirebaseFirestore.instance.collection('restaurants');
-
   Future<void> refreshPage() async {
     setState(() {});
   }
 
-  @override
   Widget build(BuildContext context) {
-    if (widget.searchText != null) {
-      searchValue.text = widget.searchText;
-    }
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    final Query<Map<String, dynamic>> _collectionRef =
+        _firestore.collection('restaurants');
 
-    if (widget.searchText != null) {
-      return Scaffold(
-          appBar: AppBar(
-            // title: Text("Restaurantes"),
-            backgroundColor: Globals.appBarBackgroundColor,
-          ),
-          body: RefreshIndicator(
-            child: Column(
-              children: bodyContent(searchValue, context, widget.userData),
-            ),
-            onRefresh: () {
-              return refreshPage();
-            },
-          ));
-    }
     return Scaffold(
         body: RefreshIndicator(
           child: SingleChildScrollView(
               child: Column(
-            children: bodyContent(searchValue, context, widget.userData),
+            children: [
+              Text(
+                "Restaurantes",
+                style: TextStyle(fontSize: 25),
+              ),
+              listViewResult(
+                  collectionRef: _collectionRef, collection: "restaurants")
+            ],
           )),
           onRefresh: () {
             return refreshPage();
+            //
           },
         ),
         floatingActionButton: FloatingActionButton(
@@ -70,90 +50,5 @@ class _Restaurants extends State<Restaurants> {
                   MaterialPageRoute(builder: (context) => addRestaurant()));
             },
             child: Icon(Icons.add)));
-  }
-
-  List<Widget> bodyContent(searchValue, context, userData) {
-    return <Widget>[
-      Padding(
-        padding: EdgeInsets.all(10),
-        child: TextField(
-          decoration: InputDecoration(
-            prefixIcon: Icon(Icons.search),
-          ),
-          controller: searchValue,
-          onSubmitted: (value) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        Restaurants(searchText: searchValue.text)));
-          },
-        ),
-      ),
-      Padding(
-          padding: EdgeInsets.all(10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Restaurantes",
-                style: TextStyle(fontSize: 25),
-              ),
-              GestureDetector(
-                  onTap: () async {
-                    dynamic result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => filterRestaurant()));
-                  },
-                  child: Icon(Icons.filter_alt)),
-            ],
-          )),
-      _buildBody(context, collectionReference)
-    ];
-  }
-
-  Widget _buildBody(BuildContext context, CollectionReference reference) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: reference.snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return LinearProgressIndicator();
-
-        return _buildList(context, snapshot.data!.docs);
-      },
-    );
-  }
-
-  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
-    return ListView(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.only(top: 20.0),
-      children: snapshot.map((data) => _buildListItem(context, data)).toList(),
-    );
-  }
-
-  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
-    final documentId = data.id;
-    final row = data.data() as Map<String, dynamic>;
-    if (searchValue.text.isNotEmpty &&
-        row['name'].toLowerCase().contains(searchValue.text.toLowerCase()) ==
-            false) {
-      return Container();
-    }
-    return GestureDetector(
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      RestaurantDetail(documentId: documentId)));
-        },
-        child: Tile(
-          documentId: documentId,
-          data: row,
-          flexDirection: "horizontal",
-          collection: "restaurants",
-        ));
   }
 }

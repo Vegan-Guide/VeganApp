@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:vegan_app/globals/globalVariables.dart';
-import 'package:vegan_app/pages/components/tile.dart';
+import 'package:vegan_app/pages/components/listView.dart';
 import 'package:vegan_app/pages/receitas/add.dart';
 import 'package:vegan_app/pages/receitas/filter.dart';
-import 'package:vegan_app/pages/receitas/recipe.dart';
 
 class Receitas extends StatefulWidget {
   final category;
@@ -16,12 +14,10 @@ class Receitas extends StatefulWidget {
   _Receitas createState() => _Receitas();
 }
 
-class _Receitas extends State<Receitas> with AutomaticKeepAliveClientMixin {
+class _Receitas extends State<Receitas> {
   @override
-  bool get wantKeepAlive => true;
   var min = null;
   var max = null;
-
   final searchValue = TextEditingController();
   String categoryName = "";
   Future<void> refreshPage() async {
@@ -30,11 +26,13 @@ class _Receitas extends State<Receitas> with AutomaticKeepAliveClientMixin {
 
   @override
   Widget build(BuildContext context) {
-    Query<Map<String, dynamic>> recipesReference = (widget.category != null)
-        ? FirebaseFirestore.instance
-            .collection('recipes')
-            .where("type", isEqualTo: widget.category)
-        : FirebaseFirestore.instance.collection('recipes');
+    final FirebaseFirestore _firestoreRecipes = FirebaseFirestore.instance;
+    Query<Map<String, dynamic>> recipesReference =
+        _firestoreRecipes.collection('recipes');
+
+    final FirebaseFirestore _firestoreCategories = FirebaseFirestore.instance;
+    Query<Map<String, dynamic>> categorieReference =
+        _firestoreCategories.collection('categories');
 
     if (min != null) {
       recipesReference = recipesReference.where("time",
@@ -45,215 +43,117 @@ class _Receitas extends State<Receitas> with AutomaticKeepAliveClientMixin {
           recipesReference.where("time", isLessThanOrEqualTo: int.parse(max));
     }
 
-    final CollectionReference categoryReference =
-        FirebaseFirestore.instance.collection('categories');
-
-    List<Widget> bodyContent = (widget.category != null)
-        ? <Widget>[
-            SearchBar(searchValue, context),
-            _buildBody(context, recipesReference, false, widget.searchText)
-          ].toList()
-        : <Widget>[
-            SearchBar(searchValue, context),
-            Padding(
-              padding: EdgeInsets.all(15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Text(
-                        "Categorias",
-                        style: TextStyle(fontSize: 25),
-                      )),
-                  GestureDetector(
-                      onTap: () async {
-                        dynamic result = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    filterRecipe(min: min, max: max)));
-                        setState(() {
-                          min = result['min'] ?? null;
-                          max = result['max'] ?? null;
-                        });
-                      },
-                      child: Icon(Icons.filter_alt)),
-                ],
+    return Scaffold(
+        body: RefreshIndicator(
+          child: SingleChildScrollView(
+              child: Column(
+            children: [
+              Text(
+                "Categorias",
+                style: TextStyle(fontSize: 25),
               ),
-            ),
-            Container(
+              Container(
                 width: MediaQuery.of(context).size.width,
                 height: 150,
-                child: Center(
-                  child: _buildBody(
-                      context, categoryReference, true, widget.searchText),
-                )),
-            _buildBody(context, recipesReference, false, widget.searchText)
-          ].toList();
-    ;
-
-    if ((widget.category != null || widget.searchText != null)) {
-      if (widget.category != null) {
-        final String category = widget.categoryName;
-        bodyContent.insert(
-            1,
-            Text(
-              category.toUpperCase(),
-              style: TextStyle(fontSize: 25),
-            ));
-      }
-
-      if (widget.searchText != null) {
-        final String searched = widget.searchText;
-        searchValue.text = widget.searchText;
-        bodyContent.insert(
-            3,
-            Text(
-              searched.toUpperCase(),
-              style: TextStyle(fontSize: 25),
-            ));
-      }
-      return Scaffold(
-        appBar: AppBar(
-          title: Text("Receitas"),
-          backgroundColor: Globals.appBarBackgroundColor,
-        ),
-        body: RefreshIndicator(
-          child: SingleChildScrollView(child: Column(children: bodyContent)),
+                child: Categories(categorieReference),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Receitas",
+                      style: TextStyle(fontSize: 25),
+                    ),
+                    GestureDetector(
+                        onTap: () async {
+                          dynamic result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      filterRecipe(min: min, max: max)));
+                          print("max");
+                          print(result['max']);
+                          setState(() {
+                            min = result['min'] ?? null;
+                            max = result['max'] ?? null;
+                          });
+                        },
+                        child: Icon(Icons.filter_alt))
+                  ],
+                ),
+              ),
+              listViewResult(
+                  collectionRef: recipesReference, collection: "recipes")
+            ],
+          )),
           onRefresh: () {
             return refreshPage();
+            //
           },
         ),
-      );
-    } else {
-      return Scaffold(
-          body: RefreshIndicator(
-            child: SingleChildScrollView(child: Column(children: bodyContent)),
-            onRefresh: () {
-              return refreshPage();
+        floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              //algo aqui
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => addReceita()));
             },
-          ),
-          floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                //algo aqui
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => addReceita()));
-              },
-              child: Icon(Icons.add)));
-    }
-  }
-
-  Widget _buildBody(BuildContext context, reference, bool row, searchText) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: reference.snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return LinearProgressIndicator();
-
-        return _buildList(context, snapshot.data!.docs, row, searchText);
-      },
-    );
-  }
-
-  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot,
-      bool row, searchText) {
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: (row == false) ? NeverScrollableScrollPhysics() : null,
-      scrollDirection: (row == false) ? Axis.vertical : Axis.horizontal,
-      itemCount: snapshot.length,
-      itemBuilder: (context, index) {
-        final data = snapshot[index];
-        return _buildListItem(context, data, row, searchText);
-      },
-      // children: snapshot
-      //     .map((data) => _buildListItem(context, data, row, searchText))
-      //     .toList(),
-    );
-  }
-
-  Widget _buildListItem(
-      BuildContext context, DocumentSnapshot data, bool isRow, searchText) {
-    final documentId = data.id;
-    final row = data.data() as Map<String, dynamic>;
-    return (isRow == false)
-        ? recipeContainer(context, documentId, row, searchText)
-        : categoryContainer(context, documentId, row);
+            child: Icon(Icons.add)));
   }
 }
 
-Widget recipeContainer(context, documentId, row, searchText) {
-  if (searchText != null &&
-      searchText.isNotEmpty &&
-      row['name'].toLowerCase().contains(searchText.toLowerCase()) == false) {
-    return Container();
-  }
-  return GestureDetector(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => RecipeDetail(
-                      documentId: documentId,
-                      created_by: row['author_uid'],
-                    )));
-      },
-      child: Tile(
-          documentId: documentId,
-          data: row,
-          flexDirection: "horizontal",
-          collection: "recipes"));
-}
+Widget Categories(collectionRef) {
+  return StreamBuilder<QuerySnapshot>(
+    stream: collectionRef.snapshots(),
+    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      if (snapshot.hasError) {
+        return Text('Error: ${snapshot.error}');
+      }
 
-Widget SearchBar(searchValue, context) {
-  return Padding(
-      padding: EdgeInsets.all(10),
-      child: TextField(
-        decoration: InputDecoration(
-          prefixIcon: Icon(Icons.search),
-        ),
-        controller: searchValue,
-        onSubmitted: (value) {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      Receitas(searchText: searchValue.text)));
-        },
-      ));
-}
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return CircularProgressIndicator();
+      }
 
-Widget categoryContainer(context, documentId, row) {
-  return GestureDetector(
-    onTap: () {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => Receitas(
-                    category: documentId,
-                    categoryName: row['name'],
-                  )));
+      return ListView(
+        scrollDirection: Axis.horizontal,
+        children: snapshot.data!.docs.map((DocumentSnapshot document) {
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Receitas(category: data['id'])));
+            },
+            child: Container(
+                child: Column(
+              children: [
+                Container(
+                  width: 75,
+                  height: 75,
+                  margin: EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    shape: BoxShape.circle,
+                  ),
+                  child:
+                      (data.keys.contains("photoURL") && data["photoURL"] != "")
+                          ? ClipOval(
+                              child: Image.network(
+                              data["photoURL"],
+                              width: 100, // adjust the size as needed
+                              height: 100,
+                              fit: BoxFit.cover,
+                            ))
+                          : Center(child: Text("FOTO")),
+                ),
+                Center(child: Text(data["name"] ?? ""))
+              ],
+            )),
+          );
+        }).toList(),
+      );
     },
-    child: Container(
-      width: 110,
-      padding: EdgeInsets.all(15),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            width: 75,
-            height: 75,
-            margin: EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              shape: BoxShape.circle,
-            ),
-            child: Center(child: Text(row["photoURL"] ?? "FOTO")),
-          ),
-          Center(child: Text(row["name"] ?? "")),
-        ],
-      ),
-    ),
   );
 }
