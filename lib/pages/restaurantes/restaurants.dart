@@ -30,9 +30,30 @@ class _Restaurants extends State<Restaurants> {
           child: SingleChildScrollView(
               child: Column(
             children: [
-              Text(
-                "Restaurantes",
-                style: TextStyle(fontSize: 25),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Receitas",
+                      style: TextStyle(fontSize: 25),
+                    ),
+                    GestureDetector(
+                        onTap: () async {
+                          dynamic result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => filterRestaurant()));
+                          print("max");
+                          print(result['max']);
+                          setState(() {
+                            //
+                          });
+                        },
+                        child: Icon(Icons.filter_alt))
+                  ],
+                ),
               ),
               listViewResult(
                   collectionRef: _collectionRef, collection: "restaurants")
