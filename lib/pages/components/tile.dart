@@ -19,20 +19,7 @@ class Tile extends StatelessWidget {
   Widget build(BuildContext context) {
     if (flexDirection == "vertical") {
       return Container(
-          margin: EdgeInsets.all(10),
-          padding: EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            color: Globals.tileBackgroundColor,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey,
-                offset: Offset(2, 2),
-                blurRadius: 3,
-                spreadRadius: 1,
-              ),
-            ],
-          ),
+          margin: EdgeInsets.all(5),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -89,13 +76,11 @@ class Tile extends StatelessWidget {
 
 Widget FotoContainer(data) {
   if (data.keys.contains("photoURL") && data["photoURL"] != "") {
-    print("${data["photoURL"]}");
-    print(data["photoURL"]);
     return Container(
       padding: EdgeInsets.all(2),
       margin: const EdgeInsets.only(left: 20.0, right: 20.0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.0),
+        borderRadius: BorderRadius.circular(15.0),
       ),
       width: 100,
       height: 100,
@@ -108,8 +93,8 @@ Widget FotoContainer(data) {
       padding: EdgeInsets.all(2),
       margin: const EdgeInsets.only(left: 20.0, right: 20.0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.0),
-        color: Colors.white,
+        borderRadius: BorderRadius.circular(15.0),
+        border: Border.all(color: Colors.grey),
       ),
       width: 100,
       height: 100,
