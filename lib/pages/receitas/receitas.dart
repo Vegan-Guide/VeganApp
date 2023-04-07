@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vegan_app/globals/globalVariables.dart';
 import 'package:vegan_app/pages/components/listView.dart';
 import 'package:vegan_app/pages/receitas/add.dart';
 import 'package:vegan_app/pages/receitas/filter.dart';
@@ -34,6 +35,14 @@ class _Receitas extends State<Receitas> {
     Query<Map<String, dynamic>> categorieReference =
         _firestoreCategories.collection('categories');
 
+    print("widget.category");
+    print(widget.category);
+
+    if (widget.category != null) {
+      recipesReference =
+          recipesReference.where("type", isEqualTo: widget.category);
+    }
+
     if (min != null) {
       recipesReference = recipesReference.where("time",
           isGreaterThanOrEqualTo: int.parse(min));
@@ -44,6 +53,12 @@ class _Receitas extends State<Receitas> {
     }
 
     return Scaffold(
+        appBar: (widget.category != null)
+            ? AppBar(
+                backgroundColor: Globals.appBarBackgroundColor,
+                title: Text("Receitas"),
+              )
+            : null,
         body: RefreshIndicator(
           child: SingleChildScrollView(
               child: Column(
@@ -90,7 +105,6 @@ class _Receitas extends State<Receitas> {
           )),
           onRefresh: () {
             return refreshPage();
-            //
           },
         ),
         floatingActionButton: FloatingActionButton(
@@ -124,7 +138,7 @@ Widget Categories(collectionRef) {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => Receitas(category: data['id'])));
+                      builder: (context) => Receitas(category: document.id)));
             },
             child: Container(
                 child: Column(

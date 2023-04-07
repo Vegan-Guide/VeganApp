@@ -45,8 +45,6 @@ class _Restaurants extends State<Restaurants> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => filterRestaurant()));
-                          print("max");
-                          print(result['max']);
                           setState(() {
                             //
                           });

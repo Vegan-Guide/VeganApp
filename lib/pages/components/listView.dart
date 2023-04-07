@@ -38,6 +38,12 @@ class _listViewResult extends State<listViewResult> {
           return CircularProgressIndicator();
         }
 
+        if (snapshot.data!.size == 0) {
+          return Center(
+            child: Text("Desculpa, nada encontrado :("),
+          );
+        }
+
         return ListView(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
@@ -52,9 +58,9 @@ class _listViewResult extends State<listViewResult> {
                       MaterialPageRoute(
                           builder: (context) =>
                               (widget.collection == "restaurants")
-                                  ? RestaurantDetail(documentId: data['id'])
+                                  ? RestaurantDetail(documentId: document.id)
                                   : RecipeDetail(
-                                      documentId: data['id'],
+                                      documentId: document.id,
                                       created_by: data['author_uid'],
                                     )));
                 }
