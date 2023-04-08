@@ -36,6 +36,7 @@ class _RestaurantDetail extends State<RestaurantDetail> {
               Map<String, dynamic> data =
                   snapshot.data!.data() as Map<String, dynamic>;
               List totalReviews = data["reviews"] ?? [];
+              List totalComments = data["comments"] ?? [];
               List favorites = data["favorites"] ?? [];
               print("data");
               print(data['address']);
@@ -125,7 +126,7 @@ class _RestaurantDetail extends State<RestaurantDetail> {
                   ),
                   Comments(
                       collection: "restaurants",
-                      comments: totalReviews
+                      comments: totalComments
                           .where((element) => element['comment'] != null)
                           .toList(),
                       documentId: widget.documentId)

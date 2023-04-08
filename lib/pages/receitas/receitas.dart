@@ -35,9 +35,6 @@ class _Receitas extends State<Receitas> {
     Query<Map<String, dynamic>> categorieReference =
         _firestoreCategories.collection('categories');
 
-    print("widget.category");
-    print(widget.category);
-
     if (widget.category != null) {
       recipesReference =
           recipesReference.where("type", isEqualTo: widget.category);
@@ -88,8 +85,6 @@ class _Receitas extends State<Receitas> {
                               MaterialPageRoute(
                                   builder: (context) =>
                                       filterRecipe(min: min, max: max)));
-                          print("max");
-                          print(result['max']);
                           setState(() {
                             min = result['min'] ?? null;
                             max = result['max'] ?? null;

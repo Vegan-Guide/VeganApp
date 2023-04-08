@@ -55,8 +55,7 @@ class _Rating extends State<Rating> {
       ignoreGestures: (widget.type == "listItem"),
       onRatingUpdate: (newRating) async {
         if (initialRating != newRating && newRating != myReview) {
-          await checkReview(widget.collection, newRating, widget.totalReviews,
-              widget.documentId);
+          await checkReview(widget.collection, newRating, widget.documentId);
           initialRating = newRating;
         }
       },
@@ -64,7 +63,7 @@ class _Rating extends State<Rating> {
   }
 
   Future<void> checkReview(
-      String collection, double newRatingReceived, List reviews, id) async {
+      String collection, double newRatingReceived, id) async {
     CollectionReference ref = FirebaseFirestore.instance.collection(collection);
     final doc = ref.doc(id);
 
@@ -91,8 +90,6 @@ class _Rating extends State<Rating> {
                   "rating": newRatingReceived
                 });
               }
-              print("reviewsList");
-              print(reviewsList);
               data['reviews'] = reviewsList;
               data['totalReviews'] = reviewsList
                   .map((e) => e["rating"])

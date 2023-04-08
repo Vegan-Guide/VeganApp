@@ -36,6 +36,7 @@ class _recipeDetail extends State<RecipeDetail> {
                 Map<String, dynamic> data =
                     snapshot.data!.data() as Map<String, dynamic>;
                 List totalReviews = data["reviews"] ?? [];
+                List totalComments = data["comments"] ?? [];
                 List ingredients = data["ingredients"] ?? [];
                 List favorites = data["favorites"] ?? [];
                 Color heartColor = Colors.white;
@@ -163,8 +164,8 @@ class _recipeDetail extends State<RecipeDetail> {
                       ],
                     ),
                     Comments(
-                        collection: "restaurants",
-                        comments: totalReviews
+                        collection: "recipes",
+                        comments: totalComments
                             .where((element) => element['comment'] != null)
                             .toList(),
                         documentId: widget.documentId)
