@@ -16,14 +16,20 @@ class Restaurants extends StatefulWidget {
 
 class _Restaurants extends State<Restaurants> {
   @override
+  double rating = 0.0;
   Future<void> refreshPage() async {
     setState(() {});
   }
 
   Widget build(BuildContext context) {
     final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-    final Query<Map<String, dynamic>> _collectionRef =
+    Query<Map<String, dynamic>> _collectionRef =
         _firestore.collection('restaurants');
+
+    if (rating > 0.0) {
+      _collectionRef =
+          _collectionRef.where("averageReview", isGreaterThanOrEqualTo: rating);
+    }
 
     return Scaffold(
         body: RefreshIndicator(
@@ -44,9 +50,11 @@ class _Restaurants extends State<Restaurants> {
                           dynamic result = await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => filterRestaurant()));
+                                  builder: (context) => filterRestaurant(
+                                        rating: rating,
+                                      )));
                           setState(() {
-                            //
+                            rating = (result['rating']) ?? 0.0;
                           });
                         },
                         child: Icon(Icons.filter_alt))

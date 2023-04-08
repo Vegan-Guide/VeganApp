@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:vegan_app/globals/globalVariables.dart';
 
 class filterRecipe extends StatefulWidget {
   final min;
   final max;
+  final double rating;
 
-  const filterRecipe({this.min, this.max});
+  const filterRecipe({this.min, this.max, this.rating = 0.0});
 
   @override
   _filterRecipeState createState() => _filterRecipeState();
@@ -24,6 +26,8 @@ class _filterRecipeState extends State<filterRecipe> {
   final ingredientsController = TextEditingController();
   final minTimeController = TextEditingController();
   final maxTimeController = TextEditingController();
+  double minRating = 1;
+  double rating = 0;
 
   @override
   void initState() {
@@ -43,6 +47,7 @@ class _filterRecipeState extends State<filterRecipe> {
 
   @override
   Widget build(BuildContext context) {
+    double initialRating = (widget.rating > 0.0) ? widget.rating : 1;
     if (widget.min != null) {
       minTimeController.text = widget.min;
     }
@@ -126,13 +131,43 @@ class _filterRecipeState extends State<filterRecipe> {
                     ])),
               ],
             ),
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Rating mínimo"),
+                  RatingBar.builder(
+                    initialRating: initialRating,
+                    minRating: minRating,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemSize: 30.0,
+                    itemCount: 5,
+                    itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
+                    itemBuilder: (context, _) => Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                      size: 5.0,
+                    ),
+                    onRatingUpdate: (newRating) async {
+                      rating = newRating;
+                    },
+                  ),
+                ],
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
                     onPressed: () {
-                      maxTimeController.text = "";
-                      minTimeController.text = "";
+                      setState(() {
+                        maxTimeController.text = "";
+                        minTimeController.text = "";
+                        rating = 0.0;
+                        initialRating = 1;
+                      });
                     },
                     child: Text("Limpar")),
                 ElevatedButton(
@@ -143,7 +178,8 @@ class _filterRecipeState extends State<filterRecipe> {
                             : minTimeController.text,
                         'max': maxTimeController.text == ""
                             ? null
-                            : maxTimeController.text
+                            : maxTimeController.text,
+                        'rating': rating
                       };
                       Navigator.pop(context, returnData);
                     },

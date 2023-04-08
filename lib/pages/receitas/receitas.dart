@@ -17,10 +17,11 @@ class Receitas extends StatefulWidget {
 
 class _Receitas extends State<Receitas> {
   @override
-  var min = null;
-  var max = null;
   final searchValue = TextEditingController();
   String categoryName = "";
+  var min = null;
+  var max = null;
+  double rating = 0.0;
   Future<void> refreshPage() async {
     setState(() {});
   }
@@ -47,6 +48,10 @@ class _Receitas extends State<Receitas> {
     if (max != null) {
       recipesReference =
           recipesReference.where("time", isLessThanOrEqualTo: int.parse(max));
+    }
+    if (rating > 0.0) {
+      recipesReference = recipesReference.where("averageReview",
+          isGreaterThanOrEqualTo: rating);
     }
 
     return Scaffold(
@@ -83,11 +88,12 @@ class _Receitas extends State<Receitas> {
                           dynamic result = await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      filterRecipe(min: min, max: max)));
+                                  builder: (context) => filterRecipe(
+                                      min: min, max: max, rating: rating)));
                           setState(() {
                             min = result['min'] ?? null;
                             max = result['max'] ?? null;
+                            rating = (result['rating']) ?? 0.0;
                           });
                         },
                         child: Icon(Icons.filter_alt))
