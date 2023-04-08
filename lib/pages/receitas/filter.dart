@@ -52,6 +52,7 @@ class _filterRecipeState extends State<filterRecipe> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Globals.appBarBackgroundColor,
         title: Text('Recipe Filter'),
       ),
       body: Center(

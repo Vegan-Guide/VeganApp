@@ -59,7 +59,6 @@ class _Restaurants extends State<Restaurants> {
           )),
           onRefresh: () {
             return refreshPage();
-            //
           },
         ),
         floatingActionButton: FloatingActionButton(
