@@ -82,6 +82,8 @@ class _FilterRestaurant extends State<filterRestaurant> {
                       rating = 0.0;
                       initialRating = 1;
                     });
+                    final returnData = {'rating': rating};
+                    Navigator.pop(context, returnData);
                   },
                   child: Text("Limpar")),
               ElevatedButton(

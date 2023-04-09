@@ -112,6 +112,7 @@ class _Restaurante extends State<addRestaurant> {
                   )),
                 ),
                 Stack(
+                  alignment: Alignment.center,
                   children: [
                     Form(
                       key: _formKey,

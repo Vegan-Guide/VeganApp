@@ -168,6 +168,16 @@ class _filterRecipeState extends State<filterRecipe> {
                         rating = 0.0;
                         initialRating = 1;
                       });
+                      final returnData = {
+                        'min': minTimeController.text == ""
+                            ? null
+                            : minTimeController.text,
+                        'max': maxTimeController.text == ""
+                            ? null
+                            : maxTimeController.text,
+                        'rating': rating
+                      };
+                      Navigator.pop(context, returnData);
                     },
                     child: Text("Limpar")),
                 ElevatedButton(

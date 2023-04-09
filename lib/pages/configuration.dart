@@ -3,7 +3,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:vegan_app/login.dart';
+import 'package:vegan_app/pages/auth/login.dart';
 import 'package:vegan_app/pages/admin/myFavoriteRecipes.dart';
 import 'package:vegan_app/pages/admin/myFavoriteRestaurants.dart';
 import 'package:vegan_app/pages/admin/myRecipes.dart';

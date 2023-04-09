@@ -50,11 +50,9 @@ class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
       HomePage(userData: userData),
       NewsList(userData: userData),
       Restaurants(userData: userData),
-      Receitas()
+      Receitas(userData: userData)
     ];
     final searchValue = TextEditingController();
-
-    //colocar para enquanto userData ainda nao foi carregado, colocar tela de carregamento que substitui IndexedStack
 
     // TODO: implement build
     return Scaffold(
@@ -66,11 +64,7 @@ class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
                 children: _widgetOptions,
                 index: _selectedIndex,
               ),
-        // Center(
-        //   child: _widgetOptions.elementAt(_selectedIndex),
-        // ),
         appBar: AppBar(
-          // title: Text(""),
           actions: [
             Container(
               margin: EdgeInsets.all(5),

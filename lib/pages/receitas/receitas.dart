@@ -9,8 +9,10 @@ class Receitas extends StatefulWidget {
   final category;
   final categoryName;
   final searchText;
+  final userData;
 
-  const Receitas({this.category, this.categoryName, this.searchText});
+  const Receitas(
+      {this.userData, this.category, this.categoryName, this.searchText});
   @override
   _Receitas createState() => _Receitas();
 }
@@ -69,11 +71,7 @@ class _Receitas extends State<Receitas> {
                 "Categorias",
                 style: TextStyle(fontSize: 25),
               ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 150,
-                child: Categories(categorieReference),
-              ),
+              Categories(categorieReference),
               Padding(
                 padding: EdgeInsets.all(10),
                 child: Row(
@@ -130,30 +128,35 @@ Widget Categories(collectionRef) {
         return CircularProgressIndicator();
       }
 
-      return ListView(
-        scrollDirection: Axis.horizontal,
-        children: snapshot.data!.docs.map((DocumentSnapshot document) {
-          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-          return GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Receitas(category: document.id)));
-            },
-            child: Container(
-                child: Column(
-              children: [
-                Container(
-                  width: 75,
-                  height: 75,
-                  margin: EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    shape: BoxShape.circle,
-                  ),
-                  child:
-                      (data.keys.contains("photoURL") && data["photoURL"] != "")
+      return Container(
+          width: MediaQuery.of(context).size.width,
+          height: 150,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: snapshot.data!.docs.map((DocumentSnapshot document) {
+              Map<String, dynamic> data =
+                  document.data() as Map<String, dynamic>;
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              Receitas(category: document.id)));
+                },
+                child: Container(
+                    child: Column(
+                  children: [
+                    Container(
+                      width: 75,
+                      height: 75,
+                      margin: EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        shape: BoxShape.circle,
+                      ),
+                      child: (data.keys.contains("photoURL") &&
+                              data["photoURL"] != "")
                           ? ClipOval(
                               child: Image.network(
                               data["photoURL"],
@@ -162,13 +165,13 @@ Widget Categories(collectionRef) {
                               fit: BoxFit.cover,
                             ))
                           : Center(child: Text("FOTO")),
-                ),
-                Center(child: Text(data["name"] ?? ""))
-              ],
-            )),
-          );
-        }).toList(),
-      );
+                    ),
+                    Center(child: Text(data["name"] ?? ""))
+                  ],
+                )),
+              );
+            }).toList(),
+          ));
     },
   );
 }

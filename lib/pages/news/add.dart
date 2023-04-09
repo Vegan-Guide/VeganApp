@@ -63,6 +63,7 @@ class _news extends State<addNews> {
                   )),
                 ),
                 Stack(
+                  alignment: Alignment.center,
                   children: [
                     Form(
                       key: _formKey,
