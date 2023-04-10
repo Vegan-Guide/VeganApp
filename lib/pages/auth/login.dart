@@ -55,17 +55,16 @@ class _Login extends State<LoginPage> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-        resizeToAvoidBottomInset: false,
+        // resizeToAvoidBottomInset: false,
         // appBar: AppBar(title: Text("Login")),
-        body: Padding(
-            padding: EdgeInsets.all(10),
+        body: SingleChildScrollView(
+            padding: EdgeInsets.only(top: 50, left: 10, right: 10),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Image.asset('assets/images/logo.png', width: 200),
                 // Text("Login", style: TextStyle(fontSize: 25)),
-                SingleChildScrollView(
-                    child: Stack(alignment: Alignment.center, children: [
+                Stack(alignment: Alignment.center, children: [
                   Form(
                       key: _formKey,
                       child: Column(
@@ -147,7 +146,7 @@ class _Login extends State<LoginPage> {
                           ),
                         )
                       : Container()
-                ]))
+                ])
               ],
             )));
   }

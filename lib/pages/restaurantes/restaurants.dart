@@ -16,19 +16,29 @@ class Restaurants extends StatefulWidget {
 
 class _Restaurants extends State<Restaurants> {
   @override
-  double rating = 0.0;
   Future<void> refreshPage() async {
     setState(() {});
   }
 
+  double rating = 0.0;
+
   Widget build(BuildContext context) {
+    List ratingList = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
     final FirebaseFirestore _firestore = FirebaseFirestore.instance;
     Query<Map<String, dynamic>> _collectionRef =
         _firestore.collection('restaurants');
 
-    if (rating > 0.0) {
+    if (rating > 0) {
+      double roundToHalf(double number) {
+        return (number * 2).roundToDouble() / 2;
+      }
+
+      final index =
+          ratingList.indexWhere((element) => element == roundToHalf(rating));
+      final customList =
+          ratingList.where((element) => element >= ratingList[index]).toList();
       _collectionRef =
-          _collectionRef.where("averageReview", isGreaterThanOrEqualTo: rating);
+          _collectionRef.where("averageReview", whereIn: customList);
     }
 
     return Scaffold(

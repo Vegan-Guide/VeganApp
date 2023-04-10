@@ -30,6 +30,7 @@ class _Receitas extends State<Receitas> {
 
   @override
   Widget build(BuildContext context) {
+    List ratingList = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
     final FirebaseFirestore _firestoreRecipes = FirebaseFirestore.instance;
     Query<Map<String, dynamic>> recipesReference =
         _firestoreRecipes.collection('recipes');
@@ -51,9 +52,17 @@ class _Receitas extends State<Receitas> {
       recipesReference =
           recipesReference.where("time", isLessThanOrEqualTo: int.parse(max));
     }
-    if (rating > 0.0) {
-      recipesReference = recipesReference.where("averageReview",
-          isGreaterThanOrEqualTo: rating);
+    if (rating > 0) {
+      double roundToHalf(double number) {
+        return (number * 2).roundToDouble() / 2;
+      }
+
+      final index =
+          ratingList.indexWhere((element) => element == roundToHalf(rating));
+      final customList =
+          ratingList.where((element) => element >= ratingList[index]).toList();
+      recipesReference =
+          recipesReference.where("averageReview", whereIn: customList);
     }
 
     return Scaffold(
