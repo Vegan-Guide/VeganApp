@@ -90,15 +90,21 @@ class _Rating extends State<Rating> {
                   "rating": newRatingReceived
                 });
               }
+
+              double roundToHalf(double number) {
+                return (number * 2).roundToDouble() / 2;
+              }
+
+              final averageReviewRating = reviewsList
+                      .map((e) => e["rating"])
+                      .reduce((value, element) => value + element) /
+                  reviewsList.length;
               data['reviews'] = reviewsList;
               data['totalReviews'] = reviewsList
                   .map((e) => e["rating"])
                   .reduce((value, element) => value + element);
               data['quantityReviews'] = reviewsList.length;
-              data['averageReview'] = reviewsList
-                      .map((e) => e["rating"])
-                      .reduce((value, element) => value + element) /
-                  reviewsList.length;
+              data['averageReview'] = roundToHalf(averageReviewRating);
               await doc.set(data);
               setState(() {});
             },
