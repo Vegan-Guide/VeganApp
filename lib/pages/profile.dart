@@ -148,7 +148,7 @@ class _Profile extends State<Profile> {
                         padding: EdgeInsets.all(10),
                         child: Text("Endereço: "),
                       ),
-                      TextField(
+                      TextFormField(
                         controller: initialAddress,
                         onChanged: ((value) {
                           getLocation(value);

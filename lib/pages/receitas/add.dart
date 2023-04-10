@@ -150,11 +150,13 @@ class _Receita extends State<addReceita> {
                       children: [
                         ElevatedButton(
                           onPressed: () async {
-                            final file = await ImagePicker()
-                                .pickImage(source: ImageSource.gallery);
-                            setState(() {
-                              _recipeImage = file;
-                            });
+                            if (_formKey.currentState!.validate()) {
+                              final file = await ImagePicker()
+                                  .pickImage(source: ImageSource.gallery);
+                              setState(() {
+                                _recipeImage = file;
+                              });
+                            }
                           },
                           child: Text('Subir arquivo'),
                         ),
@@ -260,15 +262,18 @@ class _Receita extends State<addReceita> {
                               "created_at": Timestamp.fromDate(DateTime.now())
                             };
                             if (widget.doc_id != null) {
+                              print("edit");
                               ref.doc(widget.doc_id).update(payload);
-                              _hideLoading();
-                              Navigator.pop(context);
                             } else {
+                              print("create");
                               ref.add(payload).then((value) async {
                                 _hideLoading();
                                 Navigator.pop(context);
                               });
+                              _hideLoading();
                             }
+                            _hideLoading();
+                            Navigator.pop(context);
                           }
                         },
                         child: Text("Adicionar"))

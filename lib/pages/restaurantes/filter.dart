@@ -1,8 +1,5 @@
-import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import 'package:vegan_app/globals/globalVariables.dart';
@@ -24,13 +21,11 @@ class filterRestaurant extends StatefulWidget {
 }
 
 class _FilterRestaurant extends State<filterRestaurant> {
-  @override
-  double minRating = 1;
-  double rating = 0;
   Widget build(BuildContext context) {
+    @override
+    double minRating = 1;
+    double currentRating = widget.rating;
     double initialRating = (widget.rating > 0.0) ? widget.rating : 1;
-    CollectionReference ref =
-        FirebaseFirestore.instance.collection("restaurants");
 
     // TODO: implement build
     return Scaffold(
@@ -69,7 +64,7 @@ class _FilterRestaurant extends State<filterRestaurant> {
                       size: 5.0,
                     ),
                     onRatingUpdate: (newRating) async {
-                      rating = newRating;
+                      currentRating = newRating;
                     },
                   ),
                 ],
@@ -79,16 +74,16 @@ class _FilterRestaurant extends State<filterRestaurant> {
               ElevatedButton(
                   onPressed: () {
                     setState(() {
-                      rating = 0.0;
+                      currentRating = 0.0;
                       initialRating = 1;
                     });
-                    final returnData = {'rating': rating};
+                    final returnData = {'rating': currentRating};
                     Navigator.pop(context, returnData);
                   },
                   child: Text("Limpar")),
               ElevatedButton(
                   onPressed: () {
-                    final returnData = {'rating': rating};
+                    final returnData = {'rating': currentRating};
                     Navigator.pop(context, returnData);
                   },
                   child: Text("Aplicar")),

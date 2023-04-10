@@ -26,8 +26,6 @@ class _filterRecipeState extends State<filterRecipe> {
   final ingredientsController = TextEditingController();
   final minTimeController = TextEditingController();
   final maxTimeController = TextEditingController();
-  double minRating = 1;
-  double rating = 0;
 
   @override
   void initState() {
@@ -47,6 +45,8 @@ class _filterRecipeState extends State<filterRecipe> {
 
   @override
   Widget build(BuildContext context) {
+    double minRating = 1;
+    double currentRating = widget.rating;
     double initialRating = (widget.rating > 0.0) ? widget.rating : 1;
     if (widget.min != null) {
       minTimeController.text = widget.min;
@@ -151,7 +151,7 @@ class _filterRecipeState extends State<filterRecipe> {
                       size: 5.0,
                     ),
                     onRatingUpdate: (newRating) async {
-                      rating = newRating;
+                      currentRating = newRating;
                     },
                   ),
                 ],
@@ -165,7 +165,7 @@ class _filterRecipeState extends State<filterRecipe> {
                       setState(() {
                         maxTimeController.text = "";
                         minTimeController.text = "";
-                        rating = 0.0;
+                        currentRating = 0.0;
                         initialRating = 1;
                       });
                       final returnData = {
@@ -175,7 +175,7 @@ class _filterRecipeState extends State<filterRecipe> {
                         'max': maxTimeController.text == ""
                             ? null
                             : maxTimeController.text,
-                        'rating': rating
+                        'rating': currentRating
                       };
                       Navigator.pop(context, returnData);
                     },
@@ -189,7 +189,7 @@ class _filterRecipeState extends State<filterRecipe> {
                         'max': maxTimeController.text == ""
                             ? null
                             : maxTimeController.text,
-                        'rating': rating
+                        'rating': currentRating
                       };
                       Navigator.pop(context, returnData);
                     },
