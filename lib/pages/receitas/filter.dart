@@ -28,6 +28,7 @@ class _filterRecipeState extends State<filterRecipe> {
   final maxTimeController = TextEditingController();
   double minRating = 1;
   double rating = 0;
+  List ratingList = [];
 
   @override
   void initState() {
@@ -151,6 +152,10 @@ class _filterRecipeState extends State<filterRecipe> {
                       size: 5.0,
                     ),
                     onRatingUpdate: (newRating) async {
+                      var i;
+                      for (i = newRating; i < 5; i + 0.5) {
+                        ratingList.add(i);
+                      }
                       rating = newRating;
                     },
                   ),
@@ -166,6 +171,7 @@ class _filterRecipeState extends State<filterRecipe> {
                         maxTimeController.text = "";
                         minTimeController.text = "";
                         rating = 0.0;
+                        ratingList = [];
                         initialRating = 1;
                       });
                       final returnData = {
@@ -175,7 +181,7 @@ class _filterRecipeState extends State<filterRecipe> {
                         'max': maxTimeController.text == ""
                             ? null
                             : maxTimeController.text,
-                        'rating': rating
+                        'rating': ratingList
                       };
                       Navigator.pop(context, returnData);
                     },

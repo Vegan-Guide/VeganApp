@@ -18,11 +18,44 @@ class _Login extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   bool _isLoading = false;
-  @override
+
+  void _submitForm() async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+              email: emailController.text, password: passwordController.text)
+          .then((value) => {
+                Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (context) => App()))
+              });
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.message ?? ""),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to login'),
+        ),
+      );
+      setState(() {
+        _isLoading = false;
+      });
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-        // resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: false,
         // appBar: AppBar(title: Text("Login")),
         body: Padding(
             padding: EdgeInsets.all(10),
@@ -40,7 +73,7 @@ class _Login extends State<LoginPage> {
                           Padding(
                               padding: EdgeInsets.all(10),
                               child: Text("Email")),
-                          TextField(
+                          TextFormField(
                             controller: emailController,
                             keyboardType: TextInputType.emailAddress,
                             decoration: Globals.inputDecorationStyling,
@@ -48,27 +81,16 @@ class _Login extends State<LoginPage> {
                           Padding(
                               padding: EdgeInsets.all(10),
                               child: Text("Password")),
-                          TextField(
+                          TextFormField(
                             controller: passwordController,
                             obscureText: true,
                             decoration: Globals.inputDecorationStyling,
                           ),
                           ElevatedButton(
-                              onPressed: () {
-                                //fazer login
-                                setState(() {
-                                  _isLoading = true;
-                                });
-                                FirebaseAuth.instance
-                                    .signInWithEmailAndPassword(
-                                        email: emailController.text,
-                                        password: passwordController.text)
-                                    .then((value) => {
-                                          Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => App()))
-                                        });
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  _submitForm();
+                                }
                               },
                               child: Text("Login")),
                           Padding(
@@ -109,6 +131,10 @@ class _Login extends State<LoginPage> {
                                 ),
                               ],
                             ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Text("Entrar como convidado :("),
                           )
                         ],
                       )),
