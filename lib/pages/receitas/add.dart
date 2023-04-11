@@ -256,6 +256,8 @@ class _Receita extends State<addReceita> {
                               "instructions": instructions.text,
                               "time": int.parse(time.text),
                               "photoURL": photoURL,
+                              "reviews": [],
+                              "comments": [],
                               "quantityReviews": quantityReviews,
                               "totalReviews": totalReviews,
                               "averageReview": averageReview,

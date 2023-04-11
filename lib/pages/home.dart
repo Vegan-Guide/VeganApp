@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:vegan_app/pages/components/fullList.dart';
 
 import 'package:vegan_app/pages/components/tile.dart';
 import 'package:vegan_app/pages/receitas/recipe.dart';
 import 'package:vegan_app/pages/restaurantes/restaurant.dart';
+import 'package:vegan_app/pages/components/listView.dart';
 
 class HomePage extends StatefulWidget {
   final userData;
@@ -37,12 +39,10 @@ class _Home extends State<HomePage> {
             .collection('restaurants')
             .where("address.isoCountryCode",
                 isEqualTo: widget.userData["address"]["isoCountryCode"])
-            .where("address.administrativeArea",
-                isEqualTo: widget.userData["address"]["administrativeArea"]);
+            .where("address.subAdministrativeArea",
+                isEqualTo: widget.userData["address"]["subAdministrativeArea"]);
     final Query<Map<String, dynamic>> restaurantsReferenceNearLimited =
         restaurantsReferenceNear.limit(10);
-
-    final userName = widget.userData['name'];
 
     return SingleChildScrollView(
         child: Column(children: [
@@ -59,51 +59,33 @@ class _Home extends State<HomePage> {
         ),
       ),
       TitleRow("Top Receitas", "recipes", recipesReference),
-      ListContainerRow(context, recipesReferenceLimited, "recipe"),
+      listViewResult(
+          collectionRef: recipesReferenceLimited,
+          collection: "recipes",
+          type: "vertical",
+          scrollDirection: Axis.horizontal),
       TitleRow("Restaurantes para voce conhecer!", "restaurants",
           restaurantsReference),
-      ListContainerRow(context, restaurantsReferenceLimited, "restaurant"),
+      listViewResult(
+          collectionRef: restaurantsReferenceLimited,
+          collection: "restaurants",
+          type: "vertical",
+          scrollDirection: Axis.horizontal),
       TitleRow("Restaurantes na sua cidade!", "restaurants",
           restaurantsReferenceNear),
-      ListContainerRow(context, restaurantsReferenceNearLimited, "restaurant"),
+      listViewResult(
+          collectionRef: restaurantsReferenceNearLimited,
+          collection: "restaurants",
+          type: "vertical",
+          scrollDirection: Axis.horizontal),
+      Container(
+          margin: EdgeInsets.all(10),
+          child: Text(
+            "Experiências na sua região",
+            style: TextStyle(fontSize: 25),
+          )),
+      NearComments(restaurantsReferenceNear)
     ]));
-  }
-
-  Widget ListContainerRow(context, reference, collection) {
-    return Container(
-        width: MediaQuery.of(context).size.width,
-        height: 200,
-        child: _buildBody(context, reference, collection));
-  }
-
-  Widget _buildBody(BuildContext context, Query<Map<String, dynamic>> reference,
-      String collection) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: reference.snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return LinearProgressIndicator();
-
-        return _buildList(context, snapshot.data!.docs, collection);
-      },
-    );
-  }
-
-  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot,
-      String collection) {
-    return ListView(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.only(top: 20.0),
-      children: snapshot
-          .map((data) => _buildListItem(context, data, collection))
-          .toList(),
-    );
-  }
-
-  Widget _buildListItem(
-      BuildContext context, DocumentSnapshot data, String collection) {
-    final documentId = data.id;
-    final row = data.data() as Map<String, dynamic>;
-    return rowContainer(context, documentId, row, collection);
   }
 
   Widget TitleRow(String title, String collection, collectionRef) {
@@ -146,24 +128,104 @@ class _Home extends State<HomePage> {
   }
 }
 
-Widget rowContainer(
-    BuildContext context, String documentId, row, String collection) {
-  return GestureDetector(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => (collection == "recipe")
-                    ? RecipeDetail(
-                        documentId: documentId,
-                        created_by: null,
-                      )
-                    : RestaurantDetail(documentId: documentId)));
-      },
-      child: Tile(
-        documentId: documentId,
-        data: row,
-        flexDirection: "vertical",
-        collection: collection,
-      ));
+Widget CommentRatingBar(double rating) {
+  return RatingBar.builder(
+    initialRating: rating,
+    minRating: 0,
+    direction: Axis.horizontal,
+    allowHalfRating: true,
+    itemSize: 20,
+    itemCount: 5,
+    itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
+    itemBuilder: (context, _) => Icon(
+      Icons.star,
+      color: Colors.amber,
+      size: 5.0,
+    ),
+    onRatingUpdate: (value) {
+      //r
+    },
+    ignoreGestures: true,
+  );
+}
+
+Widget NearComments(CollectionReference) {
+  return StreamBuilder<QuerySnapshot>(
+    stream: CollectionReference.snapshots(),
+    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      if (snapshot.hasData) {
+        final ratings = snapshot.data!.docs
+            .where((element) => element['reviews'].length > 0)
+            .expand((i) => i['reviews'].map((j) => ({
+                  "docId": i.id,
+                  "rating": j['rating'],
+                  "userId": j['userId']
+                })))
+            .toList();
+        final comments = snapshot.data!.docs
+            .where((element) => element['comments'].length > 0)
+            .expand((i) => i['comments'].map((j) => ({
+                  "docId": i.id,
+                  "comment": j['comment'],
+                  "name": j['name'],
+                  "userId": j['userId']
+                })))
+            .toList();
+        var ratingComment = comments.map(
+          (e) {
+            final rating = ratings.firstWhere(
+                (element) => element['docId'] == e['docId'],
+                orElse: () => -1);
+            var doc = e;
+            doc['rating'] = rating == -1 ? rating : rating['rating'];
+            return doc;
+          },
+        ).where((element) => element["rating"] >= 0);
+        final orderedRatings = List.from(ratingComment)
+          ..sort((a, b) => a['rating'].compareTo(b['rating']));
+        return Container(
+            margin: EdgeInsets.all(5),
+            width: MediaQuery.of(context).size.width,
+            height: 200,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount:
+                  orderedRatings.length > 10 ? 10 : orderedRatings.length,
+              itemBuilder: (context, index) {
+                final row = orderedRatings[index];
+                print('row');
+                print(row);
+                return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  RestaurantDetail(documentId: row['docId'])));
+                    },
+                    child: Container(
+                      width: 200,
+                      height: 200,
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 5),
+                              child: Text(row['name']),
+                            ),
+                            CommentRatingBar(row['rating']),
+                            Padding(
+                                padding: EdgeInsets.only(bottom: 5),
+                                child: Expanded(
+                                  child: Text(row['comment']),
+                                ))
+                          ]),
+                    ));
+              },
+            ));
+      } else {
+        return Text("Nada encontrado :(");
+      }
+    },
+  );
 }

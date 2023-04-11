@@ -274,6 +274,8 @@ class _Restaurante extends State<addRestaurant> {
                                       "isVegan": veggie,
                                       "address": address,
                                       "photoURL": photoURL,
+                                      "reviews": [],
+                                      "comments": [],
                                       "quantityReviews": 1,
                                       "totalReviews": 1,
                                       "averageReview": 1,
