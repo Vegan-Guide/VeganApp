@@ -61,11 +61,16 @@ class _Receitas extends State<Receitas> {
           ratingList.indexWhere((element) => element == roundToHalf(rating));
       final customList =
           ratingList.where((element) => element >= ratingList[index]).toList();
-      print("customList");
-      print(customList);
       recipesReference =
           recipesReference.where("averageReview", whereIn: customList);
     }
+
+    if (min != null || max != null) {
+      recipesReference = recipesReference.orderBy("time");
+    }
+
+    recipesReference =
+        recipesReference.orderBy("totalReviews", descending: true);
 
     return Scaffold(
         appBar: (widget.category != null)
@@ -110,7 +115,9 @@ class _Receitas extends State<Receitas> {
                 ),
               ),
               listViewResult(
-                  collectionRef: recipesReference, collection: "recipes")
+                  userData: widget.userData,
+                  collectionRef: recipesReference,
+                  collection: "recipes")
             ],
           )),
           onRefresh: () {

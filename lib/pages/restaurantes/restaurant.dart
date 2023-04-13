@@ -113,24 +113,24 @@ class _RestaurantDetail extends State<RestaurantDetail> {
                     child: Text(
                         "Endereço: ${(data['address'] != null ? data['address']['street'] : "")}, ${(data['address'] != null ? data['address']['name'] : "")} - ${(data['address'] != null ? data['address']['subAdministrativeArea'] : "")}, ${(data['address'] != null ? data['address']['administrativeArea'] : "")} - ${(data['address'] != null ? data['address']['isoCountryCode'] : "")}"),
                   ),
-                  // GestureDetector(
-                  //   onTap: () async {
-                  //     final latitude = data['address']['latitude'];
-                  //     final longitude = data['address']['longitude'];
-                  //     final url =
-                  //         'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
-                  //     final Uri mapsUrl = Uri.parse(url);
-                  //     await launchUrl(mapsUrl);
-                  //   },
-                  //   child: Container(
-                  //     padding: EdgeInsets.all(8.0),
-                  //     decoration: BoxDecoration(
-                  //       color: Colors.grey[200],
-                  //       borderRadius: BorderRadius.circular(8.0),
-                  //     ),
-                  //     child: Text(data['address']['street']),
-                  //   ),
-                  // ),
+                  GestureDetector(
+                    onTap: () async {
+                      final latitude = data['address']['latitude'];
+                      final longitude = data['address']['longitude'];
+                      final url =
+                          'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+                      final Uri mapsUrl = Uri.parse(url);
+                      await launchUrl(mapsUrl);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Text(data['address']['street']),
+                    ),
+                  ),
                   Row(
                     children: [
                       Text("Seu rating: "),

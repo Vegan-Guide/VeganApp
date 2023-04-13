@@ -59,7 +59,7 @@ dependencies:
 
   cached_network_image: ^3.2.3
 
-  geolocator: ^7.0.0
+  geolocator: ^9.0.2
   url_launcher: ^6.1.10
 
 dev_dependencies:

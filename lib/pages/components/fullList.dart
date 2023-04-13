@@ -9,12 +9,14 @@ class FullList extends StatefulWidget {
   final dynamic userData;
   final String collection;
   final Query<Map<String, dynamic>> collectionRef;
+  final bool near;
 
   const FullList(
       {this.searchText,
       this.userData,
       required this.collection,
-      required this.collectionRef});
+      required this.collectionRef,
+      this.near = false});
 
   @override
   _FullList createState() => _FullList();
@@ -43,8 +45,11 @@ class _FullList extends State<FullList> {
                 ),
               ),
               listViewResult(
-                  collectionRef: widget.collectionRef,
-                  collection: widget.collection)
+                userData: widget.userData,
+                collectionRef: widget.collectionRef,
+                collection: widget.collection,
+                near: widget.near,
+              )
             ],
           )),
           onRefresh: () {

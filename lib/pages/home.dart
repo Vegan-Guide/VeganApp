@@ -3,8 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:vegan_app/pages/components/fullList.dart';
 
-import 'package:vegan_app/pages/components/tile.dart';
-import 'package:vegan_app/pages/receitas/recipe.dart';
 import 'package:vegan_app/pages/restaurantes/restaurant.dart';
 import 'package:vegan_app/pages/components/listView.dart';
 
@@ -21,6 +19,7 @@ class _Home extends State<HomePage> {
     final Query<Map<String, dynamic>> recipesReference = FirebaseFirestore
         .instance
         .collection('recipes')
+        .orderBy("averageReview", descending: true)
         .orderBy("totalReviews", descending: true);
 
     final Query<Map<String, dynamic>> recipesReferenceLimited =
@@ -29,20 +28,15 @@ class _Home extends State<HomePage> {
     final Query<Map<String, dynamic>> restaurantsReference = FirebaseFirestore
         .instance
         .collection('restaurants')
+        .where("address.isoCountryCode",
+            isEqualTo: widget.userData["address"]["isoCountryCode"])
+        .where("address.subAdministrativeArea",
+            isEqualTo: widget.userData["address"]["subAdministrativeArea"])
+        .orderBy("averageReview", descending: true)
         .orderBy("totalReviews", descending: true);
 
     final Query<Map<String, dynamic>> restaurantsReferenceLimited =
         restaurantsReference.limit(10);
-
-    final Query<Map<String, dynamic>> restaurantsReferenceNear =
-        FirebaseFirestore.instance
-            .collection('restaurants')
-            .where("address.isoCountryCode",
-                isEqualTo: widget.userData["address"]["isoCountryCode"])
-            .where("address.subAdministrativeArea",
-                isEqualTo: widget.userData["address"]["subAdministrativeArea"]);
-    final Query<Map<String, dynamic>> restaurantsReferenceNearLimited =
-        restaurantsReferenceNear.limit(10);
 
     return SingleChildScrollView(
         child: Column(children: [
@@ -58,37 +52,41 @@ class _Home extends State<HomePage> {
           ),
         ),
       ),
-      TitleRow("Top Receitas", "recipes", recipesReference),
+      TitleRow("Top Receitas", "recipes", recipesReference, false),
       listViewResult(
+          userData: widget.userData,
           collectionRef: recipesReferenceLimited,
           collection: "recipes",
           type: "vertical",
           scrollDirection: Axis.horizontal),
       TitleRow("Restaurantes para voce conhecer!", "restaurants",
-          restaurantsReference),
+          restaurantsReference, false),
       listViewResult(
+          userData: widget.userData,
           collectionRef: restaurantsReferenceLimited,
           collection: "restaurants",
           type: "vertical",
           scrollDirection: Axis.horizontal),
-      TitleRow("Restaurantes na sua cidade!", "restaurants",
-          restaurantsReferenceNear),
+      TitleRow("Restaurantes pertos de você!", "restaurants",
+          restaurantsReference, true),
       listViewResult(
-          collectionRef: restaurantsReferenceNearLimited,
+          userData: widget.userData,
+          collectionRef: restaurantsReferenceLimited,
           collection: "restaurants",
           type: "vertical",
-          scrollDirection: Axis.horizontal),
+          scrollDirection: Axis.horizontal,
+          near: true),
       Container(
           margin: EdgeInsets.all(10),
           child: Text(
             "Experiências na sua região",
             style: TextStyle(fontSize: 25),
           )),
-      NearComments(restaurantsReferenceNear)
+      NearComments(restaurantsReferenceLimited)
     ]));
   }
 
-  Widget TitleRow(String title, String collection, collectionRef) {
+  Widget TitleRow(String title, String collection, collectionRef, bool near) {
     return Padding(
       padding: EdgeInsets.all(10),
       child: Row(
@@ -117,9 +115,9 @@ class _Home extends State<HomePage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => FullList(
-                            collection: collection,
-                            collectionRef: collectionRef,
-                          )));
+                          collection: collection,
+                          collectionRef: collectionRef,
+                          near: near)));
             },
           )
         ],

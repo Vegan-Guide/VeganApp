@@ -33,11 +33,12 @@ class _Receita extends State<addReceita> {
   bool veggie = false;
   String photoURL = "";
   String tipo = "Geral";
-  int quantityReviews = 1;
-  int totalReviews = 1;
-  int averageReview = 1;
+  double quantityReviews = 1.0;
+  double totalReviews = 1.0;
+  double averageReview = 1.0;
 
   List<String> categories = <String>["Geral"];
+  List categoriesId = [];
 
   @override
   void initState() {
@@ -56,22 +57,22 @@ class _Receita extends State<addReceita> {
         .get();
     Map<String, dynamic>? snapshot = document.data();
 
-    name.text = snapshot?['name'] ?? "";
-    instructions.text = snapshot?['instructions'] ?? "";
-    time.text = snapshot?['time'] ?? "";
-    veggie = snapshot?['veggie'] ?? false;
-    tipo = snapshot?['tipo'] ?? "";
-    final ingredientsList = snapshot?['ingredients'] as List;
+    print("snapshot");
+    print(snapshot);
 
-    if (ingredientsList.length > 0) {
-      setState(() {
-        ingredients = ingredientsList;
-      });
-    }
-    quantityReviews = snapshot?['quantityReviews'] ?? 1;
-    totalReviews = snapshot?['totalReviews'] ?? 1;
-    averageReview = snapshot?['averageReview'] ?? 1;
-    photoURL = snapshot?['photoURL'] ?? "";
+    final ingredientsList = snapshot?['ingredients'] as List;
+    setState(() {
+      name.text = snapshot?['name'] ?? "";
+      instructions.text = snapshot?['instructions'] ?? "";
+      time.text = snapshot?['time'].toString() ?? "";
+      veggie = snapshot?['veggie'] ?? false;
+      tipo = snapshot?['tipo'] ?? "";
+      ingredients = ingredientsList;
+      quantityReviews = double.parse(snapshot?['quantityReviews']);
+      totalReviews = double.parse(snapshot?['totalReviews']);
+      averageReview = double.parse(snapshot?['averageReview']);
+      photoURL = snapshot?['photoURL'] ?? "";
+    });
   }
 
   Future getCategories() async {
@@ -98,9 +99,9 @@ class _Receita extends State<addReceita> {
             if (categories.contains(name) == false) {
               setState(() {
                 categories.add(name);
+                categoriesId.add({"name": name, "id": id});
               });
             }
-            print(categories);
             return data["name"];
           })
         });
@@ -247,7 +248,7 @@ class _Receita extends State<addReceita> {
                               await uploadTask.then((res) async =>
                                   {photoURL = await res.ref.getDownloadURL()});
                             }
-                            final payload = {
+                            dynamic payload = {
                               "author_uid":
                                   FirebaseAuth.instance.currentUser?.uid,
                               "name": name.text,
@@ -255,19 +256,21 @@ class _Receita extends State<addReceita> {
                               "ingredients": ingredients,
                               "instructions": instructions.text,
                               "time": int.parse(time.text),
-                              "photoURL": photoURL,
-                              "reviews": [],
-                              "comments": [],
-                              "quantityReviews": quantityReviews,
-                              "totalReviews": totalReviews,
-                              "averageReview": averageReview,
-                              "created_at": Timestamp.fromDate(DateTime.now())
+                              "photoURL": photoURL
                             };
                             if (widget.doc_id != null) {
                               print("edit");
                               ref.doc(widget.doc_id).update(payload);
                             } else {
                               print("create");
+                              payload["reviews"] = [];
+                              payload["comments"] = [];
+                              payload["quantityReviews"] = quantityReviews;
+                              payload["totalReviews"] = totalReviews;
+                              payload["averageReview"] = averageReview;
+                              payload["created_at"] =
+                                  Timestamp.fromDate(DateTime.now());
+
                               ref.add(payload).then((value) async {
                                 _hideLoading();
                                 Navigator.pop(context);

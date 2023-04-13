@@ -25,8 +25,12 @@ class _Restaurants extends State<Restaurants> {
   Widget build(BuildContext context) {
     List ratingList = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
     final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-    Query<Map<String, dynamic>> _collectionRef =
-        _firestore.collection('restaurants');
+    Query<Map<String, dynamic>> _collectionRef = _firestore
+        .collection('restaurants')
+        .where('address.isoCountryCode',
+            isEqualTo: widget.userData['address']['isoCountryCode'])
+        .where('address.subAdministrativeArea',
+            isEqualTo: widget.userData['address']['subAdministrativeArea']);
 
     if (rating > 0) {
       double roundToHalf(double number) {
@@ -40,6 +44,8 @@ class _Restaurants extends State<Restaurants> {
       _collectionRef =
           _collectionRef.where("averageReview", whereIn: customList);
     }
+
+    _collectionRef = _collectionRef.orderBy("totalReviews", descending: true);
 
     return Scaffold(
         body: RefreshIndicator(
@@ -72,7 +78,9 @@ class _Restaurants extends State<Restaurants> {
                 ),
               ),
               listViewResult(
-                  collectionRef: _collectionRef, collection: "restaurants")
+                  userData: widget.userData,
+                  collectionRef: _collectionRef,
+                  collection: "restaurants")
             ],
           )),
           onRefresh: () {

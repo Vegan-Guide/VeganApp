@@ -12,13 +12,17 @@ class listViewResult extends StatefulWidget {
   final String title;
   final String type;
   final Axis scrollDirection;
+  final bool near;
+  final userData;
 
   listViewResult(
-      {this.title = "",
-      this.collection,
+      {this.userData,
+      this.title = "",
+      required this.collection,
       required this.collectionRef,
       this.type = "horizontal",
-      this.scrollDirection = Axis.vertical});
+      this.scrollDirection = Axis.vertical,
+      this.near = false});
 
   _listViewResult createState() => _listViewResult();
 }
@@ -66,6 +70,23 @@ class _listViewResult extends State<listViewResult> {
                       snapshot.data!.docs.map((DocumentSnapshot document) {
                     Map<String, dynamic> data =
                         document.data() as Map<String, dynamic>;
+
+                    //check if the restaurant is near
+                    if (widget.near &&
+                        data['address'] != null &&
+                        widget.collection == "restaurants" &&
+                        (data['address']['latitude'] >
+                                widget.userData['address']['latitude'] + 0.01 ||
+                            data['address']['latitude'] <
+                                widget.userData['address']['latitude'] - 0.01 ||
+                            data['address']['longitude'] >
+                                widget.userData['address']['longitude'] +
+                                    0.01 ||
+                            data['address']['longitude'] <
+                                widget.userData['address']['longitude'] -
+                                    0.01)) {
+                      return Container();
+                    }
                     return GestureDetector(
                       onTap: () {
                         if (widget.collection != null) {
