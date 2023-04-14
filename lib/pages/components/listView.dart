@@ -13,7 +13,7 @@ class listViewResult extends StatefulWidget {
   final String type;
   final Axis scrollDirection;
   final bool near;
-  final userData;
+  final dynamic userData;
 
   listViewResult(
       {this.userData,

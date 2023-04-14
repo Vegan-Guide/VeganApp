@@ -115,6 +115,7 @@ class _Home extends State<HomePage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => FullList(
+                          userData: widget.userData,
                           collection: collection,
                           collectionRef: collectionRef,
                           near: near)));

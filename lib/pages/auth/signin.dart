@@ -28,66 +28,67 @@ class _signIn extends State<SignInPage> {
           title: Text("Registrar"),
           backgroundColor: Globals.appBarBackgroundColor,
         ),
-        body: SingleChildScrollView(
-          child: Column(
+        body: Stack(alignment: Alignment.center, children: [
+          SingleChildScrollView(
+              child: Column(
             children: [
               Text("Registrar", style: TextStyle(fontSize: 25)),
               Center(
-                  child: Stack(alignment: Alignment.center, children: [
-                Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        Padding(
-                            padding: EdgeInsets.all(10), child: Text("Nome")),
-                        TextField(
-                          controller: name,
-                          decoration: Globals.inputDecorationStyling,
-                        ),
-                        Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Text("Usuário")),
-                        TextField(
-                          controller: username,
-                          decoration: Globals.inputDecorationStyling,
-                        ),
-                        Padding(
-                            padding: EdgeInsets.all(10), child: Text("Email")),
-                        TextField(
-                          controller: email,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: Globals.inputDecorationStyling,
-                        ),
-                        Padding(
-                            padding: EdgeInsets.all(10), child: Text("Senha")),
-                        TextField(
-                          controller: password,
-                          obscureText: true,
-                          decoration: Globals.inputDecorationStyling,
-                        ),
-                        ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                _isLoading = true;
-                              });
-                              CreateUser(context);
-                            },
-                            child: Text("Registrar"))
-                      ],
-                    )),
-                _isLoading
-                    ? Container(
-                        color: Colors.black26,
-                        height: MediaQuery.of(context).size.height,
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      )
-                    : Container()
-              ]))
+                  child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          Padding(
+                              padding: EdgeInsets.all(10), child: Text("Nome")),
+                          TextField(
+                            controller: name,
+                            decoration: Globals.inputDecorationStyling,
+                          ),
+                          Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Text("Usuário")),
+                          TextField(
+                            controller: username,
+                            decoration: Globals.inputDecorationStyling,
+                          ),
+                          Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Text("Email")),
+                          TextField(
+                            controller: email,
+                            keyboardType: TextInputType.emailAddress,
+                            decoration: Globals.inputDecorationStyling,
+                          ),
+                          Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Text("Senha")),
+                          TextField(
+                            controller: password,
+                            obscureText: true,
+                            decoration: Globals.inputDecorationStyling,
+                          ),
+                          ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  _isLoading = true;
+                                });
+                                CreateUser(context);
+                              },
+                              child: Text("Registrar"))
+                        ],
+                      )))
             ],
-          ),
-        ));
+          )),
+          _isLoading
+              ? Container(
+                  color: Colors.black26,
+                  height: MediaQuery.of(context).size.height,
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+              : Container()
+        ]));
   }
 
   Future CreateUser(context) async {
