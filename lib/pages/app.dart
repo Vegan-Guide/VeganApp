@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:vegan_app/globals/globalVariables.dart';
 
 import 'package:vegan_app/pages/configuration.dart';
@@ -8,6 +9,7 @@ import 'package:vegan_app/pages/home.dart';
 import 'package:vegan_app/pages/news/newsList.dart';
 import 'package:vegan_app/pages/restaurantes/restaurants.dart';
 import 'package:vegan_app/pages/receitas/receitas.dart';
+import 'package:vegan_app/pages/search.dart';
 
 class App extends StatefulWidget {
   const App({super.key, loggedin: false});
@@ -79,8 +81,9 @@ class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    Receitas(searchText: searchValue.text)));
+                                builder: (context) => SearchPage(
+                                    userData: userData,
+                                    searchText: searchValue.text)));
                       },
                     )),
               ),
