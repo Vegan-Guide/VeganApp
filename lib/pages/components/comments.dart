@@ -66,7 +66,10 @@ class _comments extends State<Comments> {
         : null;
     if (index != null) {
       return Column(
-        children: [Text("Seu comentário"), Comment(widget.comments[index])],
+        children: [
+          Padding(padding: EdgeInsets.all(10), child: Text("Seu comentário")),
+          Comment(widget.comments[index])
+        ],
       );
     }
     return Column(

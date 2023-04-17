@@ -45,132 +45,123 @@ class _recipeDetail extends State<RecipeDetail> {
                   heartColor = Colors.red;
                 }
                 return SingleChildScrollView(
+                    padding: EdgeInsets.all(10),
                     child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(20),
-                      child: FotoContainer(
-                          context: context,
-                          data: data,
-                          width: MediaQuery.of(context).size.width),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.95,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.6,
-                            margin: EdgeInsets.all(10.0),
-                            child: Text(
-                              "Nome: ${(data['name'] ?? "")}",
-                              style: TextStyle(fontSize: 25),
-                            ),
-                          ),
-                          Favorite(favorites: favorites, doc: doc, data: data)
-                        ],
-                      ),
-                    ),
-                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Rating médio: "),
-                        Padding(
-                            padding: EdgeInsets.all(10.0),
-                            child: Rating(
+                        FotoContainer(
+                            context: context,
+                            data: data,
+                            width: MediaQuery.of(context).size.width),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.95,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.6,
+                                margin: EdgeInsets.all(10.0),
+                                child: Text(
+                                  "Nome: ${(data['name'] ?? "")}",
+                                  style: TextStyle(fontSize: 25),
+                                ),
+                              ),
+                              Favorite(
+                                  favorites: favorites, doc: doc, data: data)
+                            ],
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Text("Rating médio: "),
+                            Rating(
                                 collection: "recipes",
                                 totalReviews: totalReviews,
-                                documentId: widget.documentId)),
-                      ],
-                    ),
-                    Divider(
-                      height: 20,
-                      thickness: 1,
-                    ),
-                    Container(
-                      margin: EdgeInsets.all(5.0),
-                      child: Text("Tipo: ${(data['type'] ?? "Não Informado")}"),
-                    ),
-                    Container(
-                        margin: EdgeInsets.all(5.0),
-                        child: Row(
-                          children: [
-                            Text("Ingredientes: "),
-                            // Text((ingredients.join(', ')))
-                            Expanded(
-                                child: Container(
-                                    height: 60,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        padding: EdgeInsets.all(15.0),
-                                        itemCount: ingredients.length,
-                                        itemBuilder: ((context, index) {
-                                          final a = ingredients[index];
-                                          return Container(
-                                              height: 20,
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20.0),
-                                                  color: Colors.lightGreen),
-                                              padding: EdgeInsets.all(5.0),
-                                              margin: EdgeInsets.all(2.0),
-                                              child: Text(a));
-                                        })))),
+                                documentId: widget.documentId),
                           ],
-                        )),
-                    Padding(
-                      padding: EdgeInsets.all(10),
-                      child:
-                          Text("Tempo de preparo: ${data['time'] ?? "??"} min"),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: Padding(
-                          padding: EdgeInsets.all(10.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Center(
+                        ),
+                        Divider(
+                          height: 20,
+                          thickness: 1,
+                        ),
+                        Container(
+                          margin: EdgeInsets.all(5.0),
+                          child: Text(
+                              "Tipo: ${(data['type'] ?? "Não Informado")}"),
+                        ),
+                        Container(
+                            margin: EdgeInsets.all(5.0),
+                            child: Row(
+                              children: [
+                                Text("Ingredientes: "),
+                                // Text((ingredients.join(', ')))
+                                Expanded(
+                                    child: Container(
+                                        height: 60,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                            padding: EdgeInsets.all(15.0),
+                                            itemCount: ingredients.length,
+                                            itemBuilder: ((context, index) {
+                                              final a = ingredients[index];
+                                              return Container(
+                                                  height: 20,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20.0),
+                                                      color: Colors.lightGreen),
+                                                  padding: EdgeInsets.all(5.0),
+                                                  margin: EdgeInsets.all(2.0),
+                                                  child: Text(a));
+                                            })))),
+                              ],
+                            )),
+                        Text("Tempo de preparo: ${data['time'] ?? "??"} min"),
+                        Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Center(
+                                    child: Padding(
+                                  padding: EdgeInsets.only(top: 10, bottom: 10),
                                   child: Text(
-                                "Instruções",
-                                style: TextStyle(fontSize: 25),
-                              )),
-                              Padding(
-                                  padding: EdgeInsets.all(10.0),
-                                  child: Text(data["instructions"] ??
-                                      "Nenhuma instrução passada"))
-                            ],
-                          )),
-                    ),
-                    Divider(
-                      thickness: 1,
-                      color: Colors.grey[300],
-                      indent: 20, // espaço à esquerda
-                      endIndent: 20, // espaço à direita
-                    ),
-                    Row(
-                      children: [
-                        Text("Seu rating: "),
-                        Padding(
-                            padding: EdgeInsets.all(10.0),
-                            child: Rating(
+                                    "Instruções",
+                                    style: TextStyle(fontSize: 25),
+                                  ),
+                                )),
+                                Text(data["instructions"] ??
+                                    "Nenhuma instrução passada")
+                              ],
+                            )),
+                        Divider(
+                          thickness: 1,
+                          color: Colors.grey[300],
+                          indent: 20, // espaço à esquerda
+                          endIndent: 20, // espaço à direita
+                        ),
+                        Row(
+                          children: [
+                            Text("Seu rating: "),
+                            Rating(
                                 type: "detail",
                                 collection: "recipes",
                                 totalReviews: totalReviews,
-                                documentId: widget.documentId)),
+                                documentId: widget.documentId),
+                          ],
+                        ),
+                        Comments(
+                            collection: "recipes",
+                            comments: totalComments
+                                .where((element) => element['comment'] != null)
+                                .toList(),
+                            documentId: widget.documentId)
                       ],
-                    ),
-                    Comments(
-                        collection: "recipes",
-                        comments: totalComments
-                            .where((element) => element['comment'] != null)
-                            .toList(),
-                        documentId: widget.documentId)
-                  ],
-                ));
+                    ));
               }
               return Text("Loading...");
             })),

@@ -197,8 +197,6 @@ Widget NearComments(CollectionReference) {
                   orderedRatings.length > 10 ? 10 : orderedRatings.length,
               itemBuilder: (context, index) {
                 final row = orderedRatings[index];
-                print('row');
-                print(row);
                 return GestureDetector(
                     onTap: () {
                       Navigator.push(
