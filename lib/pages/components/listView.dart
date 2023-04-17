@@ -27,7 +27,10 @@ class listViewResult extends StatefulWidget {
   _listViewResult createState() => _listViewResult();
 }
 
-class _listViewResult extends State<listViewResult> {
+class _listViewResult extends State<listViewResult>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
   int page = 1;
   int rowsPerPage = 5;
 
@@ -104,6 +107,7 @@ class _listViewResult extends State<listViewResult> {
                         }
                       },
                       child: Tile(
+                        userData: widget.userData,
                         documentId: data['id'],
                         data: data,
                         flexDirection: widget.type,

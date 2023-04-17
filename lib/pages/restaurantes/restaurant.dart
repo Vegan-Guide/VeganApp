@@ -39,8 +39,6 @@ class _RestaurantDetail extends State<RestaurantDetail> {
               List totalReviews = data["reviews"] ?? [];
               List totalComments = data["comments"] ?? [];
               List favorites = data["favorites"] ?? [];
-              print("data");
-              print(data['address']);
               return SingleChildScrollView(
                   child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:vegan_app/globals/globalVariables.dart';
 
 import 'package:vegan_app/pages/auth/login.dart';
 import 'package:vegan_app/pages/admin/myFavoriteRecipes.dart';
@@ -55,7 +56,7 @@ class _config extends State<ConfigPage> with AutomaticKeepAliveClientMixin {
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                                 overflow: TextOverflow.ellipsis,
-                                color: Colors.white)))),
+                                color: Globals.drawerTextColor)))),
                 Divider(
                   height: 20,
                   thickness: 5,
@@ -74,7 +75,8 @@ class _config extends State<ConfigPage> with AutomaticKeepAliveClientMixin {
                                 builder: (context) => Profile()));
                           }),
                           child: Text("Perfil",
-                              style: TextStyle(color: Colors.white)))))
+                              style:
+                                  TextStyle(color: Globals.drawerTextColor)))))
             ])),
             ListTile(
                 title: Row(children: [
@@ -83,7 +85,7 @@ class _config extends State<ConfigPage> with AutomaticKeepAliveClientMixin {
                   padding: EdgeInsets.all(10.00),
                   child: Center(
                       child: Text("Amigos",
-                          style: TextStyle(color: Colors.white))))
+                          style: TextStyle(color: Globals.drawerTextColor))))
             ])),
             ListTile(
                 title: Row(children: [
@@ -93,7 +95,7 @@ class _config extends State<ConfigPage> with AutomaticKeepAliveClientMixin {
                   child: Center(
                       child: GestureDetector(
                     child: Text("Meus Pratos",
-                        style: TextStyle(color: Colors.white)),
+                        style: TextStyle(color: Globals.drawerTextColor)),
                     onTap: (() {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => MinhasReceitas()));
@@ -108,7 +110,7 @@ class _config extends State<ConfigPage> with AutomaticKeepAliveClientMixin {
                   child: Center(
                       child: GestureDetector(
                     child: Text("Minhas Receitas Favoritas",
-                        style: TextStyle(color: Colors.white)),
+                        style: TextStyle(color: Globals.drawerTextColor)),
                     onTap: (() {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => MinhasReceitasFavoritas()));
@@ -123,7 +125,7 @@ class _config extends State<ConfigPage> with AutomaticKeepAliveClientMixin {
                   child: Center(
                       child: GestureDetector(
                     child: Text("Meus Restaurantes Favoritos",
-                        style: TextStyle(color: Colors.white)),
+                        style: TextStyle(color: Globals.drawerTextColor)),
                     onTap: (() {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => MeusRestaurantesFavoritos()));
@@ -137,8 +139,8 @@ class _config extends State<ConfigPage> with AutomaticKeepAliveClientMixin {
                   padding: EdgeInsets.all(10.00),
                   child: Center(
                       child: GestureDetector(
-                    child:
-                        Text("Logout", style: TextStyle(color: Colors.white)),
+                    child: Text("Logout",
+                        style: TextStyle(color: Globals.drawerTextColor)),
                     onTap: (() {
                       FirebaseAuth.instance.signOut().then((value) => {
                             Navigator.pushReplacement(

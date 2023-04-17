@@ -14,7 +14,11 @@ class Restaurants extends StatefulWidget {
   _Restaurants createState() => _Restaurants();
 }
 
-class _Restaurants extends State<Restaurants> {
+class _Restaurants extends State<Restaurants>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   Future<void> refreshPage() async {
     setState(() {});

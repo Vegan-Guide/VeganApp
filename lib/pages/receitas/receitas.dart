@@ -17,7 +17,9 @@ class Receitas extends StatefulWidget {
   _Receitas createState() => _Receitas();
 }
 
-class _Receitas extends State<Receitas> {
+class _Receitas extends State<Receitas> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
   @override
   final searchValue = TextEditingController();
   String categoryName = "";

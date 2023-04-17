@@ -2,21 +2,36 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:vegan_app/globals/globalVariables.dart';
 import 'package:vegan_app/pages/components/rating.dart';
+import 'dart:math' as math;
 
 class Tile extends StatelessWidget {
+  final dynamic userData;
   final documentId;
   final data;
   final String flexDirection;
   final String collection;
 
   Tile(
-      {required this.documentId,
+      {this.userData,
+      required this.documentId,
       required this.data,
       required this.flexDirection,
       required this.collection});
 
   @override
   Widget build(BuildContext context) {
+    double distance = 0.0;
+    if (collection == 'restaurants' && userData != null) {
+      final userLocation = userData["address"];
+      final storeLocation = data['address'];
+      distance = math.sqrt(math.pow(
+                  ((userLocation['latitude']) - storeLocation['latitude']), 2) +
+              math.pow((userLocation['longitude'] - storeLocation['longitude']),
+                  2)) *
+          111;
+    }
+    final String distanceString = distance.toStringAsFixed(2);
+
     if (flexDirection == "vertical") {
       return Container(
           margin: EdgeInsets.all(5),
@@ -64,7 +79,10 @@ class Tile extends StatelessWidget {
                     Text(
                         " (${data['reviews'] != null ? data['reviews'].length : 0})")
                   ],
-                )
+                ),
+                (collection == 'restaurants' && userData != null)
+                    ? Text("$distanceString km")
+                    : Container()
               ],
             )),
           ],

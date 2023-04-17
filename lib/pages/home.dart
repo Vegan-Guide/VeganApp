@@ -14,7 +14,10 @@ class HomePage extends StatefulWidget {
 }
 
 @override
-class _Home extends State<HomePage> {
+class _Home extends State<HomePage> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   Widget build(BuildContext context) {
     final Query<Map<String, dynamic>> recipesReference = FirebaseFirestore
         .instance
@@ -173,7 +176,9 @@ Widget NearComments(CollectionReference) {
         var ratingComment = comments.map(
           (e) {
             final rating = ratings.firstWhere(
-                (element) => element['docId'] == e['docId'],
+                (element) =>
+                    element['docId'] == e['docId'] &&
+                    element['userId'] == e['userId'],
                 orElse: () => -1);
             var doc = e;
             doc['rating'] = rating == -1 ? rating : rating['rating'];

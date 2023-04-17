@@ -92,7 +92,7 @@ class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
           backgroundColor: Globals.appBarBackgroundColor,
         ),
         drawer: Drawer(
-            backgroundColor: Globals.appBarBackgroundColor,
+            backgroundColor: Globals.drawerBackgroundColor,
             width: MediaQuery.of(context).size.width * 0.75,
             child: ConfigPage(userData: userData)),
         bottomNavigationBar: BottomNavigationBar(
