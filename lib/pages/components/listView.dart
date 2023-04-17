@@ -33,6 +33,7 @@ class _listViewResult extends State<listViewResult>
   bool get wantKeepAlive => true;
   int page = 1;
   int rowsPerPage = 5;
+  int lastSize = 0;
 
   Future<void> refreshPage() async {
     setState(() {});
@@ -116,7 +117,8 @@ class _listViewResult extends State<listViewResult>
                     );
                   }).toList(),
                 )),
-            (widget.scrollDirection == Axis.vertical)
+            (widget.scrollDirection == Axis.vertical &&
+                    snapshot.data!.size > lastSize)
                 ? GestureDetector(
                     child: Container(
                       margin: EdgeInsets.all(10),
@@ -130,6 +132,7 @@ class _listViewResult extends State<listViewResult>
                     onTap: () {
                       setState(() {
                         page++;
+                        lastSize = snapshot.data!.size;
                       });
                     },
                   )

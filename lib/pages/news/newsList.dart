@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vegan_app/globals/globalVariables.dart';
 import 'package:vegan_app/pages/components/photo.dart';
 import 'package:vegan_app/pages/news/add.dart';
+import 'package:vegan_app/pages/news/news.dart';
 
 class NewsList extends StatefulWidget {
   final userData;
@@ -125,10 +126,10 @@ Widget newsContainer(context, documentId, row, searchText) {
   }
   return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (context) => News(documentId: documentId)));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => News(documentId: documentId)));
       },
       child: Card(
         child: ListTile(
