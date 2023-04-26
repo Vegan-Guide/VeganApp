@@ -87,8 +87,25 @@ class _recipeDetail extends State<RecipeDetail> {
                         ),
                         Container(
                           margin: EdgeInsets.all(5.0),
-                          child: Text(
-                              "Tipo: ${(data['type'] ?? "Não Informado")}"),
+                          child: FutureBuilder(
+                            future: FirebaseFirestore.instance
+                                .collection('categories')
+                                .doc(data['type'])
+                                .get(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              }
+
+                              if (!snapshot.hasData) {
+                                return CircularProgressIndicator();
+                              }
+
+                              var data =
+                                  snapshot.data!.data() as Map<String, dynamic>;
+                              return Text("Tipo: ${data['name']}");
+                            },
+                          ),
                         ),
                         Container(
                             margin: EdgeInsets.all(5.0),

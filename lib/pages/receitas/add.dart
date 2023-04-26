@@ -32,13 +32,13 @@ class _Receita extends State<addReceita> {
   List ingredients = [];
   bool veggie = false;
   String photoURL = "";
-  String tipo = "Geral";
+  String tipo = "DmOLr9KKx12DTeSf17GB";
   double quantityReviews = 1.0;
   double totalReviews = 1.0;
   double averageReview = 1.0;
 
-  List<String> categories = <String>["Geral"];
-  List categoriesId = [];
+  final Query<Map<String, dynamic>> categoryReference =
+      FirebaseFirestore.instance.collection('categories');
 
   @override
   void initState() {
@@ -60,51 +60,18 @@ class _Receita extends State<addReceita> {
     print("snapshot");
     print(snapshot);
 
-    final ingredientsList = snapshot?['ingredients'] as List;
     setState(() {
       name.text = snapshot?['name'] ?? "";
       instructions.text = snapshot?['instructions'] ?? "";
       time.text = snapshot?['time'].toString() ?? "";
       veggie = snapshot?['veggie'] ?? false;
       tipo = snapshot?['tipo'] ?? "";
-      ingredients = ingredientsList;
+      ingredients = snapshot?['ingredients'] as List;
       quantityReviews = double.parse(snapshot?['quantityReviews']);
       totalReviews = double.parse(snapshot?['totalReviews']);
       averageReview = double.parse(snapshot?['averageReview']);
       photoURL = snapshot?['photoURL'] ?? "";
     });
-  }
-
-  Future getCategories() async {
-    await FirebaseFirestore.instance
-        .collection('categories')
-        .get()
-        .then((value) => value.docs.forEach((element) async {
-              await getCategorieName(element.reference.id);
-              if (tipo == "") {
-                tipo = categories.first;
-              }
-            }));
-  }
-
-  Future getCategorieName(id) async {
-    CollectionReference ref =
-        FirebaseFirestore.instance.collection('categories');
-    final doc = ref.doc(id);
-    final docGet = doc.get();
-    return await docGet.then((value) => {
-          value.reference.snapshots().forEach((element) {
-            Map<String, dynamic> data = element.data() as Map<String, dynamic>;
-            String name = data["name"];
-            if (categories.contains(name) == false) {
-              setState(() {
-                categories.add(name);
-                categoriesId.add({"name": name, "id": id});
-              });
-            }
-            return data["name"];
-          })
-        });
   }
 
   _onDelete(index) {
@@ -174,23 +141,45 @@ class _Receita extends State<addReceita> {
                       padding: EdgeInsets.all(10),
                       child: Text("Tipo da receita"),
                     ),
-                    FutureBuilder(
-                        future: getCategories(),
-                        builder: ((context, snapshot) {
-                          return DropdownButtonFormField(
-                              decoration: Globals.inputDecorationStyling,
-                              items: categories
-                                  .map<DropdownMenuItem<String>>((String e) =>
-                                      DropdownMenuItem(
-                                          value: e, child: Text(e)))
-                                  .toList(),
-                              value: tipo,
-                              onChanged: (value) {
-                                setState(() {
-                                  tipo = value!;
-                                });
-                              });
-                        })),
+                    StreamBuilder(
+                      stream: categoryReference.snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        }
+
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        }
+
+                        if (snapshot.data!.size == 0) {
+                          return Center(
+                            child: Text("Desculpa, nada encontrado :("),
+                          );
+                        }
+                        return DropdownButtonFormField(
+                          validator: (value) => value!.isEmpty
+                              ? "Selecione o tipo de receita!"
+                              : null,
+                          value: tipo,
+                          decoration: Globals.inputDecorationStyling,
+                          items: snapshot.data!.docs
+                              .map((DocumentSnapshot document) {
+                            Map<String, dynamic> data =
+                                document.data() as Map<String, dynamic>;
+                            return DropdownMenuItem(
+                                child: Text(data['name']), value: document.id);
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              tipo = value!;
+                            });
+                          },
+                        );
+                      },
+                    ),
                     Padding(
                       padding: EdgeInsets.all(10),
                       child: Text("Instruções"),
@@ -238,7 +227,7 @@ class _Receita extends State<addReceita> {
                         onPressed: () async {
                           //algo
                           _showLoading();
-                          if (name.text != "" && instructions.text != "") {
+                          if (_formKey.currentState!.validate()) {
                             if (_recipeImage != null) {
                               final storageRef = FirebaseStorage.instance
                                   .ref()
@@ -251,7 +240,7 @@ class _Receita extends State<addReceita> {
                             dynamic payload = {
                               "author_uid":
                                   FirebaseAuth.instance.currentUser?.uid,
-                              "name": name.text,
+                              "name": name.text.toUpperCase(),
                               "type": tipo,
                               "ingredients": ingredients,
                               "instructions": instructions.text,
@@ -279,6 +268,14 @@ class _Receita extends State<addReceita> {
                             }
                             _hideLoading();
                             Navigator.pop(context);
+                          } else {
+                            _hideLoading();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    "Termine de preencher os campos antes de salvar"),
+                              ),
+                            );
                           }
                         },
                         child: Text("Adicionar"))

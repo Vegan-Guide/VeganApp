@@ -21,8 +21,8 @@ class _SearchPage extends State<SearchPage> {
     final Query<Map<String, dynamic>> recipesReference = FirebaseFirestore
         .instance
         .collection('recipes')
-        .where("name", isGreaterThanOrEqualTo: widget.searchText)
-        .where("name", isLessThan: widget.searchText + "z")
+        .where("name", isGreaterThanOrEqualTo: widget.searchText.toUpperCase())
+        .where("name", isLessThan: widget.searchText.toUpperCase() + "z")
         .orderBy("name")
         .orderBy("averageReview", descending: true)
         .orderBy("totalReviews", descending: true);

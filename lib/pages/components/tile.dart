@@ -82,7 +82,7 @@ class Tile extends StatelessWidget {
                 ),
                 (collection == 'restaurants' && userData != null)
                     ? Text("$distanceString km")
-                    : Container()
+                    : Text("${data['time']} min")
               ],
             )),
           ],

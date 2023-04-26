@@ -269,7 +269,7 @@ class _Restaurante extends State<addRestaurant> {
                                     await ref.add({
                                       "author_uid": FirebaseAuth
                                           .instance.currentUser?.uid,
-                                      "name": nameController.text,
+                                      "name": nameController.text.toUpperCase(),
                                       "type": tipo,
                                       "isVegan": veggie,
                                       "address": address,
