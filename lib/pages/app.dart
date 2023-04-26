@@ -83,7 +83,8 @@ class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
                             MaterialPageRoute(
                                 builder: (context) => SearchPage(
                                     userData: userData,
-                                    searchText: searchValue.text)));
+                                    searchText:
+                                        searchValue.text.toUpperCase())));
                       },
                     )),
               ),

@@ -20,6 +20,7 @@ class _recipeDetail extends State<RecipeDetail> {
   @override
   Widget build(BuildContext context) {
     //get collection data
+
     CollectionReference recipes =
         FirebaseFirestore.instance.collection('recipes');
     DocumentReference doc = recipes.doc(widget.documentId);
@@ -35,15 +36,13 @@ class _recipeDetail extends State<RecipeDetail> {
               if (snapshot.connectionState == ConnectionState.done) {
                 Map<String, dynamic> data =
                     snapshot.data!.data() as Map<String, dynamic>;
+                print("data type");
+                print(data['type'] == "");
+
                 List totalReviews = data["reviews"] ?? [];
                 List totalComments = data["comments"] ?? [];
                 List ingredients = data["ingredients"] ?? [];
                 List favorites = data["favorites"] ?? [];
-                Color heartColor = Colors.white;
-                if (favorites
-                    .contains(FirebaseAuth.instance.currentUser?.uid)) {
-                  heartColor = Colors.red;
-                }
                 return SingleChildScrollView(
                     padding: EdgeInsets.all(10),
                     child: Column(
@@ -86,27 +85,10 @@ class _recipeDetail extends State<RecipeDetail> {
                           thickness: 1,
                         ),
                         Container(
-                          margin: EdgeInsets.all(5.0),
-                          child: FutureBuilder(
-                            future: FirebaseFirestore.instance
-                                .collection('categories')
-                                .doc(data['type'])
-                                .get(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasError) {
-                                return Text('Error: ${snapshot.error}');
-                              }
-
-                              if (!snapshot.hasData) {
-                                return CircularProgressIndicator();
-                              }
-
-                              var data =
-                                  snapshot.data!.data() as Map<String, dynamic>;
-                              return Text("Tipo: ${data['name']}");
-                            },
-                          ),
-                        ),
+                            margin: EdgeInsets.all(5.0),
+                            child: (data['type'] == null || data['type'] == "")
+                                ? Text("")
+                                : ShowCategorie(data["type"])),
                         Container(
                             margin: EdgeInsets.all(5.0),
                             child: Row(
@@ -197,5 +179,24 @@ class _recipeDetail extends State<RecipeDetail> {
                     },
                   )
                 : Container());
+  }
+
+  Widget ShowCategorie(String type) {
+    return FutureBuilder(
+      future:
+          FirebaseFirestore.instance.collection('categories').doc(type).get(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+
+        if (!snapshot.hasData) {
+          return CircularProgressIndicator();
+        }
+
+        var data = snapshot.data!.data() as Map<String, dynamic>;
+        return Text("Tipo: ${data['name']}");
+      },
+    );
   }
 }

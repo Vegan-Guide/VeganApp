@@ -65,7 +65,7 @@ class _Receita extends State<addReceita> {
       instructions.text = snapshot?['instructions'] ?? "";
       time.text = snapshot?['time'].toString() ?? "";
       veggie = snapshot?['veggie'] ?? false;
-      tipo = snapshot?['tipo'] ?? "";
+      tipo = snapshot?['type'] ?? tipo;
       ingredients = snapshot?['ingredients'] as List;
       quantityReviews = double.parse(snapshot?['quantityReviews']);
       totalReviews = double.parse(snapshot?['totalReviews']);
