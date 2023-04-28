@@ -78,15 +78,15 @@ class _config extends State<ConfigPage> with AutomaticKeepAliveClientMixin {
                               style:
                                   TextStyle(color: Globals.drawerTextColor)))))
             ])),
-            ListTile(
-                title: Row(children: [
-              Icon(Icons.group),
-              Padding(
-                  padding: EdgeInsets.all(10.00),
-                  child: Center(
-                      child: Text("Amigos",
-                          style: TextStyle(color: Globals.drawerTextColor))))
-            ])),
+            // ListTile(
+            //     title: Row(children: [
+            //   Icon(Icons.group),
+            //   Padding(
+            //       padding: EdgeInsets.all(10.00),
+            //       child: Center(
+            //           child: Text("Amigos",
+            //               style: TextStyle(color: Globals.drawerTextColor))))
+            // ])),
             ListTile(
                 title: Row(children: [
               Icon(Icons.restaurant_menu),

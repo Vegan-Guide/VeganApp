@@ -19,31 +19,37 @@ class _favorite extends State<Favorite> {
     if (widget.favorites.contains(FirebaseAuth.instance.currentUser?.uid)) {
       heartColor = Colors.red;
     }
+    int favoritesLength = widget.favorites.length;
     // TODO: implement build
-    return Container(
-      margin: EdgeInsets.all(10.0),
-      child: FloatingActionButton(
-        child: Icon(Icons.favorite, color: heartColor),
-        backgroundColor: Colors.green.shade800,
-        onPressed: () async {
-          print("favorites");
-          print(widget.favorites);
-          if (widget.favorites
-              .contains(FirebaseAuth.instance.currentUser?.uid)) {
-            widget.favorites.remove(FirebaseAuth.instance.currentUser?.uid);
-            setState(() {
-              heartColor = Colors.white;
-            });
-          } else {
-            widget.favorites.add(FirebaseAuth.instance.currentUser?.uid);
-            setState(() {
-              heartColor = Colors.red;
-            });
-          }
-          widget.data["favorites"] = widget.favorites;
-          await widget.doc.set(widget.data);
-        },
-      ),
+    return Column(
+      children: [
+        Text((favoritesLength < 1000)
+            ? favoritesLength.toString()
+            : "${(favoritesLength / 100).round().toString()}k"),
+        Container(
+          margin: EdgeInsets.all(10.0),
+          child: FloatingActionButton(
+            child: Icon(Icons.favorite, color: heartColor),
+            backgroundColor: Colors.green.shade800,
+            onPressed: () async {
+              if (widget.favorites
+                  .contains(FirebaseAuth.instance.currentUser?.uid)) {
+                widget.favorites.remove(FirebaseAuth.instance.currentUser?.uid);
+                setState(() {
+                  heartColor = Colors.white;
+                });
+              } else {
+                widget.favorites.add(FirebaseAuth.instance.currentUser?.uid);
+                setState(() {
+                  heartColor = Colors.red;
+                });
+              }
+              widget.data["favorites"] = widget.favorites;
+              await widget.doc.set(widget.data);
+            },
+          ),
+        )
+      ],
     );
   }
 }

@@ -40,25 +40,16 @@ class Tile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               FotoContainer(data),
-              Text(data["name"]),
+              Padding(
+                padding: EdgeInsets.only(top: 5),
+                child: Text(data["name"]),
+              ),
             ],
           ));
     } else {
-      return Container(
-        margin: EdgeInsets.all(10),
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: Globals.tileBackgroundColor,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey,
-              offset: Offset(2, 2),
-              blurRadius: 5,
-              spreadRadius: 1,
-            ),
-          ],
-        ),
+      return Card(
+          child: Padding(
+        padding: EdgeInsets.all(5),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -87,7 +78,7 @@ class Tile extends StatelessWidget {
             )),
           ],
         ),
-      );
+      ));
     }
   }
 }
