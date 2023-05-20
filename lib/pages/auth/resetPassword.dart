@@ -54,6 +54,8 @@ class _ResetPage extends State<ResetPage> {
     return Scaffold(
         // resizeToAvoidBottomInset: false,
         appBar: AppBar(
+          iconTheme: IconThemeData(
+              color: Globals.drawerIconColor), //add this line here
           title: Text("Resetar Senha"),
           backgroundColor: Globals.appBarBackgroundColor,
         ),

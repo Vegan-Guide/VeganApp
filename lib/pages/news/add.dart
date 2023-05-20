@@ -37,6 +37,8 @@ class _news extends State<addNews> {
     return Scaffold(
       // resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        iconTheme:
+            IconThemeData(color: Globals.drawerIconColor), //add this line here
         title: Text("Adicionar Notícia"),
         backgroundColor: Globals.appBarBackgroundColor,
       ),

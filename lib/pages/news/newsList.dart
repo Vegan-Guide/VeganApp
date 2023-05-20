@@ -46,6 +46,8 @@ class _NewsList extends State<NewsList> with AutomaticKeepAliveClientMixin {
           ));
       return Scaffold(
         appBar: AppBar(
+          iconTheme: IconThemeData(
+              color: Globals.drawerIconColor), //add this line here
           title: Text("Notícias"),
           backgroundColor: Globals.appBarBackgroundColor,
         ),

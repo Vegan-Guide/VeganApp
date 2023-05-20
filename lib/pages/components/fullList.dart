@@ -31,6 +31,8 @@ class _FullList extends State<FullList> {
 
     return Scaffold(
         appBar: AppBar(
+          iconTheme: IconThemeData(
+              color: Globals.drawerIconColor), //add this line here
           backgroundColor: Globals.appBarBackgroundColor,
         ),
         body: RefreshIndicator(

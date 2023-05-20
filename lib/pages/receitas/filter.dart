@@ -57,6 +57,8 @@ class _filterRecipeState extends State<filterRecipe> {
 
     return Scaffold(
       appBar: AppBar(
+        iconTheme:
+            IconThemeData(color: Globals.drawerIconColor), //add this line here
         backgroundColor: Globals.appBarBackgroundColor,
         title: Text('Recipe Filter'),
       ),

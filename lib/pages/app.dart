@@ -67,6 +67,8 @@ class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
                 index: _selectedIndex,
               ),
         appBar: AppBar(
+          iconTheme: IconThemeData(
+              color: Globals.drawerIconColor), //add this line here
           actions: [
             Container(
               margin: EdgeInsets.all(5),

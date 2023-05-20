@@ -31,6 +31,8 @@ class _FilterRestaurant extends State<filterRestaurant> {
     return Scaffold(
         // resizeToAvoidBottomInset: false,
         appBar: AppBar(
+          iconTheme: IconThemeData(
+              color: Globals.drawerIconColor), //add this line here
           title: Text("Adicionar Restaurante"),
           backgroundColor: Globals.appBarBackgroundColor,
         ),

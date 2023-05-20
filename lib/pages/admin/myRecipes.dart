@@ -25,6 +25,8 @@ class _MinhasReceitas extends State<MinhasReceitas> {
 
     return Scaffold(
         appBar: AppBar(
+          iconTheme: IconThemeData(
+              color: Globals.drawerIconColor), //add this line here
           title: Text("Minhas Receitas"),
           backgroundColor: Globals.appBarBackgroundColor,
         ),

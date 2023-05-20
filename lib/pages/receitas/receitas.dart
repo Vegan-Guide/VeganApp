@@ -77,6 +77,8 @@ class _Receitas extends State<Receitas> with AutomaticKeepAliveClientMixin {
     return Scaffold(
         appBar: (widget.category != null)
             ? AppBar(
+                iconTheme: IconThemeData(
+                    color: Globals.drawerIconColor), //add this line here
                 backgroundColor: Globals.appBarBackgroundColor,
                 title: Text("Receitas"),
               )

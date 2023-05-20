@@ -91,6 +91,8 @@ class _Receita extends State<addReceita> {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
+        iconTheme:
+            IconThemeData(color: Globals.drawerIconColor), //add this line here
         title: Text("Adicionar Receita"),
         backgroundColor: Globals.appBarBackgroundColor,
       ),

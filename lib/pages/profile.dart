@@ -77,6 +77,8 @@ class _Profile extends State<Profile> {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
+        iconTheme:
+            IconThemeData(color: Globals.drawerIconColor), //add this line here
         title: Text("Editar perfil"),
         backgroundColor: Globals.appBarBackgroundColor,
       ),

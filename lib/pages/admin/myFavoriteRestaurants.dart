@@ -25,6 +25,8 @@ class _MeusRestaurantesFavoritos extends State<MeusRestaurantesFavoritos> {
 
     return Scaffold(
         appBar: AppBar(
+          iconTheme: IconThemeData(
+              color: Globals.drawerIconColor), //add this line here
           title: Text("Meus Restaurantes Favoritos"),
           backgroundColor: Globals.appBarBackgroundColor,
         ),

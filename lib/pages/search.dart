@@ -44,6 +44,8 @@ class _SearchPage extends State<SearchPage> {
         length: 2,
         child: Scaffold(
           appBar: AppBar(
+            iconTheme: IconThemeData(
+                color: Globals.drawerIconColor), //add this line here
             backgroundColor: Globals.appBarBackgroundColor,
             title: Text(widget.searchText),
             bottom: TabBar(

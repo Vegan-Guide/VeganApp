@@ -25,6 +25,8 @@ class _signIn extends State<SignInPage> {
     // TODO: implement build
     return Scaffold(
         appBar: AppBar(
+          iconTheme: IconThemeData(
+              color: Globals.drawerIconColor), //add this line here
           title: Text("Registrar"),
           backgroundColor: Globals.appBarBackgroundColor,
         ),

@@ -27,6 +27,8 @@ class _recipeDetail extends State<RecipeDetail> {
 
     return Scaffold(
         appBar: AppBar(
+          iconTheme: IconThemeData(
+              color: Globals.drawerIconColor), //add this line here
           title: Text("Receita"),
           backgroundColor: Globals.appBarBackgroundColor,
         ),

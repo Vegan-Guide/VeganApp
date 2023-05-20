@@ -25,6 +25,8 @@ class _News extends State<News> {
 
     return Scaffold(
       appBar: AppBar(
+        iconTheme:
+            IconThemeData(color: Globals.drawerIconColor), //add this line here
         title: Text("Notícia"),
         backgroundColor: Globals.appBarBackgroundColor,
       ),

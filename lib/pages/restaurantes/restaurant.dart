@@ -27,6 +27,8 @@ class _RestaurantDetail extends State<RestaurantDetail> {
 
     return Scaffold(
       appBar: AppBar(
+        iconTheme:
+            IconThemeData(color: Globals.drawerIconColor), //add this line here
         title: Text("Restaurante"),
         backgroundColor: Globals.appBarBackgroundColor,
       ),

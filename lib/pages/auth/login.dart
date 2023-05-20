@@ -56,7 +56,10 @@ class _Login extends State<LoginPage> {
     // TODO: implement build
     return Scaffold(
         // resizeToAvoidBottomInset: false,
-        // appBar: AppBar(title: Text("Login")),
+        // appBar: AppBar(
+        // iconTheme: IconThemeData(
+        //     color: Globals
+        //         .drawerIconColor), //add this line heretitle: Text("Login")),
         body: Stack(alignment: Alignment.center, children: [
       SingleChildScrollView(
           padding: EdgeInsets.only(top: 50, left: 10, right: 10),
