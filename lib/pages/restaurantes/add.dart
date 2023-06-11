@@ -246,56 +246,56 @@ class _Restaurante extends State<addRestaurant> {
                                 }
                               }),
                           ElevatedButton(
-                              onPressed: () async {
-                                if (_formKey.currentState!.validate()) {
-                                  //algo
-                                  String photoURL = "";
-                                  if (nameController.text != "" &&
-                                      initialAddress.text != "" &&
-                                      address != "") {
-                                    errorMessage = "";
-                                    _showLoading();
-                                    if (_recipeImage != null) {
-                                      final storageRef = FirebaseStorage
-                                          .instance
-                                          .ref()
-                                          .child('restaurants/$imageUuid.jpg');
-                                      final uploadTask = storageRef
-                                          .putFile(File(_recipeImage!.path));
-                                      await uploadTask.then((res) async => {
-                                            photoURL =
-                                                await res.ref.getDownloadURL()
-                                          });
-                                    }
-                                    print("creating document");
-                                    await ref.add({
-                                      "author_uid": FirebaseAuth
-                                          .instance.currentUser?.uid,
-                                      "name": nameController.text.toUpperCase(),
-                                      "type": tipo,
-                                      "isVegan": veggie,
-                                      "address": address,
-                                      "photoURL": photoURL,
-                                      "reviews": [],
-                                      "comments": [],
-                                      "quantityReviews": 1,
-                                      "totalReviews": 1,
-                                      "averageReview": 1,
-                                      "created_at":
-                                          Timestamp.fromDate(DateTime.now())
-                                    }).then((value) {
-                                      _hideLoading();
-                                      Navigator.pop(context);
-                                    });
-                                  } else {
-                                    setState(() {
-                                      errorMessage =
-                                          "Por favor, preencha todos os campos";
-                                    });
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                //algo
+                                String photoURL = "";
+                                if (nameController.text != "" &&
+                                    initialAddress.text != "" &&
+                                    address != "") {
+                                  errorMessage = "";
+                                  _showLoading();
+                                  if (_recipeImage != null) {
+                                    final storageRef = FirebaseStorage.instance
+                                        .ref()
+                                        .child('restaurants/$imageUuid.jpg');
+                                    final uploadTask = storageRef
+                                        .putFile(File(_recipeImage!.path));
+                                    await uploadTask.then((res) async => {
+                                          photoURL =
+                                              await res.ref.getDownloadURL()
+                                        });
                                   }
+                                  print("creating document");
+                                  await ref.add({
+                                    "author_uid":
+                                        FirebaseAuth.instance.currentUser?.uid,
+                                    "name": nameController.text.toUpperCase(),
+                                    "type": tipo,
+                                    "isVegan": veggie,
+                                    "address": address,
+                                    "photoURL": photoURL,
+                                    "reviews": [],
+                                    "comments": [],
+                                    "quantityReviews": 1,
+                                    "totalReviews": 1,
+                                    "averageReview": 1,
+                                    "created_at":
+                                        Timestamp.fromDate(DateTime.now())
+                                  }).then((value) {
+                                    _hideLoading();
+                                    Navigator.pop(context);
+                                  });
+                                } else {
+                                  setState(() {
+                                    errorMessage =
+                                        "Por favor, preencha todos os campos";
+                                  });
                                 }
-                              },
-                              child: Text("Adicionar"))
+                              }
+                            },
+                            child: Text("Adicionar"),
+                          )
                         ],
                       ),
                     ),

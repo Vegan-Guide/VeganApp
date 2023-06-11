@@ -169,6 +169,7 @@ class _recipeDetail extends State<RecipeDetail> {
         floatingActionButton:
             widget.created_by == FirebaseAuth.instance.currentUser?.uid
                 ? FloatingActionButton(
+                    backgroundColor: Globals.floatingAddButton,
                     child: Icon(Icons.edit),
                     onPressed: () {
                       // edit

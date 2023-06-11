@@ -55,8 +55,7 @@ class _Home extends State<HomePage> with AutomaticKeepAliveClientMixin {
           ),
         ),
       ),
-      Card(
-          child: Column(
+      Column(
         children: [
           TitleRow("Top Receitas", "recipes", recipesReference, false),
           listViewResult(
@@ -66,47 +65,41 @@ class _Home extends State<HomePage> with AutomaticKeepAliveClientMixin {
               type: "vertical",
               scrollDirection: Axis.horizontal)
         ],
-      )),
-      Card(
-        child: Column(
-          children: [
-            TitleRow("Restaurantes para voce conhecer!", "restaurants",
-                restaurantsReference, false),
-            listViewResult(
-                userData: widget.userData,
-                collectionRef: restaurantsReferenceLimited,
-                collection: "restaurants",
-                type: "vertical",
-                scrollDirection: Axis.horizontal)
-          ],
-        ),
       ),
-      Card(
-        child: Column(children: [
-          TitleRow("Restaurantes pertos de você!", "restaurants",
-              restaurantsReference, true),
+      Column(
+        children: [
+          TitleRow("Restaurantes para voce conhecer!", "restaurants",
+              restaurantsReference, false),
           listViewResult(
               userData: widget.userData,
               collectionRef: restaurantsReferenceLimited,
               collection: "restaurants",
               type: "vertical",
-              scrollDirection: Axis.horizontal,
-              near: true)
-        ]),
+              scrollDirection: Axis.horizontal)
+        ],
       ),
-      Card(
-        child: Column(
-          children: [
-            Container(
-                margin: EdgeInsets.all(10),
-                child: Text(
-                  "Experiências na sua região",
-                  style: TextStyle(fontSize: 25),
-                )),
-            NearComments(restaurantsReferenceLimited)
-          ],
-        ),
-      )
+      Column(children: [
+        TitleRow("Restaurantes pertos de você!", "restaurants",
+            restaurantsReference, true),
+        listViewResult(
+            userData: widget.userData,
+            collectionRef: restaurantsReferenceLimited,
+            collection: "restaurants",
+            type: "vertical",
+            scrollDirection: Axis.horizontal,
+            near: true)
+      ]),
+      Column(
+        children: [
+          Container(
+              margin: EdgeInsets.all(10),
+              child: Text(
+                "Experiências na sua região",
+                style: TextStyle(fontSize: 20),
+              )),
+          NearComments(restaurantsReferenceLimited)
+        ],
+      ),
     ]));
   }
 
@@ -121,7 +114,7 @@ class _Home extends State<HomePage> with AutomaticKeepAliveClientMixin {
             margin: EdgeInsets.only(right: 5),
             child: Text(
               title,
-              style: TextStyle(fontSize: 25),
+              style: TextStyle(fontSize: 20),
             ),
           )),
           GestureDetector(

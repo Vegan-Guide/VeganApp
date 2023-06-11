@@ -118,9 +118,9 @@ class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
             )
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Color.fromARGB(255, 39, 196, 55),
-          unselectedItemColor: Color.fromARGB(255, 110, 133, 112),
-          backgroundColor: Color.fromARGB(255, 230, 228, 228),
+          selectedItemColor: Globals.selectedNavBarIcon,
+          unselectedItemColor: Globals.unselectedNavBarIcon,
+          backgroundColor: Globals.navBarBackgroundColor,
           onTap: _onItemTapped,
         ));
   }

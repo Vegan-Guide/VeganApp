@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vegan_app/globals/globalVariables.dart';
 import 'package:vegan_app/pages/components/listView.dart';
 import 'package:vegan_app/pages/restaurantes/add.dart';
 import 'package:vegan_app/pages/restaurantes/filter.dart';
@@ -92,6 +93,7 @@ class _Restaurants extends State<Restaurants>
           },
         ),
         floatingActionButton: FloatingActionButton(
+            backgroundColor: Globals.floatingAddButton,
             onPressed: () {
               //algo aqui
               Navigator.push(context,

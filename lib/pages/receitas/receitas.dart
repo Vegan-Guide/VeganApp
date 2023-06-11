@@ -129,6 +129,7 @@ class _Receitas extends State<Receitas> with AutomaticKeepAliveClientMixin {
           },
         ),
         floatingActionButton: FloatingActionButton(
+            backgroundColor: Globals.floatingAddButton,
             onPressed: () {
               //algo aqui
               Navigator.push(context,

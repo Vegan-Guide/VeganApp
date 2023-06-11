@@ -41,15 +41,13 @@ class Tile extends StatelessWidget {
             children: [
               FotoContainer(data),
               Padding(
-                padding: EdgeInsets.only(top: 5),
-                child: Text(data["name"]),
-              ),
+                  padding: EdgeInsets.only(top: 5), child: Text(data["name"])),
             ],
           ));
     } else {
-      return Card(
+      return Container(
           child: Padding(
-        padding: EdgeInsets.all(5),
+        padding: EdgeInsets.all(15),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,

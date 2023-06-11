@@ -49,7 +49,9 @@ class _listViewResult extends State<listViewResult>
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         }
 
         if (snapshot.data!.size == 0) {

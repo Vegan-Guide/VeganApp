@@ -101,6 +101,14 @@ class _Receita extends State<addReceita> {
         child: SingleChildScrollView(
           child: Stack(children: [
             Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+              Padding(
+                padding: EdgeInsets.all(15),
+                child: Center(
+                    child: Text(
+                  "Adicionar Receita",
+                  style: TextStyle(fontSize: 20),
+                )),
+              ),
               Form(
                 key: _formKey,
                 child: Container(

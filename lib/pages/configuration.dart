@@ -44,7 +44,25 @@ class _config extends State<ConfigPage> with AutomaticKeepAliveClientMixin {
                         ? Container(
                             height: 150,
                             width: 150,
-                            child: Image.network(widget.userData['photoURL']))
+                            child: Image.network(
+                              widget.userData['photoURL'],
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                } else {
+                                  return Center(
+                                      child: CircularProgressIndicator(
+                                    value: loadingProgress.expectedTotalBytes !=
+                                            null
+                                        ? loadingProgress
+                                                .cumulativeBytesLoaded /
+                                            loadingProgress.expectedTotalBytes!
+                                        : null,
+                                  ));
+                                }
+                              },
+                            ))
                         : FotoContainer(
                             context: context, data: {}, width: 200)),
                 Center(
