@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:vegan_app/globals/globalVariables.dart';
 import 'package:vegan_app/pages/components/fullList.dart';
 
 import 'package:vegan_app/pages/restaurantes/restaurant.dart';
@@ -118,14 +119,10 @@ class _Home extends State<HomePage> with AutomaticKeepAliveClientMixin {
             ),
           )),
           GestureDetector(
-            child: Text(
-              "Ver mais",
-              style: TextStyle(
-                decoration: TextDecoration
-                    .underline, // optional: specify the color of the underline
-                decorationThickness:
-                    2, // optional: specify the thickness of the underline
-              ),
+            child: Container(
+              child: Text("Ver mais"),
+              padding: EdgeInsets.all(5),
+              decoration: Globals.tagDecoration,
             ),
             onTap: () {
               Navigator.push(

@@ -4,6 +4,7 @@ import 'firebase_options.dart';
 
 import 'package:flutter/material.dart';
 
+import 'package:vegan_app/globals/globalVariables.dart';
 import 'package:vegan_app/pages/auth/login.dart';
 import 'package:vegan_app/pages/app.dart';
 

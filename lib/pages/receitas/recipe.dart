@@ -110,11 +110,8 @@ class _recipeDetail extends State<RecipeDetail> {
                                               final a = ingredients[index];
                                               return Container(
                                                   height: 20,
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20.0),
-                                                      color: Colors.lightGreen),
+                                                  decoration:
+                                                      Globals.tagDecoration,
                                                   padding: EdgeInsets.all(5.0),
                                                   margin: EdgeInsets.all(2.0),
                                                   child: Text(a));
