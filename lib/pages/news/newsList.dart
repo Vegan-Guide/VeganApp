@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vegan_app/globals/globalVariables.dart';
-import 'package:vegan_app/pages/components/photo.dart';
 import 'package:vegan_app/pages/news/add.dart';
 import 'package:vegan_app/pages/news/news.dart';
 

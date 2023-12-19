@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:vegan_app/globals/globalVariables.dart';
 import 'package:vegan_app/pages/components/rating.dart';
 import 'dart:math' as math;
 

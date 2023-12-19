@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vegan_app/globals/globalVariables.dart';
-import 'package:vegan_app/pages/components/comments.dart';
 import 'package:vegan_app/pages/components/photo.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class News extends StatefulWidget {
   final String documentId;

@@ -12,7 +12,7 @@ import 'package:vegan_app/pages/receitas/receitas.dart';
 import 'package:vegan_app/pages/search.dart';
 
 class App extends StatefulWidget {
-  const App({super.key, loggedin: false});
+  const App({super.key, loggedin = false});
 
   @override
   State<App> createState() => _LoginState();

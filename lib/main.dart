@@ -4,7 +4,6 @@ import 'firebase_options.dart';
 
 import 'package:flutter/material.dart';
 
-import 'package:vegan_app/globals/globalVariables.dart';
 import 'package:vegan_app/pages/auth/login.dart';
 import 'package:vegan_app/pages/app.dart';
 
@@ -17,7 +16,7 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key, loggedin: false});
+  const MyApp({super.key, loggedin = false});
 
   @override
   State<MyApp> createState() => _LoginState();

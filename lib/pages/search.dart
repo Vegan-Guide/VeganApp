@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vegan_app/globals/globalVariables.dart';
-import 'package:vegan_app/pages/components/fullList.dart';
 import 'package:vegan_app/pages/components/listView.dart';
 
 class SearchPage extends StatefulWidget {
