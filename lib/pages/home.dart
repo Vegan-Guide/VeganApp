@@ -44,18 +44,8 @@ class _Home extends State<HomePage> with AutomaticKeepAliveClientMixin {
 
     return SingleChildScrollView(
         child: Column(children: [
-      Container(
-        width: MediaQuery.of(context).size.width,
-        height: 200,
-        decoration: BoxDecoration(color: Colors.green),
-        margin: EdgeInsets.all(5),
-        child: Center(
-          child: Text(
-            "BANNER",
-            style: TextStyle(fontSize: 30),
-          ),
-        ),
-      ),
+      Image.asset('assets/images/banner.jpg',
+          width: MediaQuery.of(context).size.width),
       Column(
         children: [
           TitleRow("Top Receitas", "recipes", recipesReference, false),

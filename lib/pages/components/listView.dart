@@ -125,7 +125,7 @@ class _listViewResult extends State<listViewResult>
                       margin: EdgeInsets.all(10),
                       padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: Globals.colorOne,
+                        color: Globals.primaryColor,
                         shape: BoxShape.circle,
                       ),
                       child: Icon(Icons.add),

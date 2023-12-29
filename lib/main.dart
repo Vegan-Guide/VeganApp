@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:vegan_app/globals/globalVariables.dart';
 import 'firebase_options.dart';
 
 import 'package:flutter/material.dart';
@@ -28,10 +29,18 @@ class _LoginState extends State<MyApp> {
     // TODO: implement build
     if (FirebaseAuth.instance.currentUser != null) {
       return MaterialApp(
+        theme: ThemeData(
+          // Set the background color here
+          scaffoldBackgroundColor: Globals.mainBackgroundColor,
+        ),
         home: App(),
       );
     } else {
       return MaterialApp(
+        theme: ThemeData(
+          // Set the background color here
+          scaffoldBackgroundColor: Globals.mainBackgroundColor,
+        ),
         home: LoginPage(),
       );
     }

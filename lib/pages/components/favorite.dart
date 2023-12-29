@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:vegan_app/globals/globalVariables.dart';
 
 class Favorite extends StatefulWidget {
   final List favorites;
@@ -29,7 +30,7 @@ class _favorite extends State<Favorite> {
           margin: EdgeInsets.all(10.0),
           child: FloatingActionButton(
             child: Icon(Icons.favorite, color: heartColor),
-            backgroundColor: Colors.green.shade800,
+            backgroundColor: Globals.primaryColor,
             onPressed: () async {
               if (widget.favorites
                   .contains(FirebaseAuth.instance.currentUser?.uid)) {

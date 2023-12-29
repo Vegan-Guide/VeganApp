@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 
 class Globals {
-  static Color colorOne = Color.fromRGBO(63, 227, 45, 1);
+  static Color mainBackgroundColor = Color.fromARGB(235, 248, 248, 248);
+
+  static Color secondaryColor = Color.fromARGB(255, 188, 108, 37);
+  static Color primaryColor = Color.fromARGB(255, 96, 108, 56);
+
   static Color appBarBackgroundColor = Color.fromRGBO(255, 255, 255, 1);
   static Color tileBackgroundColor = Color.fromRGBO(243, 243, 243, 1);
-  static Color floatingAddButton = Color.fromRGBO(85, 175, 71, 1);
+  static Color floatingAddButton = secondaryColor;
 
   //drawer
   static Color drawerTextColor = Color.fromRGBO(255, 255, 255, 1);
-  static Color drawerBackgroundColor = Color.fromRGBO(85, 175, 71, 1);
-  static Color drawerIconColor = Color.fromRGBO(66, 137, 55, 1);
+  static Color drawerBackgroundColor = secondaryColor;
+  static Color drawerIconColor = secondaryColor;
   //navbar
-  static Color navBarBackgroundColor = Color.fromRGBO(85, 175, 71, 1);
-  static Color selectedNavBarIcon = Color.fromARGB(255, 39, 196, 55);
-  static Color unselectedNavBarIcon = Color.fromARGB(255, 110, 133, 112);
+  static Color selectedNavBarIcon = secondaryColor;
+  static Color unselectedNavBarIcon = Color.fromARGB(255, 68, 81, 40);
 
   static BoxDecoration tagDecoration = BoxDecoration(
-      borderRadius: BorderRadius.circular(20.0), color: Colors.lightGreen);
+      borderRadius: BorderRadius.circular(20.0), color: secondaryColor);
 
   static InputDecoration inputDecorationStyling = InputDecoration(
     filled: true,
