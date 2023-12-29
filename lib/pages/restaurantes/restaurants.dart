@@ -20,7 +20,6 @@ class _Restaurants extends State<Restaurants>
   @override
   bool get wantKeepAlive => true;
 
-  @override
   Future<void> refreshPage() async {
     setState(() {});
   }
@@ -28,6 +27,7 @@ class _Restaurants extends State<Restaurants>
   double rating = 0.0;
 
   Widget build(BuildContext context) {
+    super.build(context);
     List ratingList = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
     final FirebaseFirestore _firestore = FirebaseFirestore.instance;
     Query<Map<String, dynamic>> _collectionRef = _firestore

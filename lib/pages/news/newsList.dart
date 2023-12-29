@@ -25,6 +25,7 @@ class _NewsList extends State<NewsList> with AutomaticKeepAliveClientMixin {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     Query<Map<String, dynamic>> newsReference =
         FirebaseFirestore.instance.collection('news');
 

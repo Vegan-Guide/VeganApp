@@ -48,6 +48,7 @@ class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
   }
 
   Widget build(BuildContext context) {
+    super.build(context);
     List<Widget> _widgetOptions = <Widget>[
       HomePage(userData: userData),
       NewsList(userData: userData),

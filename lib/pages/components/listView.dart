@@ -31,7 +31,7 @@ class _listViewResult extends State<listViewResult>
   @override
   bool get wantKeepAlive => true;
   int page = 1;
-  int rowsPerPage = 5;
+  int rowsPerPage = 10;
   int lastSize = 0;
 
   Future<void> refreshPage() async {
@@ -40,6 +40,7 @@ class _listViewResult extends State<listViewResult>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return StreamBuilder<QuerySnapshot>(
       stream: widget.collectionRef.limit(page * rowsPerPage).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {

@@ -13,7 +13,6 @@ class MinhasReceitas extends StatefulWidget {
 }
 
 class _MinhasReceitas extends State<MinhasReceitas> {
-  @override
   Future<void> refreshPage() async {
     setState(() {});
   }

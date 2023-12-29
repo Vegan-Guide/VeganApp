@@ -20,6 +20,7 @@ class _Home extends State<HomePage> with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive => true;
 
   Widget build(BuildContext context) {
+    super.build(context);
     final Query<Map<String, dynamic>> recipesReference = FirebaseFirestore
         .instance
         .collection('recipes')

@@ -20,7 +20,6 @@ class Receitas extends StatefulWidget {
 class _Receitas extends State<Receitas> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-  @override
   final searchValue = TextEditingController();
   String categoryName = "";
   var min = null;
@@ -32,6 +31,7 @@ class _Receitas extends State<Receitas> with AutomaticKeepAliveClientMixin {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     List ratingList = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0];
     final FirebaseFirestore _firestoreRecipes = FirebaseFirestore.instance;
     Query<Map<String, dynamic>> recipesReference =

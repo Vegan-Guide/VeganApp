@@ -34,9 +34,9 @@ class _News extends State<News> {
             if (snapshot.connectionState == ConnectionState.done) {
               Map<String, dynamic> data =
                   snapshot.data!.data() as Map<String, dynamic>;
-              List totalReviews = data["reviews"] ?? [];
-              List totalComments = data["comments"] ?? [];
-              List favorites = data["favorites"] ?? [];
+              // List totalReviews = data["reviews"] ?? [];
+              // List totalComments = data["comments"] ?? [];
+              // List favorites = data["favorites"] ?? [];
               return SingleChildScrollView(
                   padding: EdgeInsets.all(10),
                   child: Column(

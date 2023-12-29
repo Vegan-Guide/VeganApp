@@ -25,6 +25,7 @@ class _config extends State<ConfigPage> with AutomaticKeepAliveClientMixin {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     // TODO: implement build
     return SingleChildScrollView(
         child: Column(
@@ -125,7 +126,7 @@ class _config extends State<ConfigPage> with AutomaticKeepAliveClientMixin {
                   padding: EdgeInsets.all(10.00),
                   child: Center(
                       child: GestureDetector(
-                    child: Text("Minhas Receitas Favoritas",
+                    child: Text("Receitas Favoritas",
                         style: TextStyle(color: Globals.drawerTextColor)),
                     onTap: (() {
                       Navigator.of(context).push(MaterialPageRoute(
@@ -140,7 +141,7 @@ class _config extends State<ConfigPage> with AutomaticKeepAliveClientMixin {
                   padding: EdgeInsets.all(10.00),
                   child: Center(
                       child: GestureDetector(
-                    child: Text("Meus Restaurantes Favoritos",
+                    child: Text("Restaurantes Favoritos",
                         style: TextStyle(color: Globals.drawerTextColor)),
                     onTap: (() {
                       Navigator.of(context).push(MaterialPageRoute(

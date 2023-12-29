@@ -12,8 +12,8 @@ class Globals {
 
   //drawer
   static Color drawerTextColor = Color.fromRGBO(255, 255, 255, 1);
-  static Color drawerBackgroundColor = secondaryColor;
-  static Color drawerIconColor = secondaryColor;
+  static Color drawerBackgroundColor = primaryColor;
+  static Color drawerIconColor = primaryColor;
   //navbar
   static Color selectedNavBarIcon = secondaryColor;
   static Color unselectedNavBarIcon = Color.fromARGB(255, 68, 81, 40);
@@ -36,7 +36,7 @@ class Globals {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide.none,
+        borderSide: BorderSide(color: Globals.secondaryColor),
       ),
     );
   }
