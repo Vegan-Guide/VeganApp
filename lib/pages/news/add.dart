@@ -71,13 +71,10 @@ class _news extends State<addNews> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Text("Título"),
-                          ),
                           TextField(
                               controller: title,
-                              decoration: Globals.inputDecorationStyling),
+                              decoration:
+                                  Globals.inputDecorationStyling('Título')),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -100,24 +97,14 @@ class _news extends State<addNews> {
                               ),
                             ],
                           ),
-                          Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Center(
-                              child: Text("Subtitulo"),
-                            ),
-                          ),
                           TextField(
                               controller: subtitle,
-                              decoration: Globals.inputDecorationStyling),
-                          Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Center(
-                              child: Text("Texto"),
-                            ),
-                          ),
+                              decoration:
+                                  Globals.inputDecorationStyling('Subtitulo')),
                           TextField(
                               controller: content,
-                              decoration: Globals.inputDecorationStyling),
+                              decoration:
+                                  Globals.inputDecorationStyling('Texto')),
                           ElevatedButton(
                               onPressed: () async {
                                 //algo

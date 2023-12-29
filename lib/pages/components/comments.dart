@@ -85,7 +85,7 @@ class _comments extends State<Comments> {
             minLines: 4,
             maxLines: 20,
             controller: commentController,
-            decoration: Globals.inputDecorationStyling,
+            decoration: Globals.inputDecorationStyling('Digite Aqui...'),
           ),
         ),
         ElevatedButton(

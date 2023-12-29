@@ -6,6 +6,7 @@ import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 
 import 'package:vegan_app/pages/auth/login.dart';
+import 'package:vegan_app/pages/welcome.dart';
 import 'package:vegan_app/pages/app.dart';
 
 void main() async {
@@ -41,7 +42,8 @@ class _LoginState extends State<MyApp> {
           // Set the background color here
           scaffoldBackgroundColor: Globals.mainBackgroundColor,
         ),
-        home: LoginPage(),
+        home: WelcomePage(),
+        // home: LoginPage(),
       );
     }
   }

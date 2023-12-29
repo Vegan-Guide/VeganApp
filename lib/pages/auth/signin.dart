@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vegan_app/globals/globalVariables.dart';
+import 'package:vegan_app/pages/auth/login.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -24,73 +25,119 @@ class _signIn extends State<SignInPage> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-        appBar: AppBar(
-          iconTheme: IconThemeData(
-              color: Globals.drawerIconColor), //add this line here
-          title: Text("Registrar"),
-          backgroundColor: Globals.appBarBackgroundColor,
-        ),
         body: Stack(alignment: Alignment.center, children: [
-          SingleChildScrollView(
-              child: Column(
-            children: [
-              Text("Registrar", style: TextStyle(fontSize: 25)),
-              Center(
-                  child: Form(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          Padding(
-                              padding: EdgeInsets.all(10), child: Text("Nome")),
-                          TextField(
+      SingleChildScrollView(
+          child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(
+            'assets/icon/icon2.png',
+            width: MediaQuery.of(context).size.width,
+          ),
+          Padding(
+            padding: EdgeInsets.all(15),
+            child: Text("Explore todas as possibilidades do Vegan Guide",
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Globals.primaryColor)),
+          ),
+          Center(
+            child: Form(
+                key: _formKey,
+                child: Padding(
+                    padding: EdgeInsets.all(35),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(5),
+                          child: TextField(
                             controller: name,
-                            decoration: Globals.inputDecorationStyling,
+                            decoration: Globals.inputDecorationStyling('Nome'),
                           ),
-                          Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Text("Usuário")),
-                          TextField(
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(5),
+                          child: TextField(
                             controller: username,
-                            decoration: Globals.inputDecorationStyling,
+                            decoration:
+                                Globals.inputDecorationStyling('Usuário'),
                           ),
-                          Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Text("Email")),
-                          TextField(
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(5),
+                          child: TextField(
                             controller: email,
                             keyboardType: TextInputType.emailAddress,
-                            decoration: Globals.inputDecorationStyling,
+                            decoration: Globals.inputDecorationStyling('Email'),
                           ),
-                          Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Text("Senha")),
-                          TextField(
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(5),
+                          child: TextField(
                             controller: password,
                             obscureText: true,
-                            decoration: Globals.inputDecorationStyling,
+                            decoration: Globals.inputDecorationStyling('Senha'),
                           ),
-                          ElevatedButton(
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(10),
+                          child: ElevatedButton(
+                              style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                Globals.secondaryColor,
+                              )),
                               onPressed: () {
                                 setState(() {
                                   _isLoading = true;
                                 });
                                 CreateUser(context);
                               },
-                              child: Text("Registrar"))
-                        ],
-                      )))
-            ],
-          )),
-          _isLoading
-              ? Container(
-                  color: Colors.black26,
-                  height: MediaQuery.of(context).size.height,
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                )
-              : Container()
-        ]));
+                              child: Text(
+                                "Cadastrar-se",
+                                style: TextStyle(color: Colors.white),
+                              )),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Já possui uma conta? ",
+                              style: TextStyle(color: Globals.primaryColor),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: ((context) => LoginPage())));
+                              },
+                              child: Text(
+                                "Faça o login agora!",
+                                style: TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    color: Globals.primaryColor),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ))),
+          )
+        ],
+      )),
+      _isLoading
+          ? Container(
+              color: Colors.black26,
+              height: MediaQuery.of(context).size.height,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            )
+          : Container()
+    ]));
   }
 
   Future CreateUser(context) async {

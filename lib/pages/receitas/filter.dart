@@ -107,30 +107,28 @@ class _filterRecipeState extends State<filterRecipe> {
               children: [
                 Padding(
                   padding: EdgeInsets.all(10),
-                  child: Text("Min: "),
+                  child: Expanded(
+                      child: TextField(
+                          controller: minTimeController,
+                          onSubmitted: (value) {},
+                          decoration: Globals.inputDecorationStyling("Min: "),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ])),
                 ),
-                Expanded(
-                    child: TextField(
-                        controller: minTimeController,
-                        onSubmitted: (value) {},
-                        decoration: Globals.inputDecorationStyling,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
-                    ])),
                 Padding(
                   padding: EdgeInsets.all(10),
-                  child: Text("Max: "),
+                  child: Expanded(
+                      child: TextField(
+                          controller: maxTimeController,
+                          onSubmitted: (value) {},
+                          decoration: Globals.inputDecorationStyling("Max: "),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ])),
                 ),
-                Expanded(
-                    child: TextField(
-                        controller: maxTimeController,
-                        onSubmitted: (value) {},
-                        decoration: Globals.inputDecorationStyling,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
-                    ])),
               ],
             ),
             Padding(

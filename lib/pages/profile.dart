@@ -138,22 +138,21 @@ class _Profile extends State<Profile> {
                       ),
                       Padding(
                         padding: EdgeInsets.all(15.0),
-                        child: Text("Nome"),
-                      ),
-                      TextField(
-                        controller: name,
-                        decoration: Globals.inputDecorationStyling,
+                        child: TextField(
+                          controller: name,
+                          decoration: Globals.inputDecorationStyling('Nome'),
+                        ),
                       ),
                       Padding(
                         padding: EdgeInsets.all(10),
-                        child: Text("Endereço: "),
-                      ),
-                      TextFormField(
-                        controller: initialAddress,
-                        onChanged: ((value) {
-                          getLocation(value);
-                        }),
-                        decoration: Globals.inputDecorationStyling,
+                        child: TextFormField(
+                          controller: initialAddress,
+                          onChanged: ((value) {
+                            getLocation(value);
+                          }),
+                          decoration:
+                              Globals.inputDecorationStyling("Endereço: "),
+                        ),
                       ),
                       ListView.builder(
                           shrinkWrap: true,
@@ -190,25 +189,24 @@ class _Profile extends State<Profile> {
                           }),
                       Padding(
                         padding: EdgeInsets.all(15.0),
-                        child: Text("Usuário"),
-                      ),
-                      StreamBuilder(
-                        stream: ref,
-                        builder: (context, snapshot) {
-                          dynamic data = snapshot.data;
-                          username.text = data["username"];
-                          return TextField(
-                              controller: username,
-                              decoration: Globals.inputDecorationStyling);
-                        },
+                        child: StreamBuilder(
+                          stream: ref,
+                          builder: (context, snapshot) {
+                            dynamic data = snapshot.data;
+                            username.text = data["username"];
+                            return TextField(
+                                controller: username,
+                                decoration:
+                                    Globals.inputDecorationStyling("Usuário"));
+                          },
+                        ),
                       ),
                       Padding(
                         padding: EdgeInsets.all(15.0),
-                        child: Text("Email"),
-                      ),
-                      TextField(
-                        controller: email,
-                        decoration: Globals.inputDecorationStyling,
+                        child: TextField(
+                          controller: email,
+                          decoration: Globals.inputDecorationStyling("Email"),
+                        ),
                       ),
                       Center(
                           child: ElevatedButton(

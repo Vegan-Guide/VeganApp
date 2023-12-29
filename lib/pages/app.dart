@@ -77,7 +77,7 @@ class _LoginState extends State<App> with AutomaticKeepAliveClientMixin {
                 child: Container(
                     height: 50.0,
                     child: TextField(
-                      decoration: Globals.inputDecorationStyling,
+                      decoration: Globals.inputDecorationStyling('Pesquisar'),
                       controller: searchValue,
                       onSubmitted: (value) {
                         Navigator.push(

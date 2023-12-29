@@ -21,21 +21,23 @@ class Globals {
   static BoxDecoration tagDecoration = BoxDecoration(
       borderRadius: BorderRadius.circular(20.0), color: secondaryColor);
 
-  static InputDecoration inputDecorationStyling = InputDecoration(
-    filled: true,
-    fillColor: Colors.grey[200],
-    hintText: 'Digite aqui...',
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
-      borderSide: BorderSide.none,
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
-      borderSide: BorderSide.none,
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
-      borderSide: BorderSide.none,
-    ),
-  );
+  static InputDecoration inputDecorationStyling(textHint) {
+    return InputDecoration(
+      filled: true,
+      fillColor: Colors.grey[200],
+      hintText: (textHint != null) ? textHint : 'Digite aqui...',
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide.none,
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide.none,
+      ),
+    );
+  }
 }

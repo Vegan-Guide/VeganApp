@@ -79,13 +79,11 @@ class _ResetPage extends State<ResetPage> {
                                   style: TextStyle(fontSize: 15),
                                 ),
                               ),
-                              Padding(
-                                  padding: EdgeInsets.all(10),
-                                  child: Text("Email")),
                               TextFormField(
                                 controller: emailController,
                                 keyboardType: TextInputType.emailAddress,
-                                decoration: Globals.inputDecorationStyling,
+                                decoration:
+                                    Globals.inputDecorationStyling('Email'),
                               ),
                               SizedBox(height: 16.0),
                               ElevatedButton(

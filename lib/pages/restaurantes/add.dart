@@ -122,13 +122,20 @@ class _Restaurante extends State<addRestaurant> {
                         children: [
                           Padding(
                             padding: EdgeInsets.all(10),
-                            child: Text("Nome"),
+                            child: TextFormField(
+                                validator: (value) => value!.isEmpty
+                                    ? "Qual o nome daqui?"
+                                    : null,
+                                controller: nameController,
+                                decoration:
+                                    Globals.inputDecorationStyling("Nome")),
                           ),
                           TextFormField(
                               validator: (value) =>
                                   value!.isEmpty ? "Qual o nome daqui?" : null,
                               controller: nameController,
-                              decoration: Globals.inputDecorationStyling),
+                              decoration:
+                                  Globals.inputDecorationStyling("Nome")),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -199,18 +206,18 @@ class _Restaurante extends State<addRestaurant> {
                           Padding(
                             padding: EdgeInsets.all(10),
                             child: Center(
-                              child: Text("Endereço"),
+                              child: TextFormField(
+                                  validator: (value) => value!.isEmpty
+                                      ? "Fale onde esta esse lugar legal pra galera!"
+                                      : null,
+                                  controller: initialAddress,
+                                  onChanged: ((value) {
+                                    getLocation(value);
+                                  }),
+                                  decoration: Globals.inputDecorationStyling(
+                                      "Endereço")),
                             ),
                           ),
-                          TextFormField(
-                              validator: (value) => value!.isEmpty
-                                  ? "Fale onde esta esse lugar legal pra galera!"
-                                  : null,
-                              controller: initialAddress,
-                              onChanged: ((value) {
-                                getLocation(value);
-                              }),
-                              decoration: Globals.inputDecorationStyling),
                           ListView.builder(
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),

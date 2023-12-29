@@ -66,34 +66,37 @@ class _Login extends State<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Image.asset('assets/images/logo.png', width: 200),
+              Image.asset('assets/images/logo2.png',
+                  width: MediaQuery.of(context).size.width * 0.8),
               Form(
                   key: _formKey,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Padding(
-                          padding: EdgeInsets.all(10), child: Text("Email")),
-                      TextFormField(
-                        controller: emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: Globals.inputDecorationStyling,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(15),
+                            child: TextFormField(
+                                controller: emailController,
+                                keyboardType: TextInputType.emailAddress,
+                                decoration:
+                                    Globals.inputDecorationStyling('Email')),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(15),
+                            child: TextFormField(
+                                controller: passwordController,
+                                obscureText: true,
+                                decoration:
+                                    Globals.inputDecorationStyling('Senha')),
+                          ),
+                        ],
                       ),
-                      Padding(
-                          padding: EdgeInsets.all(10), child: Text("Password")),
-                      TextFormField(
-                        controller: passwordController,
-                        obscureText: true,
-                        decoration: Globals.inputDecorationStyling,
-                      ),
-                      ElevatedButton(
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              _submitForm();
-                            }
-                          },
-                          child: Text("Login")),
-                      Padding(
+                      Container(
                         padding: EdgeInsets.all(10),
+                        alignment: Alignment.centerRight,
                         child: GestureDetector(
                           onTap: () {
                             Navigator.push(
@@ -103,17 +106,35 @@ class _Login extends State<LoginPage> {
                           },
                           child: Text(
                             "Esqueci minha senha",
-                            style:
-                                TextStyle(decoration: TextDecoration.underline),
+                            style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                color: Globals.primaryColor),
                           ),
                         ),
                       ),
+                      ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                            Globals.secondaryColor,
+                          )),
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              _submitForm();
+                            }
+                          },
+                          child: Text(
+                            "Login",
+                            style: TextStyle(color: Colors.white),
+                          )),
                       Padding(
                         padding: EdgeInsets.all(10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text("Ainda não possui sua conta? "),
+                            Text(
+                              "Ainda não se registrou? ",
+                              style: TextStyle(color: Globals.primaryColor),
+                            ),
                             GestureDetector(
                               onTap: () {
                                 Navigator.push(
@@ -122,18 +143,15 @@ class _Login extends State<LoginPage> {
                                         builder: ((context) => SignInPage())));
                               },
                               child: Text(
-                                "Registrar",
+                                "Faça uma conta agora!",
                                 style: TextStyle(
-                                    decoration: TextDecoration.underline),
+                                    decoration: TextDecoration.underline,
+                                    color: Globals.primaryColor),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Text("Entrar como convidado :("),
-                      )
                     ],
                   ))
             ],

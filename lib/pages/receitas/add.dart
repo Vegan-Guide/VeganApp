@@ -114,13 +114,15 @@ class _Receita extends State<addReceita> {
                     child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Padding(padding: EdgeInsets.all(10), child: Text("Nome")),
-                    TextFormField(
-                      validator: (value) => value!.isEmpty
-                          ? "Nome da Receita não pode estar Vazio"
-                          : null,
-                      controller: name,
-                      decoration: Globals.inputDecorationStyling,
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: TextFormField(
+                        validator: (value) => value!.isEmpty
+                            ? "Nome da Receita não pode estar Vazio"
+                            : null,
+                        controller: name,
+                        decoration: Globals.inputDecorationStyling("Nome"),
+                      ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -173,7 +175,8 @@ class _Receita extends State<addReceita> {
                               ? "Selecione o tipo de receita!"
                               : null,
                           value: tipo,
-                          decoration: Globals.inputDecorationStyling,
+                          decoration:
+                              Globals.inputDecorationStyling('Digite Aqui...'),
                           items: snapshot.data!.docs
                               .map((DocumentSnapshot document) {
                             Map<String, dynamic> data =
@@ -191,45 +194,46 @@ class _Receita extends State<addReceita> {
                     ),
                     Padding(
                       padding: EdgeInsets.all(10),
-                      child: Text("Instruções"),
-                    ),
-                    TextFormField(
-                      validator: (value) => value!.isEmpty
-                          ? "Dê o passo a passo para que sua receita faça sucesso!"
-                          : null,
-                      controller: instructions,
-                      decoration: Globals.inputDecorationStyling,
-                      minLines: 4,
-                      maxLines: 20,
+                      child: TextFormField(
+                        validator: (value) => value!.isEmpty
+                            ? "Dê o passo a passo para que sua receita faça sucesso!"
+                            : null,
+                        controller: instructions,
+                        decoration:
+                            Globals.inputDecorationStyling("Instruções"),
+                        minLines: 4,
+                        maxLines: 20,
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.all(10),
-                      child: Text("Tempo de Preparo (min)"),
-                    ),
-                    TextFormField(
-                      validator: (value) => value!.isEmpty
-                          ? "Coloque o tempo de preparo por favor!"
-                          : null,
-                      controller: time,
-                      decoration: Globals.inputDecorationStyling,
+                      child: TextFormField(
+                        validator: (value) => value!.isEmpty
+                            ? "Coloque o tempo de preparo por favor!"
+                            : null,
+                        controller: time,
+                        decoration: Globals.inputDecorationStyling(
+                            "Tempo de Preparo (min)"),
+                      ),
                     ),
                     Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Text("Ingredientes")),
-                    TagEditor(
-                      length: ingredients.length,
-                      delimiters: [','],
-                      hasAddButton: true,
-                      inputDecoration: Globals.inputDecorationStyling,
-                      onTagChanged: (newValue) {
-                        setState(() {
-                          ingredients.add(newValue);
-                        });
-                      },
-                      tagBuilder: (context, index) => _Chip(
-                        index: index,
-                        label: ingredients[index],
-                        onDeleted: _onDelete,
+                      padding: EdgeInsets.all(10),
+                      child: TagEditor(
+                        length: ingredients.length,
+                        delimiters: [','],
+                        hasAddButton: true,
+                        inputDecoration:
+                            Globals.inputDecorationStyling("Ingredientes"),
+                        onTagChanged: (newValue) {
+                          setState(() {
+                            ingredients.add(newValue);
+                          });
+                        },
+                        tagBuilder: (context, index) => _Chip(
+                          index: index,
+                          label: ingredients[index],
+                          onDeleted: _onDelete,
+                        ),
                       ),
                     ),
                     ElevatedButton(
