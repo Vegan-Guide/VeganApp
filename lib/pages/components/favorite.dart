@@ -23,9 +23,6 @@ class _favorite extends State<Favorite> {
     // TODO: implement build
     return Column(
       children: [
-        Text((favoritesLength < 1000)
-            ? favoritesLength.toString()
-            : "${(favoritesLength / 100).round().toString()}k"),
         Container(
           margin: EdgeInsets.all(10.0),
           child: FloatingActionButton(
@@ -48,7 +45,10 @@ class _favorite extends State<Favorite> {
               await widget.doc.set(widget.data);
             },
           ),
-        )
+        ),
+        Text((favoritesLength < 1000)
+            ? favoritesLength.toString()
+            : "${(favoritesLength / 100).round().toString()}k"),
       ],
     );
   }

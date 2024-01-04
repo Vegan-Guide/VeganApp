@@ -25,27 +25,27 @@ class _recipeDetail extends State<RecipeDetail> {
         FirebaseFirestore.instance.collection('recipes');
     DocumentReference doc = recipes.doc(widget.documentId);
 
-    return Scaffold(
-        appBar: AppBar(
-          iconTheme: IconThemeData(
-              color: Globals.drawerIconColor), //add this line here
-          title: Text("Receita"),
-          backgroundColor: Globals.appBarBackgroundColor,
-        ),
-        body: FutureBuilder<DocumentSnapshot>(
-            future: doc.get(),
-            builder: ((context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                Map<String, dynamic> data =
-                    snapshot.data!.data() as Map<String, dynamic>;
-                print("data type");
-                print(data['type'] == "");
+    return FutureBuilder<DocumentSnapshot>(
+        future: doc.get(),
+        builder: ((context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            Map<String, dynamic> data =
+                snapshot.data!.data() as Map<String, dynamic>;
+            print("data type");
+            print(data['type'] == "");
 
-                List totalReviews = data["reviews"] ?? [];
-                List totalComments = data["comments"] ?? [];
-                List ingredients = data["ingredients"] ?? [];
-                List favorites = data["favorites"] ?? [];
-                return SingleChildScrollView(
+            List totalReviews = data["reviews"] ?? [];
+            List totalComments = data["comments"] ?? [];
+            List ingredients = data["ingredients"] ?? [];
+            List favorites = data["favorites"] ?? [];
+            return Scaffold(
+                appBar: AppBar(
+                  iconTheme: IconThemeData(
+                      color: Globals.drawerIconColor), //add this line here
+                  title: Text(Globals.capitalize(data['name'] ?? "")),
+                  backgroundColor: Globals.appBarBackgroundColor,
+                ),
+                body: SingleChildScrollView(
                     padding: EdgeInsets.all(10),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -55,31 +55,18 @@ class _recipeDetail extends State<RecipeDetail> {
                             context: context,
                             data: data,
                             width: MediaQuery.of(context).size.width),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.95,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width * 0.6,
-                                margin: EdgeInsets.all(10.0),
-                                child: Text(
-                                  "Nome: ${(data['name'] ?? "")}",
-                                  style: TextStyle(fontSize: 25),
-                                ),
-                              ),
-                              Favorite(
-                                  favorites: favorites, doc: doc, data: data)
-                            ],
-                          ),
-                        ),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("Rating médio: "),
-                            Rating(
-                                collection: "recipes",
-                                totalReviews: totalReviews,
-                                documentId: widget.documentId),
+                            Row(children: [
+                              Text("Rating médio: "),
+                              Rating(
+                                  collection: "recipes",
+                                  totalReviews: totalReviews,
+                                  documentId: widget.documentId),
+                            ]),
+                            Favorite(
+                                favorites: favorites, doc: doc, data: data),
                           ],
                         ),
                         Divider(
@@ -159,44 +146,46 @@ class _recipeDetail extends State<RecipeDetail> {
                                 .toList(),
                             documentId: widget.documentId)
                       ],
-                    ));
-              }
-              return Text("Loading...");
-            })),
-        floatingActionButton:
-            widget.created_by == FirebaseAuth.instance.currentUser?.uid
-                ? FloatingActionButton(
-                    backgroundColor: Globals.floatingAddButton,
-                    child: Icon(Icons.edit),
-                    onPressed: () {
-                      // edit
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => addReceita(
-                                    doc_id: widget.documentId,
-                                  )));
-                    },
-                  )
-                : Container());
+                    )),
+                floatingActionButton:
+                    widget.created_by == FirebaseAuth.instance.currentUser?.uid
+                        ? FloatingActionButton(
+                            backgroundColor: Globals.floatingAddButton,
+                            child: Icon(Icons.edit),
+                            onPressed: () {
+                              // edit
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => addReceita(
+                                            doc_id: widget.documentId,
+                                          )));
+                            },
+                          )
+                        : Container());
+          } else {
+            return Scaffold(
+              body: Expanded(child: Text("Receita não encontrada")),
+            );
+          }
+        }));
   }
+}
 
-  Widget ShowCategorie(String type) {
-    return FutureBuilder(
-      future:
-          FirebaseFirestore.instance.collection('categories').doc(type).get(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        }
+Widget ShowCategorie(String type) {
+  return FutureBuilder(
+    future: FirebaseFirestore.instance.collection('categories').doc(type).get(),
+    builder: (context, snapshot) {
+      if (snapshot.hasError) {
+        return Text('Error: ${snapshot.error}');
+      }
 
-        if (!snapshot.hasData) {
-          return CircularProgressIndicator();
-        }
+      if (!snapshot.hasData) {
+        return CircularProgressIndicator();
+      }
 
-        var data = snapshot.data!.data() as Map<String, dynamic>;
-        return Text("Tipo: ${data['name']}");
-      },
-    );
-  }
+      var data = snapshot.data!.data() as Map<String, dynamic>;
+      return Text("Tipo: ${data['name']}");
+    },
+  );
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vegan_app/globals/globalVariables.dart';
 import 'package:vegan_app/pages/components/rating.dart';
 import 'dart:math' as math;
 
@@ -39,7 +40,11 @@ class Tile extends StatelessWidget {
             children: [
               FotoContainer(data),
               Padding(
-                  padding: EdgeInsets.only(top: 5), child: Text(data["name"])),
+                  padding: EdgeInsets.only(top: 5),
+                  child: Text(
+                    Globals.capitalize(data["name"]),
+                    style: TextStyle(fontSize: 15),
+                  )),
             ],
           ));
     } else {
@@ -56,7 +61,9 @@ class Tile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text(data["name"]),
+                Text(
+                  Globals.capitalize(data["name"]),
+                ),
                 Row(
                   children: [
                     Rating(
@@ -91,7 +98,27 @@ Widget FotoContainer(data) {
       height: 100,
       child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
-          child: Image.network(data["photoURL"], fit: BoxFit.cover)),
+          child: Image.network(
+            data["photoURL"],
+            fit: BoxFit.cover,
+            loadingBuilder: (BuildContext context, Widget child,
+                ImageChunkEvent? loadingProgress) {
+              if (loadingProgress == null) {
+                // Image is fully loaded
+                return child;
+              } else {
+                // Show a loading indicator while the image is loading
+                return Center(
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                            (loadingProgress.expectedTotalBytes ?? 1)
+                        : null,
+                  ),
+                );
+              }
+            },
+          )),
     );
   } else {
     return Container(

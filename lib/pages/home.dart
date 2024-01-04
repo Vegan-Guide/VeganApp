@@ -111,9 +111,14 @@ class _Home extends State<HomePage> with AutomaticKeepAliveClientMixin {
           )),
           GestureDetector(
             child: Container(
-              child: Text("Ver mais"),
+              child: Text(
+                "Ver mais",
+                style: (TextStyle(
+                    decoration: TextDecoration.underline,
+                    fontSize: 15,
+                    color: Globals.primaryColor)),
+              ),
               padding: EdgeInsets.all(5),
-              decoration: Globals.tagDecoration,
             ),
             onTap: () {
               Navigator.push(
